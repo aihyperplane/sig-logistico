@@ -1,0 +1,1677 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SIG-Logístico · LogiTech Solutions S.A.</title>
+<meta name="description" content="Aplicativo de decisión del Comité de Decisiones Logísticas: diagnóstico, disrupciones, estrategias e Índice de Homeostasis.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230f6e7a'/%3E%3Cpath d='M7 21h6v-6h6v-6h6' stroke='white' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#f4f6f8; --surface:#ffffff; --surface-2:#eef2f5; --text:#16212b; --muted:#5b6b7a; --border:#d9e0e6;
+  --accent:#0f6e7a; --accent-ink:#ffffff; --accent-soft:#e1f1f2;
+  --c-base:#2f64b0; --c-disr:#c2410c; --c-estr:#0f8a5f; --c-meta:#6b7280;
+  --ok:#15803d; --warn:#b45309; --bad:#b91c1c; --ok-bg:#e7f6ec; --warn-bg:#fdf3e1; --bad-bg:#fde8e8;
+  --shadow:0 1px 2px rgba(16,24,40,.06),0 1px 3px rgba(16,24,40,.08);
+  --radius:12px; --font:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0e1419; --surface:#161e25; --surface-2:#1d2730; --text:#e6edf3; --muted:#9aabba; --border:#2a3743;
+    --accent:#3fb6c2; --accent-ink:#06252a; --accent-soft:#163238;
+    --c-base:#6b9ce6; --c-disr:#f0804d; --c-estr:#3cc48e; --c-meta:#9ca3af;
+    --ok:#4ade80; --warn:#fbbf24; --bad:#f87171; --ok-bg:#12301f; --warn-bg:#33270f; --bad-bg:#3a1717;
+    --shadow:none; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0e1419; --surface:#161e25; --surface-2:#1d2730; --text:#e6edf3; --muted:#9aabba; --border:#2a3743;
+  --accent:#3fb6c2; --accent-ink:#06252a; --accent-soft:#163238;
+  --c-base:#6b9ce6; --c-disr:#f0804d; --c-estr:#3cc48e; --c-meta:#9ca3af;
+  --ok:#4ade80; --warn:#fbbf24; --bad:#f87171; --ok-bg:#12301f; --warn-bg:#33270f; --bad-bg:#3a1717;
+  --shadow:none; color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--text);font:15px/1.5 var(--font);-webkit-font-smoothing:antialiased}
+a{color:var(--accent)}
+h1,h2,h3,h4{line-height:1.25;margin:0 0 .5rem}
+h2{font-size:1.35rem} h3{font-size:1.05rem} h4{font-size:.95rem}
+p{margin:.25rem 0 .75rem}
+.muted{color:var(--muted)} .small{font-size:.85rem} .tiny{font-size:.78rem}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:4px}
+button,select,input,textarea{font:inherit;color:inherit}
+.btn{display:inline-flex;align-items:center;gap:.4rem;border:1px solid var(--border);background:var(--surface);padding:.45rem .8rem;border-radius:8px;cursor:pointer;white-space:nowrap}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn.ghost{background:transparent}
+.btn.sm{padding:.25rem .55rem;font-size:.82rem}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+/* header */
+header.top{background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:20}
+.top-inner{max-width:1280px;margin:0 auto;padding:.7rem 16px;display:flex;flex-wrap:wrap;gap:.6rem 1rem;align-items:center;justify-content:space-between}
+.brand{display:flex;gap:.7rem;align-items:center;min-width:0}
+.logo{width:34px;height:34px;border-radius:9px;background:var(--accent);display:grid;place-items:center;flex:none}
+.brand h1{font-size:1.05rem;margin:0}
+.brand p{margin:0;font-size:.8rem;color:var(--muted)}
+.tools{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center}
+.tools select{border:1px solid var(--border);background:var(--surface);border-radius:8px;padding:.4rem .5rem;max-width:230px}
+nav.tabs{max-width:1280px;margin:0 auto;padding:0 16px;display:flex;gap:.2rem;overflow-x:auto;scrollbar-width:thin}
+nav.tabs button{border:0;background:none;padding:.6rem .8rem;border-bottom:3px solid transparent;cursor:pointer;color:var(--muted);white-space:nowrap;font-weight:500}
+nav.tabs button[aria-selected="true"]{color:var(--text);border-bottom-color:var(--accent)}
+nav.tabs .n{display:inline-grid;place-items:center;width:1.3rem;height:1.3rem;border-radius:50%;background:var(--surface-2);font-size:.72rem;margin-right:.35rem}
+nav.tabs button[aria-selected="true"] .n{background:var(--accent);color:var(--accent-ink)}
+main{max-width:1280px;margin:0 auto;padding:1.1rem 16px 3rem}
+footer{max-width:1280px;margin:0 auto;padding:1rem 16px 2rem;color:var(--muted);font-size:.8rem;border-top:1px solid var(--border)}
+/* layout */
+.grid{display:grid;gap:1rem}
+.g2{grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr))}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;box-shadow:var(--shadow);min-width:0}
+.card>h3:first-child{margin-bottom:.4rem}
+.section{margin:1.4rem 0 .6rem;display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:.5rem}
+.section h2{margin:0}
+.lead{color:var(--muted);max-width:75ch}
+.row{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center}
+.spacer{flex:1}
+.banner{border-radius:10px;padding:.65rem .9rem;margin:.5rem 0;border:1px solid var(--border);background:var(--surface-2);font-size:.9rem}
+.banner.warn{background:var(--warn-bg);border-color:transparent}
+.banner.bad{background:var(--bad-bg);border-color:transparent}
+.banner.ok{background:var(--ok-bg);border-color:transparent}
+.banner.info{background:var(--accent-soft);border-color:transparent}
+/* tables */
+.tw{overflow-x:auto;border:1px solid var(--border);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.86rem}
+th,td{padding:.45rem .55rem;border-bottom:1px solid var(--border);text-align:left;vertical-align:top}
+th{background:var(--surface-2);font-weight:600;white-space:nowrap;position:sticky;top:0}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+tr.hl td{background:var(--accent-soft)}
+table.edit td{padding:.2rem .25rem}
+table.edit input,table.edit select{width:100%;min-width:5.5rem;border:1px solid transparent;background:transparent;padding:.3rem .35rem;border-radius:6px}
+table.edit input:hover{border-color:var(--border)}
+table.edit input:focus{border-color:var(--accent);background:var(--surface);outline:none;box-shadow:0 0 0 2px var(--accent-soft)}
+table.edit input.inv{border-color:var(--bad);background:var(--bad-bg)}
+table.edit td.w-l input{min-width:12rem}
+.affix{position:relative}
+.affix[data-pre]::before{content:attr(data-pre);position:absolute;left:.4rem;top:50%;transform:translateY(-50%);color:var(--muted);font-size:.8rem;pointer-events:none}
+.affix[data-pre] input{padding-left:1.1rem}
+.affix[data-suf]::after{content:attr(data-suf);position:absolute;right:.45rem;top:50%;transform:translateY(-50%);color:var(--muted);font-size:.8rem;pointer-events:none}
+.affix[data-suf] input{padding-right:1.3rem}
+/* forms */
+.field{display:flex;flex-direction:column;gap:.2rem;min-width:0}
+.field label{font-size:.82rem;color:var(--muted)}
+.field input,.field select,.field textarea{border:1px solid var(--border);background:var(--surface);border-radius:8px;padding:.42rem .55rem;width:100%}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
+.fields{display:grid;gap:.6rem;grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),1fr))}
+.tag{display:inline-block;font-size:.7rem;font-weight:600;letter-spacing:.02em;padding:.08rem .45rem;border-radius:99px;background:var(--surface-2);color:var(--muted);vertical-align:middle}
+.tag.sup{background:var(--warn-bg);color:var(--warn)}
+.tag.ok{background:var(--ok-bg);color:var(--ok)} .tag.bad{background:var(--bad-bg);color:var(--bad)} .tag.warn{background:var(--warn-bg);color:var(--warn)}
+.tip{display:inline-grid;place-items:center;width:1rem;height:1rem;border-radius:50%;background:var(--surface-2);color:var(--muted);font-size:.68rem;cursor:help;margin-left:.2rem;font-weight:700}
+/* switch */
+.switch{display:inline-flex;align-items:center;gap:.5rem;cursor:pointer;user-select:none}
+.switch input{appearance:none;width:2.4rem;height:1.35rem;border-radius:99px;background:var(--border);position:relative;cursor:pointer;transition:background .15s;flex:none;margin:0}
+.switch input::after{content:"";position:absolute;top:.15rem;left:.15rem;width:1.05rem;height:1.05rem;border-radius:50%;background:#fff;transition:left .15s;box-shadow:0 1px 2px rgba(0,0,0,.25)}
+.switch input:checked{background:var(--accent)}
+.switch input:checked::after{left:1.2rem}
+.lever{border-left:4px solid var(--border)}
+.lever.on{border-left-color:var(--accent)}
+.lever .meta{display:flex;flex-wrap:wrap;gap:.35rem;margin:.3rem 0 .6rem}
+.lever .fields{opacity:.55}
+.lever.on .fields{opacity:1}
+/* kpi tiles */
+.tile{display:flex;flex-direction:column;gap:.15rem}
+.tile .lbl{font-size:.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;font-weight:600}
+.tile .val{font-size:2rem;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.1}
+.tile .sub{font-size:.85rem;color:var(--muted)}
+.band{display:inline-block;padding:.12rem .55rem;border-radius:99px;font-size:.78rem;font-weight:600}
+.band.Equilibrio{background:var(--ok-bg);color:var(--ok)} .band.Tensión{background:var(--warn-bg);color:var(--warn)} .band.Desequilibrio{background:var(--bad-bg);color:var(--bad)}
+.dot{display:inline-block;width:.7rem;height:.7rem;border-radius:50%;vertical-align:middle;margin-right:.3rem}
+.dot.verde{background:var(--ok)} .dot.amarillo{background:var(--warn)} .dot.rojo{background:var(--bad)}
+.state-b{color:var(--c-base)} .state-d{color:var(--c-disr)} .state-e{color:var(--c-estr)}
+.tile.b{border-top:4px solid var(--c-base)} .tile.d{border-top:4px solid var(--c-disr)} .tile.e{border-top:4px solid var(--c-estr)}
+/* calc */
+details.calc{margin-top:.3rem;font-size:.8rem}
+details.calc summary{cursor:pointer;color:var(--accent);list-style:none;display:inline}
+details.calc summary::-webkit-details-marker{display:none}
+details.calc summary::before{content:"ƒ ";font-style:italic}
+details.calc>div{margin-top:.3rem;padding:.5rem .6rem;background:var(--surface-2);border-radius:8px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.76rem;white-space:pre-wrap;color:var(--text);line-height:1.45}
+details.role>summary{cursor:pointer;font-weight:600;font-size:1.05rem;padding:.2rem 0}
+/* charts */
+figure.chart{margin:0}
+figure.chart figcaption{display:flex;justify-content:space-between;align-items:flex-start;gap:.5rem}
+figure.chart figcaption h3{margin:0}
+.cv{position:relative;width:100%;margin-top:.5rem}
+ul.clean{margin:.2rem 0;padding-left:1.1rem} ul.clean li{margin:.2rem 0}
+.check li{list-style:none;margin-left:-1.1rem}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:.2rem .8rem;font-size:.88rem}
+.kv dt{color:var(--muted)} .kv dd{margin:0;font-variant-numeric:tabular-nums}
+dialog{border:1px solid var(--border);border-radius:14px;background:var(--surface);color:var(--text);max-width:min(520px,calc(100vw - 32px));padding:1.2rem;box-shadow:0 20px 50px rgba(0,0,0,.25)}
+dialog::backdrop{background:rgba(10,15,20,.45)}
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--text);color:var(--bg);padding:.6rem 1rem;border-radius:10px;font-size:.9rem;z-index:50;max-width:calc(100vw - 32px);box-shadow:0 6px 20px rgba(0,0,0,.25)}
+.hidden{display:none!important}
+.print-only{display:none}
+@media (max-width:640px){
+  .tile .val{font-size:1.6rem}
+  .brand p{display:none}
+  .tools .lbl-hide{display:none}
+  header.top{position:static}
+}
+@media print{
+  header.top,nav.tabs,.no-print,details.calc summary{display:none!important}
+  .print-only{display:block}
+  body{background:#fff;color:#000;font-size:11px}
+  main{padding:0;max-width:none}
+  .card{box-shadow:none;break-inside:avoid}
+  details.calc>div{display:block}
+  .tw{overflow:visible}
+  .mod{break-before:page}
+}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.5.0/lz-string.min.js"></script>
+</head>
+<body>
+<a href="#main" class="btn sm" style="position:absolute;left:-999px" onfocus="this.style.left='8px'" onblur="this.style.left='-999px'">Saltar al contenido</a>
+<header class="top">
+  <div class="top-inner">
+    <div class="brand">
+      <div class="logo" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 32 32"><path d="M5 23h7v-7h7V9h8" stroke="#fff" stroke-width="3.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div><h1>SIG-Logístico · LogiTech Solutions S.A.</h1><p>Comité de Decisiones Logísticas — homeostasis de la cadena de suministro</p></div>
+    </div>
+    <div class="tools">
+      <label class="small muted lbl-hide" for="selRol">Vista</label>
+      <select id="selRol" aria-label="Rol del comité"></select>
+      <button class="btn sm" id="btnTour" type="button">Recorrido guiado</button>
+      <button class="btn sm" id="btnShare" type="button" title="Copiar un link que reproduce este análisis">Copiar link</button>
+      <button class="btn sm" id="btnTheme" type="button" aria-label="Cambiar tema claro/oscuro">◐ Tema</button>
+    </div>
+  </div>
+  <nav class="tabs" role="tablist" aria-label="Módulos" id="tabs"></nav>
+</header>
+<main id="main" tabindex="-1"></main>
+<footer>
+  <div class="row"><span><strong>SIG-Logístico</strong> <span id="ver"></span></span><span class="spacer"></span>
+  <span>Caso ficticio con fines académicos. Todo el cálculo ocurre en tu navegador: los datos no salen de tu equipo.</span></div>
+  <div class="tiny" style="margin-top:.3rem">El Índice de Homeostasis es un indicador construido por el comité; no proviene del documento de la actividad.</div>
+</footer>
+<dialog id="dlg" aria-labelledby="dlgT"><h3 id="dlgT"></h3><div id="dlgB"></div><div class="row" style="margin-top:1rem"><span class="tiny muted" id="dlgN"></span><span class="spacer"></span><button class="btn sm" id="dlgPrev" type="button">Anterior</button><button class="btn sm primary" id="dlgNext" type="button">Siguiente</button><button class="btn sm" id="dlgClose" type="button">Cerrar</button></div></dialog>
+<input type="file" id="fileData" accept=".csv,.xlsx,.xls,text/csv" class="hidden">
+<input type="file" id="fileJSON" accept=".json,application/json" class="hidden">
+<script>
+/*
+ * motor.js — Motor de cálculo de referencia del SIG-Logístico (LogiTech Solutions S.A.)
+ * Funciones puras, sin dependencias. Funciona en Node (module.exports) y en el
+ * navegador (window.SIGMotor). Copia este archivo dentro del aplicativo en lugar
+ * de reescribir las fórmulas: así el aplicativo, el informe y las pruebas usan
+ * exactamente los mismos cálculos.
+ *
+ * Convenciones: porcentajes en escala 0-100; dinero en la moneda del template;
+ * horizonte de simulación en días (por defecto 30 = un mes).
+ */
+(function (root) {
+  'use strict';
+
+  // ---------------------------------------------------------------- defaults
+  const PARAMS_DEFAULT = {
+    margen: 0.25,                 // precio proxy = costo × (1 + margen)
+    diasProteccion: 7,            // SS recomendado = d × diasProteccion
+    umbralSobrestockDIO: 45,      // DIO por encima del cual un SKU es "Sobrestock"
+    horizonteDias: 30,
+    viajesMesPorRuta: 20,         // no está en el template: supuesto
+    participacionCombustible: 0.40, // fracción del flete que es combustible
+    tasaMantenerInventarioMes: 0.02, // costo mensual de mantener inventario / valor
+    participacionRutaAfectada: null, // null = 1 / número de rutas troncales desde el CD
+    pesosIH: { costo: 0.2, otif: 0.2, rotacion: 0.2, leadTime: 0.2, perfectOrder: 0.2 },
+    bandasIH: { equilibrio: 90, tension: 75 }
+  };
+
+  const ESCENARIOS_DEFAULT = {
+    esc01: { activo: false, ruta: 'RT-02', dias: 5, tiempoPct: 35, fleteDesvioPct: 20, combustiblePct: 20 },
+    esc02: { activo: false, sku: 'SKU-102', demandaPct: 80 },
+    esc03: { activo: false, proveedor: 'PRV-01', diasSuspension: 21 }
+  };
+
+  const ESTRATEGIAS_DEFAULT = {
+    e1_3pl:          { activo: false, rol: 'Coordinador/a de Transporte', otifObjetivo: null, sobrecostoPct: 15 },
+    e2_consolidacion:{ activo: false, rol: 'Coordinador/a de Transporte', ocupacionObjetivo: 90 },
+    e3_ssrop:        { activo: false, rol: 'Analista de Inventarios' },
+    e4_rebalanceo:   { activo: false, rol: 'Analista de Inventarios', dioObjetivo: 30 },
+    e5_alterno:      { activo: false, rol: 'Gestor/a de Compras', leadTime: 10, fillRate: 90, sobrecostoPct: 12, reemplazaProveedor: false },
+    e6_sop:          { activo: false, rol: 'Director/a de Cadena de Suministro', reduccionPicoPct: 50 },
+    e7_calidad:      { activo: false, rol: 'Analista de Servicio al Cliente', reduccionDevolucionesPct: 30 }
+  };
+
+  const KPI_DEF = {
+    costo:        { ind: 'Costo Logístico Total (% sobre Ventas)', mejor: 'menor', unidad: '%' },
+    otif:         { ind: 'Nivel de Cumplimiento OTIF Global', mejor: 'mayor', unidad: '%' },
+    rotacion:     { ind: 'Rotación de Inventarios (Anual)', mejor: 'mayor', unidad: 'veces' },
+    leadTime:     { ind: 'Tiempo de Ciclo de Proveedores (Lead Time)', mejor: 'menor', unidad: 'días' },
+    perfectOrder: { ind: 'Nivel de Pedidos Perfectos (Perfect Order Rate)', mejor: 'mayor', unidad: '%' }
+  };
+
+  // ---------------------------------------------------------------- utilidades
+  const r2 = n => Math.round(n * 100) / 100;
+  const r1 = n => Math.round(n * 10) / 10;
+  const clamp = (n, a, b) => Math.min(b, Math.max(a, n));
+  const sum = (arr, f) => arr.reduce((a, x) => a + f(x), 0);
+  function merge(base, over) {
+    const out = JSON.parse(JSON.stringify(base));
+    if (!over) return out;
+    for (const k of Object.keys(over)) {
+      if (over[k] && typeof over[k] === 'object' && !Array.isArray(over[k]) && out[k] && typeof out[k] === 'object') out[k] = merge(out[k], over[k]);
+      else if (over[k] !== undefined) out[k] = over[k];
+    }
+    return out;
+  }
+
+  // ---------------------------------------------------------------- lectura CSV
+  function toNum(v) {
+    if (v === undefined || v === null) return null;
+    const s = String(v).replace(/[%$\s]|veces|días|dias/gi, '').replace(',', '.');
+    if (s === '') return null;
+    const n = Number(s);
+    return isNaN(n) ? null : n;
+  }
+  function splitCSVLine(line) {
+    const out = []; let cur = '', q = false;
+    for (let i = 0; i < line.length; i++) {
+      const c = line[i];
+      if (q) { if (c === '"') { if (line[i + 1] === '"') { cur += '"'; i++; } else q = false; } else cur += c; }
+      else if (c === '"') q = true; else if (c === ';') { out.push(cur); cur = ''; } else cur += c;
+    }
+    out.push(cur); return out.map(s => s.trim());
+  }
+  /** Lee el texto del CSV del template (secciones 1 a 7) y devuelve el modelo de datos. */
+  function parseTemplateCSV(text) {
+    text = text.replace(/^\uFEFF/, '');
+    const lines = text.split(/\r?\n/).map(splitCSVLine);
+    const secs = {}; let cur = null, header = null;
+    for (const cells of lines) {
+      const nonEmpty = cells.filter(c => c !== '');
+      if (!nonEmpty.length) { cur = null; header = null; continue; }
+      const m = /^([1-7])\.\s/.exec(cells[0]);
+      if (m && nonEmpty.length === 1) { cur = m[1]; secs[cur] = []; header = null; continue; }
+      if (!cur) continue;
+      if (!header) { header = cells; continue; }
+      secs[cur].push(cells);
+    }
+    const kpiKeyByText = t => {
+      t = t.toLowerCase();
+      if (t.includes('costo')) return 'costo'; if (t.includes('otif')) return 'otif';
+      if (t.includes('rotaci')) return 'rotacion'; if (t.includes('lead')) return 'leadTime';
+      if (t.includes('perfect') || t.includes('perfectos')) return 'perfectOrder'; return null;
+    };
+    const data = { ventas: { valor: null, fuente: null }, kpis: {}, skus: [], rutas: [], proveedores: [], canales: [], escenarios: [], avisos: [] };
+    (secs['1'] || []).forEach(c => { const k = kpiKeyByText(c[0]); if (k) data.kpis[k] = { actual: toNum(c[1]), meta: toNum(c[2]), estado: c[3] || '', responsable: c[4] || '' }; });
+    (secs['2'] || []).forEach(c => data.skus.push({ sku: c[0], desc: c[1], cat: c[2], dem: toNum(c[3]), stock: toNum(c[4]), ss: toNum(c[5]), rop: toNum(c[6]), costo: toNum(c[7]), dio: toNum(c[8]), rot: toNum(c[9]) }));
+    (secs['3'] || []).forEach(c => data.rutas.push({ id: c[0], origen: c[1], destino: c[2], km: toNum(c[3]), horas: toNum(c[4]), flete: toNum(c[5]), otif: toNum(c[6]), ocupacion: toNum(c[7]) }));
+    (secs['4'] || []).forEach(c => data.proveedores.push({ id: c[0], nombre: c[1], cat: c[2], lt: toNum(c[3]), fill: toNum(c[4]), aTiempo: toNum(c[5]), calidad: toNum(c[6]) }));
+    (secs['5'] || []).forEach(c => data.canales.push({ canal: c[0], total: toNum(c[1]), conformes: toNum(c[2]), reclamos: toNum(c[3]), devPct: toNum(c[4]), costoInv: toNum(c[5]) }));
+    (secs['6'] || []).forEach(c => data.escenarios.push({ id: c[0], nombre: c[1], desc: c[2], impacto: c[3], kpi: c[4] }));
+    (secs['7'] || []).forEach(c => { if (/ventas/i.test(c[0])) data.ventas = { valor: toNum(c[1]), fuente: /estimad/i.test(c[3] || '') ? 'Estimado' : 'Capturado' }; });
+    ['1', '2', '3', '4', '5', '6'].forEach(s => { if (!secs[s]) data.avisos.push(`Falta la sección ${s} del template.`); });
+    if (data.ventas.valor === null) {
+      const e = estimarVentas(data);
+      data.ventas = { valor: e, fuente: 'Estimado' };
+      data.avisos.push('No hay ventas mensuales: se usa el estimado Σ(demanda × costo) × 1.25, marcado como supuesto.');
+    }
+    return data;
+  }
+
+  // ---------------------------------------------------------------- diagnóstico base
+  function estimarVentas(data, margen) {
+    margen = margen ?? PARAMS_DEFAULT.margen;
+    return Math.round(sum(data.skus, s => (s.dem || 0) * (s.costo || 0)) * (1 + margen));
+  }
+  function leadTimeCategoria(data, cat) {
+    const ps = data.proveedores.filter(p => p.cat === cat && p.lt !== null);
+    return ps.length ? sum(ps, p => p.lt) / ps.length : null;
+  }
+  function diagnosticarSKUs(data, params) {
+    const p = merge(PARAMS_DEFAULT, params);
+    return data.skus.map(s => {
+      const d = s.dem / 30, lt = leadTimeCategoria(data, s.cat);
+      const dioCalc = s.stock / s.dem * 30;
+      const ssRec = d * p.diasProteccion, ropRec = lt !== null ? d * lt + ssRec : null;
+      let estado = 'Sano';
+      if (s.stock < s.ss) estado = 'Quiebre inminente'; else if (s.stock < s.rop) estado = 'Reordenar'; else if (dioCalc > p.umbralSobrestockDIO) estado = 'Sobrestock';
+      const hallazgos = [];
+      if (s.dio !== null && Math.abs(s.dio - dioCalc) > 1) hallazgos.push(`DIO reportado ${s.dio} vs. calculado ${r1(dioCalc)}`);
+      if (s.rot !== null && dioCalc > 0 && Math.abs(s.rot - 365 / dioCalc) / (365 / dioCalc) > 0.2) hallazgos.push(`Rotación reportada ${s.rot} vs. 365/DIO = ${r1(365 / dioCalc)}`);
+      return { ...s, demandaDiaria: r2(d), coberturaDias: r1(s.stock / d), dioCalc: r1(dioCalc), valorInventario: r2(s.stock * s.costo),
+        leadTime: lt, ssRecomendado: Math.ceil(ssRec), ropRecomendado: ropRec !== null ? Math.ceil(ropRec) : null, estado, hallazgos };
+    });
+  }
+  function diagnosticarRutas(data) {
+    return data.rutas.map(r => ({ ...r, costoKm: r2(r.flete / r.km), capacidadOciosa: 100 - r.ocupacion, troncal: /CD/i.test(r.origen) }));
+  }
+  function diagnosticarProveedores(data, metaLeadTime) {
+    const meta = metaLeadTime || (data.kpis.leadTime && data.kpis.leadTime.meta) || 5;
+    return data.proveedores.map(p => ({ ...p, riesgo: r2((p.lt / meta) * (1 - p.fill / 100) * (10 / p.calidad)) }))
+      .sort((a, b) => b.riesgo - a.riesgo).map((p, i) => ({ ...p, rankingRiesgo: i + 1 }));
+  }
+  function diagnosticarCanales(data) {
+    const filas = data.canales.map(c => ({ ...c, perfectOrder: r1(c.conformes / c.total * 100), tasaReclamos: r1(c.reclamos / c.total * 100), costoInvPorPedido: r2(c.costoInv / c.total) }));
+    const tot = sum(data.canales, c => c.total);
+    return { filas, perfectOrderGlobal: r1(sum(data.canales, c => c.conformes) / tot * 100), pedidosTotales: tot };
+  }
+
+  // ---------------------------------------------------------------- simulación de stock
+  /** Simula día a día el stock de un SKU. llegadas: [{dia, qty}] */
+  function simularStock({ stock0, demandaDiaria, multiplicador = 1, horizonte = 30, llegadas = [] }) {
+    let stock = stock0, noAtendidas = 0, sumaStock = 0, diaQuiebre = null; const serie = [];
+    for (let dia = 1; dia <= horizonte; dia++) {
+      llegadas.filter(l => l.dia === dia).forEach(l => { stock += l.qty; });
+      const dem = demandaDiaria * multiplicador, servido = Math.min(stock, dem);
+      if (dem - servido > 1e-9) { noAtendidas += dem - servido; if (diaQuiebre === null) diaQuiebre = dia; }
+      stock -= servido; sumaStock += stock; serie.push({ dia, stock: r1(stock) });
+    }
+    return { serie, noAtendidas: r1(noAtendidas), stockPromedio: r1(sumaStock / horizonte), diaQuiebre };
+  }
+
+  // ---------------------------------------------------------------- índice de homeostasis
+  function cumplimiento(actual, meta, mejor) {
+    if (actual === null || meta === null || actual <= 0 || meta <= 0) return 0;
+    return clamp(mejor === 'mayor' ? actual / meta : meta / actual, 0, 1);
+  }
+  function indiceHomeostasis(kpis, params) {
+    const p = merge(PARAMS_DEFAULT, params), pesos = p.pesosIH;
+    const totalPesos = sum(Object.keys(pesos), k => pesos[k]);
+    if (Math.abs(totalPesos - 1) > 1e-6) throw new Error(`Los pesos del IH deben sumar 100% (suman ${r1(totalPesos * 100)}%).`);
+    const porKPI = {}; let ih = 0;
+    for (const k of Object.keys(KPI_DEF)) {
+      const c = cumplimiento(kpis[k].actual, kpis[k].meta, KPI_DEF[k].mejor);
+      porKPI[k] = r2(c); ih += pesos[k] * c;
+    }
+    ih = r1(ih * 100);
+    const kpiMasDebil = Object.keys(porKPI).sort((a, b) => porKPI[a] - porKPI[b])[0];
+    const banda = ih >= p.bandasIH.equilibrio ? 'Equilibrio' : ih >= p.bandasIH.tension ? 'Tensión' : 'Desequilibrio';
+    return { ih, banda, porKPI, kpiMasDebil };
+  }
+
+  // ---------------------------------------------------------------- evaluación de un estado
+  function evaluar(data, cfg = {}) {
+    const p = merge(PARAMS_DEFAULT, cfg.params), E = merge(ESCENARIOS_DEFAULT, cfg.escenarios), S = merge(ESTRATEGIAS_DEFAULT, cfg.estrategias);
+    const H = p.horizonteDias, ventas = data.ventas.valor;
+    const kb = data.kpis, skusDiag = diagnosticarSKUs(data, p);
+    const pedidosTot = sum(data.canales, c => c.total), unidadesPorPedido = sum(data.skus, s => s.dem) / pedidosTot;
+    const provSusp = E.esc03.activo ? data.proveedores.find(x => x.id === E.esc03.proveedor) : null;
+    const costos = { transporte: 0, desvio: 0, tercerizacion: 0, consolidacion: 0, proveedorAlterno: 0, mantenerInventario: 0, logisticaInversa: 0 };
+    const costosEstrategia = {};
+
+    // --- inventario
+    let deltaNoAt = 0, ventasPerdidas = 0, invPromBase = 0, invPromNuevo = 0, capitalLiberado = 0, capitalAdicional = 0;
+    const skus = skusDiag.map(s => {
+      const d = s.dem / 30, lt = s.leadTime;
+      const llegadasBase = lt !== null && lt <= H ? [{ dia: Math.round(lt), qty: s.dem }] : [];
+      const simBase = simularStock({ stock0: s.stock, demandaDiaria: d, horizonte: H, llegadas: llegadasBase });
+
+      let stock0 = s.stock, mult = 1, qtyRep = s.dem;
+      if (E.esc02.activo && s.sku === E.esc02.sku) mult = 1 + E.esc02.demandaPct / 100 * (S.e6_sop.activo ? 1 - S.e6_sop.reduccionPicoPct / 100 : 1);
+      if (S.e3_ssrop.activo && s.ropRecomendado !== null && s.stock < s.ropRecomendado) {
+        qtyRep = Math.max(s.dem, s.ropRecomendado - s.stock + s.dem);
+        capitalAdicional += (qtyRep - s.dem) * s.costo;
+      }
+      if (S.e4_rebalanceo.activo && s.dioCalc > p.umbralSobrestockDIO) {
+        const obj = Math.round(d * S.e4_rebalanceo.dioObjetivo);
+        capitalLiberado += (s.stock - obj) * s.costo; stock0 = obj;
+      }
+      const suspendido = provSusp && provSusp.cat === s.cat;
+      let llegadas = [];
+      if (lt !== null) { const dia = Math.round(lt + (suspendido ? E.esc03.diasSuspension : 0)); if (dia <= H) llegadas.push({ dia, qty: qtyRep }); }
+      let sim = simularStock({ stock0, demandaDiaria: d, multiplicador: mult, horizonte: H, llegadas });
+      let ltEfectivo = lt === null ? null : lt + (suspendido ? E.esc03.diasSuspension : 0);
+      const faltanteExtra = sim.noAtendidas - simBase.noAtendidas;
+      if (S.e5_alterno.activo && (suspendido || mult > 1) && faltanteExtra > 0) {
+        // El alterno cubre solo el faltante que causa la disrupción, no los quiebres que ya existían en la base.
+        const qtyAlt = Math.round(faltanteExtra * S.e5_alterno.fillRate / 100);
+        llegadas = llegadas.concat([{ dia: Math.round(S.e5_alterno.leadTime), qty: qtyAlt }]);
+        costos.proveedorAlterno += qtyAlt * s.costo * S.e5_alterno.sobrecostoPct / 100;
+        sim = simularStock({ stock0, demandaDiaria: d, multiplicador: mult, horizonte: H, llegadas });
+        // Si el alterno solo cubre la emergencia, el lead time vuelve al del proveedor habitual;
+        // si el comité decide reemplazar al proveedor (reemplazaProveedor = true), pasa a ser el del alterno.
+        if (suspendido) ltEfectivo = S.e5_alterno.reemplazaProveedor ? S.e5_alterno.leadTime : lt;
+      }
+      // Regla conservadora: una estrategia puede, como máximo, borrar el daño de la disrupción.
+      // Los quiebres que ya existían en la base no se cuentan como ganancia (no se inflan ventas ni OTIF).
+      const dNo = Math.max(0, sim.noAtendidas - simBase.noAtendidas);
+      deltaNoAt += dNo; ventasPerdidas += dNo * s.costo * (1 + p.margen);
+      invPromBase += simBase.stockPromedio * s.costo; invPromNuevo += sim.stockPromedio * s.costo;
+      return { ...s, multiplicador: r2(mult), suspendido: !!suspendido, ltEfectivo, simBase, sim, deltaNoAtendidas: r1(dNo) };
+    });
+    if (S.e4_rebalanceo.activo) costos.mantenerInventario = -capitalLiberado * p.tasaMantenerInventarioMes;
+    if (S.e3_ssrop.activo) costos.mantenerInventario += capitalAdicional * p.tasaMantenerInventarioMes;
+
+    // --- transporte
+    const rutasDiag = diagnosticarRutas(data), troncales = rutasDiag.filter(r => r.troncal).length || 1;
+    const fuel = E.esc01.activo ? E.esc01.combustiblePct / 100 * p.participacionCombustible : 0;
+    const costoTranspBase = sum(rutasDiag, r => p.viajesMesPorRuta * r.flete);
+    costos.transporte = costoTranspBase * fuel;
+    let deltaOtifTransp = 0;
+    const rutas = rutasDiag.map(r => {
+      let otifMes = r.otif, viajes = p.viajesMesPorRuta;
+      if (E.esc01.activo && r.id === E.esc01.ruta) {
+        const frac = Math.min(1, E.esc01.dias / H);
+        let otifDisr = r.otif / (1 + E.esc01.tiempoPct / 100);
+        if (S.e1_3pl.activo) {
+          otifDisr = S.e1_3pl.otifObjetivo ?? r.otif;
+          costos.tercerizacion += viajes * frac * r.flete * S.e1_3pl.sobrecostoPct / 100;
+        } else costos.desvio += viajes * frac * r.flete * E.esc01.fleteDesvioPct / 100;
+        otifMes = frac * otifDisr + (1 - frac) * r.otif;
+        const part = p.participacionRutaAfectada ?? 1 / troncales;
+        deltaOtifTransp += (otifMes - r.otif) * part;
+      }
+      if (S.e2_consolidacion.activo && r.ocupacion < S.e2_consolidacion.ocupacionObjetivo) {
+        const nuevos = viajes * r.ocupacion / S.e2_consolidacion.ocupacionObjetivo;
+        costos.consolidacion -= (viajes - nuevos) * r.flete * (1 + fuel); viajes = nuevos;
+      }
+      return { ...r, otifMes: r1(otifMes), viajesMes: r1(viajes) };
+    });
+
+    // --- servicio
+    let deltaPORcalidad = 0;
+    if (S.e7_calidad.activo) {
+      const red = S.e7_calidad.reduccionDevolucionesPct / 100;
+      const evitados = sum(data.canales, c => c.total * c.devPct / 100) * red;
+      deltaPORcalidad = evitados / pedidosTot * 100;
+      costos.logisticaInversa = -sum(data.canales, c => c.costoInv) * red;
+    }
+
+    // --- costos atribuibles a estrategias (para el costo de la homeostasis)
+    if (S.e1_3pl.activo) costosEstrategia.e1_3pl = costos.tercerizacion;
+    if (S.e2_consolidacion.activo) costosEstrategia.e2_consolidacion = costos.consolidacion;
+    if (S.e3_ssrop.activo) costosEstrategia.e3_ssrop = capitalAdicional * p.tasaMantenerInventarioMes;
+    if (S.e4_rebalanceo.activo) costosEstrategia.e4_rebalanceo = -capitalLiberado * p.tasaMantenerInventarioMes;
+    if (S.e5_alterno.activo) costosEstrategia.e5_alterno = costos.proveedorAlterno;
+    if (S.e7_calidad.activo) costosEstrategia.e7_calidad = costos.logisticaInversa;
+    if (S.e6_sop.activo) costosEstrategia.e6_sop = 0;
+    const deltaCosto = sum(Object.keys(costos), k => costos[k]);
+
+    // --- KPIs globales
+    const costoBase$ = ventas * kb.costo.actual / 100, ventasNuevas = ventas - ventasPerdidas;
+    const deltaPedidos = deltaNoAt / unidadesPorPedido;
+    const pondera = f => { const w = sum(skus, s => s.dem * s.costo); return sum(skus, s => s.dem * s.costo * f(s)) / w; };
+    const ltPondBase = pondera(s => s.leadTime ?? 0), ltPondNuevo = pondera(s => s.ltEfectivo ?? 0);
+    const kpis = {
+      costo:        { ...KPI_DEF.costo, meta: kb.costo.meta, actual: r1((costoBase$ + deltaCosto) / ventasNuevas * 100) },
+      otif:         { ...KPI_DEF.otif, meta: kb.otif.meta, actual: r1(clamp(kb.otif.actual + deltaOtifTransp - deltaPedidos / pedidosTot * 100, 0, 100)) },
+      rotacion:     { ...KPI_DEF.rotacion, meta: kb.rotacion.meta, actual: r1(kb.rotacion.actual * (ventasNuevas / ventas) * (invPromNuevo > 0 ? invPromBase / invPromNuevo : 1)) },
+      leadTime:     { ...KPI_DEF.leadTime, meta: kb.leadTime.meta, actual: r1(kb.leadTime.actual * (ltPondBase > 0 ? ltPondNuevo / ltPondBase : 1)) },
+      perfectOrder: { ...KPI_DEF.perfectOrder, meta: kb.perfectOrder.meta, actual: r1(clamp(kb.perfectOrder.actual - deltaPedidos / pedidosTot * 100 + deltaPORcalidad, 0, 100)) }
+    };
+    for (const k of Object.keys(kpis)) {
+      const c = cumplimiento(kpis[k].actual, kpis[k].meta, kpis[k].mejor);
+      kpis[k].cumplimiento = r2(c);
+      kpis[k].semaforo = c >= 1 ? 'verde' : c >= 0.9 ? 'amarillo' : 'rojo';
+    }
+    const homeo = indiceHomeostasis(kpis, p);
+    for (const k of Object.keys(costos)) costos[k] = r2(costos[k]);
+    for (const k of Object.keys(costosEstrategia)) costosEstrategia[k] = r2(costosEstrategia[k]);
+
+    return {
+      kpis, ...homeo, skus, rutas, costos, costosEstrategia,
+      resumen: { ventasBase: ventas, ventasNuevas: r2(ventasNuevas), ventasPerdidas: r2(ventasPerdidas), costoLogisticoBase: r2(costoBase$),
+        deltaCosto: r2(deltaCosto), costoLogisticoNuevo: r2(costoBase$ + deltaCosto), unidadesNoAtendidasExtra: r1(deltaNoAt),
+        pedidosAfectados: r1(deltaPedidos), unidadesPorPedido: r2(unidadesPorPedido), capitalLiberado: r2(capitalLiberado), capitalAdicional: r2(capitalAdicional) },
+      supuestos: supuestosUsados(data, p)
+    };
+  }
+
+  function supuestosUsados(data, p) {
+    const s = [
+      ['Margen bruto para precio proxy', `${p.margen * 100}%`],
+      ['Días de protección para SS recomendado', `${p.diasProteccion} días`],
+      ['Umbral de sobrestock', `${p.umbralSobrestockDIO} días de DIO`],
+      ['Viajes por ruta al mes', `${p.viajesMesPorRuta}`],
+      ['Participación del combustible en el flete', `${p.participacionCombustible * 100}%`],
+      ['Costo mensual de mantener inventario', `${p.tasaMantenerInventarioMes * 100}% del valor`],
+      ['Reposición estándar', 'Un pedido igual a la demanda mensual, recibido al cumplirse el lead time del proveedor'],
+      ['OTIF de la ruta afectada durante el bloqueo', 'OTIF base / (1 + % de aumento del tiempo de tránsito)'],
+      ['Unidades por pedido', 'Σ demanda mensual / Σ pedidos totales (derivado del template)'],
+      ['Pesos del Índice de Homeostasis', Object.entries(p.pesosIH).map(([k, v]) => `${k} ${v * 100}%`).join(', ')]
+    ];
+    if (data.ventas.fuente === 'Estimado') s.unshift(['Ventas mensuales', 'Estimado: Σ(demanda × costo) × 1.25']);
+    return s.map(([supuesto, valor]) => ({ supuesto, valor }));
+  }
+
+  // ---------------------------------------------------------------- comparación de los tres estados
+  function compararEstados(data, cfg = {}) {
+    const sinEsc = Object.fromEntries(Object.keys(ESCENARIOS_DEFAULT).map(k => [k, { activo: false }]));
+    const sinEst = Object.fromEntries(Object.keys(ESTRATEGIAS_DEFAULT).map(k => [k, { activo: false }]));
+    const base = evaluar(data, { params: cfg.params, escenarios: sinEsc, estrategias: sinEst });
+    const disrupcion = evaluar(data, { params: cfg.params, escenarios: cfg.escenarios, estrategias: sinEst });
+    const estrategia = evaluar(data, cfg);
+    const caida = base.ih - disrupcion.ih, recuperado = estrategia.ih - disrupcion.ih;
+    const recuperacion = caida > 0.05 ? r1(recuperado / caida * 100) : null; // null = "no aplica"
+    const costoEstr = sum(Object.values(estrategia.costosEstrategia), v => v);
+    const costoHomeostasis = recuperado > 0.05 ? r2(costoEstr / recuperado) : null;
+    return { base, disrupcion, estrategia, recuperacion, costoEstrategias: r2(costoEstr), costoHomeostasis };
+  }
+
+  const api = { PARAMS_DEFAULT, ESCENARIOS_DEFAULT, ESTRATEGIAS_DEFAULT, KPI_DEF, parseTemplateCSV, estimarVentas, leadTimeCategoria,
+    diagnosticarSKUs, diagnosticarRutas, diagnosticarProveedores, diagnosticarCanales, simularStock, cumplimiento, indiceHomeostasis,
+    evaluar, compararEstados };
+  if (typeof module !== 'undefined' && module.exports) module.exports = api; else root.SIGMotor = api;
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+<script>
+const DEMO_CSV = ";;;;;;;;;\r\n;;;;;;;;;\r\n1. RESUMEN EJECUTIVO Y KPIS GLOBALES;;;;;;;;;\r\nIndicador;Valor Actual;Meta Objetivo;Estado;Responsable;;;;;\r\nCosto Logístico Total (% sobre Ventas);14.2%;10.0%;Deficiente;Director/a de Cadena de Suministro;;;;;\r\nNivel de Cumplimiento OTIF Global;81.5%;95.0%;Riesgo;Director/a de Cadena de Suministro;;;;;\r\nRotación de Inventarios (Anual);4.2 veces;8.0 veces;Bajo;Analista de Inventarios;;;;;\r\nTiempo de Ciclo de Proveedores (Lead Time);12 días;5 días;Crítico;Gestor de Compras;;;;;\r\nNivel de Pedidos Perfectos (Perfect Order Rate);78.0%;92.0%;Riesgo;Analista de Servicio al Cliente;;;;;\r\n;;;;;;;;;\r\n2. GESTIÓN DE INVENTARIOS Y ALMACENES (DATOS WMS);;;;;;;;;\r\nCódigo SKU;Descripción Producto;Categoría;Demanda Mensual (Unid);Stock Actual (Unid);Stock Seguridad (Unid);Punto Reorden (Unid);Costo Unitario ($);Días Inventario (DIO);Rotación Anual\r\nSKU-101;Smart TV 55 4K;Electro;450;120;150;300;450;8;4.5\r\nSKU-102;Laptop Gamer i7;Tecnología;800;250;200;500;850;9;3.8\r\nSKU-103;Smartphone Pro 128GB;Tecnología;1500;400;350;900;600;8;5.2\r\nSKU-104;Refrigeradora No Frost;Hogar;200;380;80;120;700;57;1.8\r\nSKU-105;Lavadora Carga Frontal;Hogar;180;310;60;100;550;51;2.0\r\nSKU-106;Audífonos Bluetooth;Accesorios;2200;4500;500;1200;35;61;1.2\r\n;;;;;;;;;\r\n3. TRANSPORTE Y DISTRIBUCIÓN (DATOS TMS);;;;;;;;;\r\nRuta ID;Origen;Destino;Distancia (Km);Tiempo Promedio (Horas);Costo Flete Actual ($/viaje);% OTIF Ruta;Ocupación Flota (%);;\r\nRT-01;CD Central (Bogotá);Almacén Satélite 1 (Medellín);415;10;1200;84%;92%;;\r\nRT-02;CD Central (Bogotá);Almacén Satélite 2 (Cali);460;12;1450;79%;88%;;\r\nRT-03;CD Central (Bogotá);Almacén Satélite 3 (Bucaramanga);390;9;1100;88%;95%;;\r\nRT-04;Almacén Satélite 1;Clientes Retail Medellín;50;3;350;82%;75%;;\r\nRT-05;Almacén Satélite 2;Clientes Retail Cali;60;4;400;76%;70%;;\r\nRT-06;Almacén Satélite 3;Clientes Retail Bucaramanga;40;3;300;86%;80%;;\r\n;;;;;;;;;\r\n4. COMPRAS Y EVALUACIÓN DE PROVEEDORES (PROCUREMENT);;;;;;;;;\r\nID Proveedor;Nombre Proveedor;Categoría Suministrada;Lead Time Promedio (Días);% Fill Rate (Cumplimiento Cantidad);% Entregas a Tiempo;Calificación Calidad (1-10);;;\r\nPRV-01;TechImport Asia;Tecnología;25;82%;78%;7.5;;;\r\nPRV-02;ElectroHogar Nacional;Hogar;8;91%;89%;8.8;;;\r\nPRV-03;Global Sound Co.;Accesorios;18;70%;65%;6.2;;;\r\nPRV-04;VisionDisplay Corp;Electro;15;88%;85%;8.1;;;\r\n;;;;;;;;;\r\n5. SERVICIO AL CLIENTE Y LOGÍSTICA INVERSA;;;;;;;;;\r\nCanal de Venta;Pedidos Totales / Mes;Pedidos Conformes;Reclamos por Demora;% Devoluciones por Daño;Costo Logística Inversa ($);;;;\r\nGrandes Superficies (Retail);1200;940;180;6.5%;18500;;;;\r\nTiendas Propias;450;390;40;2.1%;3200;;;;\r\nE-Commerce (Venta Directa);2100;1650;310;8.2%;24800;;;;\r\n;;;;;;;;;\r\n6. MATRIZ DE ESCENARIOS Y SIMULACIÓN DE DISRUPCIONES;;;;;;;;;\r\nID Escenario;Nombre Evento;Descripción Disrupción;Impacto Operativo Estimado;KPI Afectado Principalmente;;;;;\r\nESC-01;Bloqueo Vial Ruta RT-02;Cierre de vía Bogotá-Cali por 5 días;\"+35% en tiempo de tránsito; +20% costo flete desviación\";OTIF Ruta RT-02 / Costo Transporte;;;;;\r\nESC-02;Efecto Látigo en Demanda;Campaña de marketing dispara demanda SKU-102 un +80%;\"Quiebre de stock en 4 días; incapacidad de atención\";Rotación / Pedidos Perfectos;;;;;\r\nESC-03;Quiebra de Proveedor PRV-01;Suspensión inmediata de entregas de Laptops por 3 semanas;Desabastecimiento total de línea Laptop Gamer;Ventas Totales / Lead Time Compras;;;;;\r\n\r\n7. PARÁMETROS FINANCIEROS;;;;;;;;;\r\nParámetro;Valor;Unidad;Fuente;;;;;;\r\nVentas Mensuales ($);2623125;$ por mes;Estimado (demanda × costo × 1.25);;;;;;\r\n";
+</script>
+<script>
+'use strict';
+/* ====================================================================
+ * SIG-Logístico — interfaz. El motor (SIGMotor) es la única fuente de
+ * cálculos; este archivo solo lee/escribe el estado y lo presenta.
+ * ==================================================================== */
+const VERSION = 'v1.0.0', FECHA = '2026-10-07', ESQUEMA = 1, LS_KEY = 'sig-logistico-estado-v1';
+const M = window.SIGMotor;
+const clone = o => JSON.parse(JSON.stringify(o));
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const fin = n => typeof n === 'number' && Number.isFinite(n);
+const nf = (n, d = 1) => fin(n) ? n.toLocaleString('es-CO', { minimumFractionDigits: d, maximumFractionDigits: d }) : '—';
+const money = n => fin(n) ? (n < 0 ? '−$' : '$') + Math.abs(Math.round(n)).toLocaleString('es-CO') : '—';
+const signed = (n, d = 1) => fin(n) ? (n > 0 ? '+' : n < 0 ? '−' : '±') + nf(Math.abs(n), d) : '—';
+const pct = (n, d = 1) => fin(n) ? nf(n, d) + '%' : '—';
+const sum = (a, f) => a.reduce((s, x) => s + (f ? f(x) : x), 0);
+
+const KPIS = ['costo', 'otif', 'rotacion', 'leadTime', 'perfectOrder'];
+const KPI_CORTO = { costo: 'Costo logístico % ventas', otif: 'OTIF global', rotacion: 'Rotación de inventarios', leadTime: 'Lead time de proveedores', perfectOrder: 'Perfect Order Rate' };
+const KPI_MIN = { costo: 'Costo %', otif: 'OTIF', rotacion: 'Rotación', leadTime: 'Lead time', perfectOrder: 'Perfect Order' };
+const fmtKPI = (k, v) => !fin(v) ? '—' : M.KPI_DEF[k].unidad === '%' ? nf(v, 1) + '%' : M.KPI_DEF[k].unidad === 'veces' ? nf(v, 1) + ' veces' : nf(v, 1) + ' días';
+
+const ROLES = {
+  comite:      { n: 'Comité completo (visión sistémica)', corto: 'Comité' },
+  director:    { n: 'Director/a de Cadena de Suministro', corto: 'Director/a SC', kpis: ['costo'], extra: 'Responde por el costo total y el OTIF global; integra las decisiones de todas las áreas.' },
+  inventarios: { n: 'Analista de Inventarios (WMS)', corto: 'Inventarios', kpis: ['rotacion'], extra: 'Rotación, DIO e IRA.' },
+  transporte:  { n: 'Coordinador/a de Transporte (TMS)', corto: 'Transporte', kpis: ['otif'], extra: 'OTIF y costo de transporte por unidad.' },
+  compras:     { n: 'Gestor/a de Compras', corto: 'Compras', kpis: ['leadTime'], extra: 'Lead time y fill rate de proveedores.' },
+  servicio:    { n: 'Analista de Servicio al Cliente', corto: 'Servicio', kpis: ['perfectOrder'], extra: 'Perfect Order, devoluciones y costo de logística inversa.' }
+};
+const rolDeTexto = t => { t = (t || '').toLowerCase(); return t.includes('transporte') ? 'transporte' : t.includes('inventario') ? 'inventarios' : t.includes('compra') ? 'compras' : t.includes('servicio') ? 'servicio' : 'director'; };
+const KPI_ROL = { costo: 'director', otif: 'transporte', rotacion: 'inventarios', leadTime: 'compras', perfectOrder: 'servicio' };
+
+const ESC_META = {
+  esc01: { id: 'ESC-01', n: 'Bloqueo vial + alza de combustible', icon: '🚧', params: [
+    ['ruta', 'Ruta bloqueada', 'ruta', 'Ruta troncal afectada por el cierre'],
+    ['dias', 'Días de bloqueo', 'int', 'Duración del cierre dentro del mes'],
+    ['tiempoPct', 'Aumento del tiempo de tránsito', 'pct', 'Según la matriz de escenarios: +35%'],
+    ['fleteDesvioPct', 'Sobrecosto del flete por desvío', 'pct', 'Según la matriz: +20%'],
+    ['combustiblePct', 'Alza del combustible', 'pct', 'Enunciado de la actividad: +20%']] },
+  esc02: { id: 'ESC-02', n: 'Efecto látigo en la demanda', icon: '📈', params: [
+    ['sku', 'SKU afectado', 'sku', 'Grupo de productos con el pico'],
+    ['demandaPct', 'Aumento de demanda', 'pct', 'Enunciado: +80%', 300]] },
+  esc03: { id: 'ESC-03', n: 'Quiebra del proveedor principal', icon: '🏭', params: [
+    ['proveedor', 'Proveedor suspendido', 'prov', 'Proveedor que deja de despachar'],
+    ['diasSuspension', 'Días sin despachos', 'int', 'Enunciado: 3 semanas = 21 días']] }
+};
+const EST_META = {
+  e1_3pl:           { n: '3PL / ruta alterna', d: 'Tercerizar con un operador 3PL o ruta alterna los despachos de la ruta bloqueada para sostener su OTIF.', kpi: 'otif', params: [['otifObjetivo', 'OTIF objetivo de la ruta', 'pct', 'Vacío = OTIF base de la ruta', 100, true], ['sobrecostoPct', 'Sobrecosto del 3PL sobre el flete', 'pct', '']] },
+  e2_consolidacion: { n: 'Consolidación / cross-docking', d: 'Consolidar cargas en las rutas con baja ocupación para eliminar viajes.', kpi: 'costo', params: [['ocupacionObjetivo', 'Ocupación objetivo', 'pct', '']] },
+  e3_ssrop:         { n: 'Recálculo de SS y ROP', d: 'Recalcular stock de seguridad y punto de reorden con la demanda diaria y el lead time real, y reponer los SKU por debajo del ROP.', kpi: 'otif', params: [] },
+  e4_rebalanceo:    { n: 'Rebalanceo de sobrestock', d: 'Reducir los SKU en sobrestock a un DIO objetivo (traslado, promoción o devolución) y liberar capital.', kpi: 'rotacion', params: [['dioObjetivo', 'DIO objetivo', 'int', 'días']] },
+  e5_alterno:       { n: 'Proveedor alterno', d: 'Pedido de emergencia a un proveedor alterno por el faltante que causa la disrupción.', kpi: 'leadTime', params: [['leadTime', 'Lead time del alterno', 'int', 'días'], ['fillRate', 'Fill rate del alterno', 'pct', ''], ['sobrecostoPct', 'Sobrecosto por unidad', 'pct', ''], ['reemplazaProveedor', 'Reemplazo definitivo del proveedor', 'bool', 'Si se activa, el lead time de la categoría pasa a ser el del alterno']] },
+  e6_sop:           { n: 'Plan S&OP', d: 'Planeación de ventas y operaciones: coordinar la campaña comercial con compras e inventario para amortiguar el pico.', kpi: 'perfectOrder', params: [['reduccionPicoPct', 'Reducción del pico de demanda', 'pct', '']] },
+  e7_calidad:       { n: 'Control de calidad en empaque', d: 'Inspección y estándar de empaque para reducir devoluciones por daño.', kpi: 'perfectOrder', params: [['reduccionDevolucionesPct', 'Reducción de devoluciones por daño', 'pct', '']] }
+};
+const COSTO_LBL = { transporte: 'Alza de combustible', desvio: 'Desvío por bloqueo', tercerizacion: '3PL / ruta alterna', consolidacion: 'Consolidación', proveedorAlterno: 'Proveedor alterno', mantenerInventario: 'Mantener inventario', logisticaInversa: 'Logística inversa' };
+
+const PARAM_META = [
+  ['margen', 'Margen bruto para precio proxy', 'frac', 'El template no trae precios de venta: precio = costo × (1 + margen).'],
+  ['diasProteccion', 'Días de protección (SS recomendado)', 'int', 'Sin desviación de la demanda no se puede usar Z·σ·√LT; SS = demanda diaria × días.'],
+  ['umbralSobrestockDIO', 'Umbral de sobrestock (DIO)', 'int', 'DIO por encima del cual un SKU se clasifica en sobrestock.'],
+  ['horizonteDias', 'Horizonte de simulación (días)', 'int', 'Los KPIs del template son mensuales.'],
+  ['viajesMesPorRuta', 'Viajes por ruta al mes', 'int', 'El TMS no trae frecuencia de viajes.'],
+  ['participacionCombustible', 'Participación del combustible en el flete', 'frac', 'Traslada el alza del combustible al costo del flete.'],
+  ['tasaMantenerInventarioMes', 'Costo mensual de mantener inventario', 'frac', 'Costo de capital y almacenamiento sobre el valor del inventario.'],
+  ['participacionRutaAfectada', 'Peso de la ruta afectada en el OTIF global', 'frac', 'Vacío = 1 / número de rutas troncales (33,3%).', true]
+];
+
+const BRECHAS = [
+  ['IRA (exactitud del registro de inventario)', 'El SIG no trae conteos físicos; no se puede calcular. Se recomienda un conteo cíclico por SKU A.'],
+  ['Precios de venta por SKU', 'Se usa un precio proxy = costo × (1 + margen).'],
+  ['Volúmenes, pesos y frecuencia de viajes por ruta', 'Se asume un número fijo de viajes por ruta al mes; el costo por unidad transportada no es calculable.'],
+  ['Variabilidad de la demanda (σ)', 'El SS recomendado se calcula con días de protección, no con nivel de servicio estadístico.'],
+  ['Lead time por SKU', 'Se usa el lead time del proveedor de su categoría.'],
+  ['Desagregación del costo logístico', 'Solo existe el % total sobre ventas; los componentes se estiman con los supuestos.']
+];
+
+/* ------------------------------------------------------------ estado */
+let state = null, cmp = null, X = null, calcError = null, compartido = false, toastT = null;
+const charts = {};
+
+function todosActivos(def, on) { const o = clone(def); for (const k in o) o[k].activo = on; return o; }
+function estadoInicial() {
+  const data = M.parseTemplateCSV(DEMO_CSV);
+  return { esquema: ESQUEMA, origen: 'Caso demo LogiTech', data, params: clone(M.PARAMS_DEFAULT),
+    pesosBorrador: pesosAPct(M.PARAMS_DEFAULT.pesosIH), justificacionPesos: '',
+    escenarios: todosActivos(M.ESCENARIOS_DEFAULT, true), estrategias: todosActivos(M.ESTRATEGIAS_DEFAULT, true),
+    rol: 'comite', tab: 'datos', skuSim: null, estadoCascada: 'estrategia', notas: '' };
+}
+function pesosAPct(p) { const o = {}; for (const k of KPIS) o[k] = Math.round(p[k] * 1000) / 10; return o; }
+function normalizarEstado(s) {
+  const b = estadoInicial();
+  const o = Object.assign(b, s);
+  o.params = Object.assign(clone(M.PARAMS_DEFAULT), s.params || {});
+  o.escenarios = Object.assign(todosActivos(M.ESCENARIOS_DEFAULT, false), s.escenarios || {});
+  o.estrategias = Object.assign(todosActivos(M.ESTRATEGIAS_DEFAULT, false), s.estrategias || {});
+  for (const k in M.ESCENARIOS_DEFAULT) o.escenarios[k] = Object.assign(clone(M.ESCENARIOS_DEFAULT[k]), o.escenarios[k]);
+  for (const k in M.ESTRATEGIAS_DEFAULT) o.estrategias[k] = Object.assign(clone(M.ESTRATEGIAS_DEFAULT[k]), o.estrategias[k]);
+  if (!o.pesosBorrador) o.pesosBorrador = pesosAPct(o.params.pesosIH);
+  delete o.resultados;
+  return o;
+}
+function guardar() {
+  if (compartido) return;
+  try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch (e) { /* almacenamiento no disponible: el aplicativo sigue funcionando */ }
+}
+function cargarGuardado() {
+  try { const t = localStorage.getItem(LS_KEY); if (t) { const s = JSON.parse(t); if (s && s.esquema === ESQUEMA) return s; } } catch (e) { }
+  return null;
+}
+function reiniciar() {
+  if (!confirmar('¿Reiniciar el aplicativo? Se borra tu análisis guardado en este navegador y se carga el caso demo.')) return;
+  try { localStorage.removeItem(LS_KEY); } catch (e) { }
+  compartido = false; history.replaceState(null, '', location.pathname + location.search);
+  state = estadoInicial(); recalc(); toast('Aplicativo reiniciado con el caso demo.');
+}
+function confirmar(msg) { try { return window.confirm(msg); } catch (e) { return true; } }
+
+/* ------------------------------------------------------------ link compartido */
+function linkDelEstado() {
+  const json = JSON.stringify(Object.assign({ esquema: ESQUEMA }, state));
+  const url = location.origin + location.pathname + '#estado=' + LZString.compressToEncodedURIComponent(json);
+  return { url, largo: url.length };
+}
+function estadoDesdeURL() {
+  const m = /#estado=([^&]+)/.exec(location.hash);
+  if (!m) return null;
+  try {
+    const obj = JSON.parse(LZString.decompressFromEncodedURIComponent(m[1]));
+    if (!obj || obj.esquema !== ESQUEMA) { toast('Este link es de otra versión del aplicativo; se cargó el caso demo.'); return null; }
+    return obj;
+  } catch (e) { toast('El link está incompleto o dañado.'); return null; }
+}
+async function copiarLink() {
+  const { url, largo } = linkDelEstado();
+  if (largo > 8000) { toast('El análisis es muy grande para un link: descarga el JSON (módulo Exportar) y compártelo como archivo.'); return; }
+  try { await navigator.clipboard.writeText(url); toast('Link copiado. Quien lo abra verá este mismo análisis, sin cuenta ni login.'); }
+  catch (e) { window.prompt('Copia este link:', url); }
+}
+
+/* ------------------------------------------------------------ cálculo */
+const SIN_ESC = () => Object.fromEntries(Object.keys(M.ESCENARIOS_DEFAULT).map(k => [k, { activo: false }]));
+const SIN_EST = () => Object.fromEntries(Object.keys(M.ESTRATEGIAS_DEFAULT).map(k => [k, { activo: false }]));
+const cfg = () => ({ params: state.params, escenarios: state.escenarios, estrategias: state.estrategias });
+const escActivos = () => Object.keys(state.escenarios).filter(k => state.escenarios[k].activo);
+const estActivas = () => Object.keys(state.estrategias).filter(k => state.estrategias[k].activo);
+
+function recalc(noRender) {
+  calcError = null;
+  try {
+    cmp = M.compararEstados(state.data, cfg());
+    X = extras();
+  } catch (e) { calcError = e.message; console.error(e); }
+  guardar();
+  if (!noRender) render();
+}
+function extras() {
+  const d = state.data, p = state.params;
+  const porEsc = {}, porEst = {};
+  for (const k of Object.keys(M.ESCENARIOS_DEFAULT)) {
+    const e = SIN_ESC(); e[k] = Object.assign({}, state.escenarios[k], { activo: true });
+    porEsc[k] = M.evaluar(d, { params: p, escenarios: e, estrategias: SIN_EST() });
+  }
+  for (const k of Object.keys(M.ESTRATEGIAS_DEFAULT)) {
+    const s = SIN_EST(); s[k] = Object.assign({}, state.estrategias[k], { activo: true });
+    porEst[k] = M.evaluar(d, { params: p, escenarios: state.escenarios, estrategias: s });
+  }
+  const dIH = k => porEst[k].ih - cmp.disrupcion.ih;
+  const sumaIndiv = sum(estActivas(), dIH);
+  const conjunto = cmp.estrategia.ih - cmp.disrupcion.ih;
+  const canales = M.diagnosticarCanales(d);
+  const skusDiag = M.diagnosticarSKUs(d, p);
+  const proveedores = M.diagnosticarProveedores(d);
+  const rutas = M.diagnosticarRutas(d);
+  // hallazgos de calidad de datos (no se sobrescribe el dato original)
+  const hall = [];
+  skusDiag.forEach(s => s.hallazgos.forEach(h => hall.push({ area: 'Inventarios', item: s.sku, h })));
+  const poKPI = d.kpis.perfectOrder && d.kpis.perfectOrder.actual;
+  if (fin(poKPI) && Math.abs(poKPI - canales.perfectOrderGlobal) > 0.5)
+    hall.push({ area: 'Servicio', item: 'Perfect Order', h: `KPI reportado ${nf(poKPI)}% vs. calculado con los canales ${nf(canales.perfectOrderGlobal)}% (Σ conformes / Σ totales)` });
+  const w = sum(skusDiag, s => (s.dem || 0) * (s.costo || 0));
+  const ltPond = w ? sum(skusDiag, s => (s.dem || 0) * (s.costo || 0) * (s.leadTime || 0)) / w : null;
+  const ltKPI = d.kpis.leadTime && d.kpis.leadTime.actual;
+  if (fin(ltKPI) && fin(ltPond) && Math.abs(ltPond - ltKPI) / ltKPI > 0.2)
+    hall.push({ area: 'Compras', item: 'Lead time', h: `KPI reportado ${nf(ltKPI, 0)} días vs. promedio de proveedores ponderado por valor de demanda ${nf(ltPond)} días` });
+  if (d.ventas.fuente === 'Estimado') hall.push({ area: 'Finanzas', item: 'Ventas', h: 'Las ventas mensuales son estimadas (Σ demanda × costo × 1,25): se tratan como supuesto en todos los cálculos.' });
+  return { porEsc, porEst, dIH, sumaIndiv, conjunto, sinergia: conjunto - sumaIndiv, canales, skusDiag, proveedores, rutas, hall, ltPond };
+}
+
+/* ------------------------------------------------------------ validación de datos */
+function validar(d) {
+  const out = [], E = m => out.push({ n: 'error', m }), A = m => out.push({ n: 'aviso', m });
+  const nul = v => v === null || v === undefined || !fin(v);
+  if (nul(d.ventas.valor) || d.ventas.valor <= 0) E('Ventas mensuales: dato obligatorio (usa "Usar estimado" si no lo tienes).');
+  else if (d.ventas.fuente === 'Estimado') A('Ventas mensuales estimadas: se tratan como supuesto.');
+  for (const k of KPIS) { const x = d.kpis[k]; if (!x || nul(x.actual) || nul(x.meta)) E(`KPI "${KPI_CORTO[k]}": falta valor actual o meta.`); }
+  const cats = new Set(d.proveedores.map(p => p.cat));
+  const dup = (arr, f, lbl) => { const s = new Set(); arr.forEach(x => { const v = f(x); if (s.has(v)) E(`${lbl} duplicado: ${v}`); s.add(v); }); };
+  dup(d.skus, s => s.sku, 'Código SKU'); dup(d.rutas, r => r.id, 'Ruta ID'); dup(d.proveedores, p => p.id, 'ID Proveedor');
+  d.skus.forEach((s, i) => {
+    const id = s.sku || `fila ${i + 1}`;
+    ['dem', 'stock', 'ss', 'rop', 'costo'].forEach(f => { if (nul(s[f])) E(`${id}: falta ${COL_LBL[f]}.`); else if (s[f] < 0) E(`${id}: ${COL_LBL[f]} no puede ser negativo.`); });
+    if (fin(s.dem) && s.dem === 0) E(`${id}: la demanda mensual debe ser mayor que 0.`);
+    if (fin(s.rop) && fin(s.ss) && s.rop < s.ss) A(`${id}: el punto de reorden (${s.rop}) es menor que el stock de seguridad (${s.ss}).`);
+    if (s.cat && !cats.has(s.cat)) A(`${id}: la categoría "${s.cat}" no coincide con ninguna categoría de proveedor; no tendrá lead time.`);
+  });
+  d.rutas.forEach((r, i) => { const id = r.id || `ruta ${i + 1}`;
+    if (nul(r.km) || r.km <= 0) E(`${id}: distancia inválida.`); if (nul(r.flete)) E(`${id}: falta el costo del flete.`);
+    if (nul(r.otif) || r.otif < 0 || r.otif > 100) E(`${id}: % OTIF debe estar entre 0 y 100.`);
+    if (nul(r.ocupacion) || r.ocupacion < 0 || r.ocupacion > 100) E(`${id}: ocupación debe estar entre 0 y 100.`); });
+  d.proveedores.forEach((p, i) => { const id = p.id || `proveedor ${i + 1}`;
+    if (nul(p.lt) || p.lt <= 0) E(`${id}: lead time inválido.`);
+    if (nul(p.fill) || p.fill < 0 || p.fill > 100) E(`${id}: fill rate debe estar entre 0 y 100.`);
+    if (!nul(p.aTiempo) && (p.aTiempo < 0 || p.aTiempo > 100)) E(`${id}: % entregas a tiempo debe estar entre 0 y 100.`);
+    if (nul(p.calidad) || p.calidad < 1 || p.calidad > 10) E(`${id}: la calificación de calidad va de 1 a 10.`); });
+  d.canales.forEach((c, i) => { const id = c.canal || `canal ${i + 1}`;
+    if (nul(c.total) || c.total <= 0) E(`${id}: pedidos totales inválidos.`);
+    if (fin(c.conformes) && fin(c.total) && c.conformes > c.total) E(`${id}: pedidos conformes (${c.conformes}) mayores que los totales (${c.total}).`);
+    if (fin(c.reclamos) && fin(c.total) && c.reclamos > c.total) E(`${id}: reclamos mayores que los pedidos totales.`);
+    if (nul(c.devPct) || c.devPct < 0 || c.devPct > 100) E(`${id}: % devoluciones debe estar entre 0 y 100.`); });
+  const e = state.escenarios;
+  if (!d.rutas.some(r => r.id === e.esc01.ruta)) A(`ESC-01: la ruta ${e.esc01.ruta} no existe en los datos.`);
+  if (!d.skus.some(s => s.sku === e.esc02.sku)) A(`ESC-02: el SKU ${e.esc02.sku} no existe en los datos.`);
+  if (!d.proveedores.some(p => p.id === e.esc03.proveedor)) A(`ESC-03: el proveedor ${e.esc03.proveedor} no existe en los datos.`);
+  return out;
+}
+
+/* ------------------------------------------------------------ edición genérica por ruta */
+function getPath(o, path) { return path.split('.').reduce((a, k) => a == null ? a : a[k], o); }
+function setPath(o, path, v) { const ks = path.split('.'); const last = ks.pop(); const t = ks.reduce((a, k) => a[k], o); t[last] = v; }
+function limpiarNum(s) { s = String(s).trim().replace(/[%$\s]/g, ''); if (s.includes(',') && s.includes('.')) s = s.replace(/\./g, ''); s = s.replace(',', '.'); return s; }
+function leerValor(el) {
+  const t = el.dataset.type, nul = el.dataset.null === '1';
+  if (t === 'bool') return el.checked;
+  if (t === 'text' || t === 'sel') return el.value.trim();
+  if (t && t.startsWith('code:')) { const pre = t.slice(5); let v = el.value.trim().toUpperCase(); if (/^\d+$/.test(v)) v = pre + v; return v; }
+  const s = limpiarNum(el.value);
+  if (s === '') return nul ? null : null;
+  let n = Number(s); if (!fin(n)) return null;
+  if (t === 'int') n = Math.round(n);
+  if (t === 'pct') n = Math.min(Number(el.dataset.max || 100), Math.max(0, n));
+  if (t === 'qual') n = Math.min(10, Math.max(1, Math.round(n * 10) / 10));
+  if (t === 'frac') n = n / 100;
+  return n;
+}
+function mascara(el) {
+  const t = el.dataset.type; if (!t) return;
+  let v = el.value;
+  if (t === 'int' || t === 'money') v = v.replace(/[^\d]/g, '');
+  else if (t === 'dec' || t === 'pct' || t === 'qual' || t === 'frac') { v = v.replace(',', '.').replace(/[^\d.]/g, ''); const i = v.indexOf('.'); if (i >= 0) v = v.slice(0, i + 1) + v.slice(i + 1).replace(/\./g, ''); }
+  if (v !== el.value) el.value = v;
+}
+function fmtInput(v, t) { if (v === null || v === undefined) return ''; if (t === 'frac') return String(Math.round(v * 10000) / 100); return String(v); }
+
+/* ------------------------------------------------------------ UI básicos */
+function toast(msg) {
+  let el = $('#toast'); if (!el) { el = document.createElement('div'); el.id = 'toast'; el.className = 'toast'; el.setAttribute('role', 'status'); document.body.appendChild(el); }
+  el.textContent = msg; el.classList.remove('hidden'); clearTimeout(toastT); toastT = setTimeout(() => el.classList.add('hidden'), 4200);
+}
+const tip = t => `<span class="tip" title="${esc(t)}" aria-label="${esc(t)}" tabindex="0">?</span>`;
+const SUP = '<span class="tag sup" title="No viene en el SIG: parámetro editable definido por el comité">Supuesto</span>';
+const verCalc = txt => `<details class="calc"><summary>ver cálculo</summary><div>${esc(txt)}</div></details>`;
+const bandTag = b => `<span class="band ${esc(b)}">${esc(b)}</span>`;
+const semDot = s => `<span class="dot ${s}" aria-label="semáforo ${s}" title="${s}"></span>`;
+
+function campo(path, label, type, help, extra = {}) {
+  const v = getPath(state, path);
+  const id = 'f_' + path.replace(/\./g, '_');
+  if (type === 'bool') return `<label class="switch small"><input type="checkbox" data-path="${path}" data-type="bool" ${v ? 'checked' : ''}> ${esc(label)}${help ? tip(help) : ''}</label>`;
+  if (type === 'ruta' || type === 'sku' || type === 'prov') {
+    const opts = type === 'ruta' ? state.data.rutas.map(r => [r.id, `${r.id} · ${r.destino}`]) : type === 'sku' ? state.data.skus.map(s => [s.sku, `${s.sku} · ${s.desc}`]) : state.data.proveedores.map(p => [p.id, `${p.id} · ${p.nombre}`]);
+    return `<div class="field"><label for="${id}">${esc(label)}${help ? tip(help) : ''}</label><select id="${id}" data-path="${path}" data-type="sel">${opts.map(([a, b]) => `<option value="${esc(a)}" ${a === v ? 'selected' : ''}>${esc(b)}</option>`).join('')}</select></div>`;
+  }
+  const suf = type === 'pct' || type === 'frac' ? '%' : extra.suf || '';
+  return `<div class="field"><label for="${id}">${esc(label)}${help ? tip(help) : ''}</label><span class="affix" ${suf ? `data-suf="${suf}"` : ''}><input id="${id}" inputmode="decimal" data-path="${path}" data-type="${type}" ${extra.nul ? 'data-null="1"' : ''} ${extra.max ? `data-max="${extra.max}"` : ''} value="${esc(fmtInput(v, type))}" placeholder="${esc(extra.ph ?? '')}"></span></div>`;
+}
+
+
+/* ====================================================================
+ * Navegación y render
+ * ==================================================================== */
+const TABS = [
+  ['datos', 'Datos'], ['diagnostico', 'Diagnóstico'], ['escenarios', 'Escenarios'], ['estrategias', 'Estrategias'],
+  ['dashboard', 'Dashboard'], ['supuestos', 'Supuestos'], ['exportar', 'Exportar']
+];
+function renderTabs() {
+  $('#tabs').innerHTML = TABS.map(([k, n], i) => `<button role="tab" type="button" id="tab-${k}" aria-controls="main" aria-selected="${state.tab === k}" tabindex="${state.tab === k ? 0 : -1}" data-tab="${k}"><span class="n">${i + 1}</span>${n}</button>`).join('');
+}
+function ir(tab) { state.tab = tab; guardar(); render(); window.scrollTo({ top: 0 }); }
+
+function render() {
+  const act = document.activeElement, foco = act && act.dataset ? (act.dataset.path || act.id) : null;
+  Object.keys(charts).forEach(k => { charts[k].destroy(); delete charts[k]; });
+  renderTabs();
+  $('#selRol').value = state.rol;
+  const main = $('#main');
+  let html = bannerGlobal();
+  const f = VISTAS[state.tab] || VISTAS.datos;
+  html += `<section class="mod" aria-labelledby="tab-${state.tab}">${f()}</section>`;
+  main.innerHTML = html;
+  dibujar(state.tab);
+  if (foco) { const el = main.querySelector(`[data-path="${CSS.escape(foco)}"]`) || document.getElementById(foco); if (el && el !== document.activeElement) try { el.focus({ preventScroll: true }); } catch (e) { } }
+}
+function bannerGlobal() {
+  let h = '';
+  if (compartido) h += `<div class="banner info row no-print"><span>Estás viendo un <strong>análisis compartido</strong>. Tus cambios no modifican el original ni se guardan en este navegador.</span><span class="spacer"></span><button class="btn sm" data-act="conservar" type="button">Conservar como mi análisis</button></div>`;
+  if (calcError) h += `<div class="banner bad">No se pudo calcular: ${esc(calcError)}</div>`;
+  const errs = validar(state.data).filter(v => v.n === 'error');
+  if (errs.length && state.tab !== 'datos') h += `<div class="banner warn no-print">Hay ${errs.length} error(es) en los datos; los resultados pueden no ser válidos. <a href="#" data-tab="datos">Revisar datos</a></div>`;
+  return h;
+}
+const VISTAS = {};
+
+/* ====================================================================
+ * 1. DATOS
+ * ==================================================================== */
+const TABLAS = {
+  skus: { titulo: '2. Gestión de inventarios y almacenes (datos WMS)', nuevo: () => ({ sku: '', desc: '', cat: '', dem: null, stock: null, ss: null, rop: null, costo: null, dio: null, rot: null }), cols: [
+    ['sku', 'Código SKU', 'code:SKU-', 'Código del producto. Escribe solo el número; el prefijo SKU- se agrega solo. Ej.: 101'],
+    ['desc', 'Descripción', 'text', 'Nombre del producto. Ej.: Smart TV 55 4K', 'w-l'],
+    ['cat', 'Categoría', 'text', 'Debe coincidir exactamente con la "Categoría suministrada" de un proveedor. Ej.: Tecnología'],
+    ['dem', 'Demanda mensual', 'int', 'Unidades vendidas al mes. Entero. Ej.: 450', '', 'u'],
+    ['stock', 'Stock actual', 'int', 'Unidades disponibles hoy. Entero. Ej.: 120', '', 'u'],
+    ['ss', 'Stock seguridad', 'int', 'Stock de seguridad parametrizado en el WMS (unidades). Ej.: 150', '', 'u'],
+    ['rop', 'Punto reorden', 'int', 'Punto de reorden parametrizado (unidades). Debe ser ≥ SS. Ej.: 300', '', 'u'],
+    ['costo', 'Costo unitario', 'money', 'Costo por unidad, sin símbolo ni separador de miles. Ej.: 450', '$'],
+    ['dio', 'DIO', 'dec', 'Días de inventario reportados. Opcional: si falta se calcula Stock / Demanda × 30. Ej.: 8', '', 'd', true],
+    ['rot', 'Rotación anual', 'dec', 'Rotación anual reportada (veces). Opcional. Ej.: 4.5', '', '', true]] },
+  rutas: { titulo: '3. Transporte y distribución (datos TMS)', nuevo: () => ({ id: '', origen: '', destino: '', km: null, horas: null, flete: null, otif: null, ocupacion: null }), cols: [
+    ['id', 'Ruta ID', 'code:RT-', 'Código de la ruta. Escribe el número; se agrega RT-. Ej.: 02'],
+    ['origen', 'Origen', 'text', 'Las rutas troncales salen del "CD Central". Ej.: CD Central (Bogotá)', 'w-l'],
+    ['destino', 'Destino', 'text', 'Ej.: Almacén Satélite 2 (Cali)', 'w-l'],
+    ['km', 'Distancia', 'int', 'Kilómetros. Entero. Ej.: 460', '', 'km'],
+    ['horas', 'Tiempo prom.', 'dec', 'Horas de tránsito promedio. Ej.: 12', '', 'h'],
+    ['flete', 'Flete por viaje', 'money', 'Costo del flete por viaje, sin símbolo. Ej.: 1450', '$'],
+    ['otif', 'OTIF ruta', 'pct', 'Porcentaje de entregas a tiempo y completas, 0 a 100. Ej.: 79', '', '%'],
+    ['ocupacion', 'Ocupación flota', 'pct', 'Porcentaje de ocupación del vehículo, 0 a 100. Ej.: 88', '', '%']] },
+  proveedores: { titulo: '4. Compras y evaluación de proveedores (procurement)', nuevo: () => ({ id: '', nombre: '', cat: '', lt: null, fill: null, aTiempo: null, calidad: null }), cols: [
+    ['id', 'ID Proveedor', 'code:PRV-', 'Código del proveedor. Escribe el número; se agrega PRV-. Ej.: 01'],
+    ['nombre', 'Nombre', 'text', 'Ej.: TechImport Asia', 'w-l'],
+    ['cat', 'Categoría suministrada', 'text', 'Conecta al proveedor con los SKU de esa categoría. Ej.: Tecnología'],
+    ['lt', 'Lead time', 'int', 'Días promedio desde la orden hasta la recepción. Ej.: 25', '', 'd'],
+    ['fill', 'Fill rate', 'pct', 'Porcentaje de la cantidad pedida que se entrega, 0 a 100. Ej.: 82', '', '%'],
+    ['aTiempo', 'Entregas a tiempo', 'pct', 'Porcentaje de entregas a tiempo, 0 a 100. Ej.: 78', '', '%'],
+    ['calidad', 'Calidad (1-10)', 'qual', 'Calificación de calidad de 1 a 10, un decimal. Ej.: 7.5']] },
+  canales: { titulo: '5. Servicio al cliente y logística inversa', nuevo: () => ({ canal: '', total: null, conformes: null, reclamos: null, devPct: null, costoInv: null }), cols: [
+    ['canal', 'Canal de venta', 'text', 'Ej.: E-Commerce (Venta Directa)', 'w-l'],
+    ['total', 'Pedidos / mes', 'int', 'Pedidos totales del mes. Ej.: 2100'],
+    ['conformes', 'Pedidos conformes', 'int', 'Pedidos perfectos (a tiempo, completos, sin daño ni error). ≤ totales. Ej.: 1650'],
+    ['reclamos', 'Reclamos por demora', 'int', 'Número de reclamos por demora. ≤ totales. Ej.: 310'],
+    ['devPct', 'Devoluciones por daño', 'pct', 'Porcentaje de pedidos devueltos por daño, 0 a 100. Ej.: 8.2', '', '%'],
+    ['costoInv', 'Costo log. inversa', 'money', 'Costo mensual de la logística inversa, sin símbolo. Ej.: 24800', '$']] }
+};
+const COL_LBL = Object.fromEntries(Object.values(TABLAS).flatMap(t => t.cols.map(c => [c[0], c[1].toLowerCase()])));
+let DEMO_DATA = null;
+const demo = () => DEMO_DATA || (DEMO_DATA = M.parseTemplateCSV(DEMO_CSV));
+
+function tablaEditable(key) {
+  const T = TABLAS[key], rows = state.data[key], ref = demo()[key];
+  const tipoInput = t => t.startsWith('code:') || t === 'text' ? 'text' : 'decimal';
+  return `<div class="card"><div class="row" style="margin-bottom:.5rem"><h3 style="margin:0">${esc(T.titulo)}</h3><span class="spacer"></span><span class="tiny muted">${rows.length} fila(s)</span><button class="btn sm no-print" type="button" data-act="addRow" data-k="${key}">+ Agregar fila</button></div>
+  <div class="tw"><table class="edit"><thead><tr>${T.cols.map(c => `<th scope="col" class="${/^(int|dec|pct|money|qual)$/.test(c[2]) ? 'num' : ''}">${esc(c[1])}${tip(c[3])}</th>`).join('')}<th class="no-print"><span class="sr-only" style="font-size:0">Acciones</span></th></tr></thead><tbody>
+  ${rows.map((r, i) => `<tr>${T.cols.map(c => {
+    const [f, , t, h, cls = '', suf = ''] = c, pre = t === 'money' ? '$' : '', s = t === 'pct' ? '%' : suf;
+    const ph = ref[i] && ref[i][f] != null ? ref[i][f] : '';
+    const v = r[f]; const inv = (v === null || v === '' || v === undefined) && !c[6];
+    return `<td class="${cls}"><span class="affix" ${pre ? `data-pre="${pre}"` : ''} ${s ? `data-suf="${s}"` : ''}><input aria-label="${esc(c[1])} fila ${i + 1}" title="${esc(h)}" inputmode="${tipoInput(t)}" data-path="data.${key}.${i}.${f}" data-type="${t}" ${c[6] ? 'data-null="1"' : ''} class="${inv ? 'inv' : ''}" value="${esc(v ?? '')}" placeholder="${esc(ph)}"></span></td>`;
+  }).join('')}<td class="no-print"><button class="btn sm ghost" type="button" title="Eliminar fila" aria-label="Eliminar fila ${i + 1}" data-act="delRow" data-k="${key}" data-i="${i}">✕</button></td></tr>`).join('')}
+  </tbody></table></div></div>`;
+}
+
+VISTAS.datos = () => {
+  const d = state.data, v = validar(d), errs = v.filter(x => x.n === 'error'), avs = v.filter(x => x.n === 'aviso');
+  const ref = demo();
+  return `
+  <div class="section"><h2>1 · Datos del SIG-Logístico</h2></div>
+  <p class="lead">Carga el CSV exportado por el formulario de captura (o el CSV/XLSX del template original) o captura los datos directamente en las tablas. Los campos tienen ayuda (?) y el valor del caso de referencia como guía.</p>
+  <div class="banner warn"><strong>Caso ficticio.</strong> No ingreses datos reales de empresas sin autorización. Los datos se procesan solo en tu navegador y nunca salen de tu equipo.</div>
+  <div class="grid g2" style="margin-top:1rem">
+    <div class="card">
+      <h3>Fuente de datos</h3>
+      <dl class="kv"><dt>Origen</dt><dd>${esc(state.origen || '—')}</dd><dt>Contenido</dt><dd>${d.skus.length} SKU · ${d.rutas.length} rutas · ${d.proveedores.length} proveedores · ${d.canales.length} canales · ${d.escenarios.length} escenarios</dd></dl>
+      <div class="row" style="margin-top:.8rem">
+        <button class="btn primary" type="button" data-act="cargarArchivo">Cargar CSV / XLSX</button>
+        <button class="btn" type="button" data-act="demo">Cargar caso demo</button>
+        <button class="btn" type="button" data-act="reiniciar">Reiniciar</button>
+      </div>
+      ${d.avisos && d.avisos.length ? `<div class="banner warn" style="margin-top:.8rem"><strong>Avisos de lectura</strong><ul class="clean">${d.avisos.map(a => `<li>${esc(a)}</li>`).join('')}</ul></div>` : ''}
+      <hr style="border:0;border-top:1px solid var(--border);margin:1rem 0">
+      <h4>7. Parámetros financieros</h4>
+      <div class="fields">
+        ${campo('data.ventas.valor', 'Ventas mensuales ($)', 'money', 'Ventas del mes en pesos, sin símbolo ni separador de miles. Obligatorio.', { ph: ref.ventas.valor })}
+        <div class="field"><label for="f_fuente">Fuente</label><select id="f_fuente" data-path="data.ventas.fuente" data-type="sel"><option ${d.ventas.fuente === 'Capturado' ? 'selected' : ''}>Capturado</option><option ${d.ventas.fuente === 'Estimado' ? 'selected' : ''}>Estimado</option></select></div>
+      </div>
+      <div class="row" style="margin-top:.5rem"><button class="btn sm" type="button" data-act="usarEstimado">Usar estimado</button>
+      <span class="tiny muted">Σ(demanda × costo) × (1 + margen) = ${money(M.estimarVentas(d, state.params.margen))}</span>
+      ${d.ventas.fuente === 'Estimado' ? SUP : ''}</div>
+    </div>
+    <div class="card">
+      <h3>Validación de datos</h3>
+      ${!v.length ? '<div class="banner ok">Todos los datos pasan las validaciones.</div>' : ''}
+      ${errs.length ? `<div class="banner bad"><strong>${errs.length} error(es)</strong><ul class="clean">${errs.map(x => `<li>${esc(x.m)}</li>`).join('')}</ul></div>` : ''}
+      ${avs.length ? `<div class="banner warn"><strong>${avs.length} advertencia(s)</strong><ul class="clean">${avs.map(x => `<li>${esc(x.m)}</li>`).join('')}</ul></div>` : ''}
+      <p class="tiny muted">Reglas: campos obligatorios, rangos (0-100 en porcentajes, 1-10 en calidad), pedidos conformes y reclamos ≤ totales, punto de reorden ≥ stock de seguridad (advertencia), categorías SKU ↔ proveedor coincidentes, códigos únicos.</p>
+    </div>
+  </div>
+  <div class="card" style="margin-top:1rem"><h3>1. Resumen ejecutivo y KPIs globales</h3>
+    <div class="tw"><table class="edit"><thead><tr><th>Indicador</th><th class="num">Valor actual${tip('Valor reportado por el SIG')}</th><th class="num">Meta objetivo</th><th>Mejor si</th><th>Estado reportado</th><th>Responsable</th></tr></thead><tbody>
+    ${KPIS.map(k => { const x = d.kpis[k] || {}; const u = M.KPI_DEF[k].unidad, suf = u === '%' ? '%' : u === 'días' ? 'd' : '×';
+      return `<tr><td>${esc(M.KPI_DEF[k].ind)}</td>
+      <td><span class="affix" data-suf="${suf}"><input inputmode="decimal" aria-label="Valor actual ${esc(KPI_CORTO[k])}" data-path="data.kpis.${k}.actual" data-type="dec" value="${esc(x.actual ?? '')}" placeholder="${esc(ref.kpis[k].actual)}"></span></td>
+      <td><span class="affix" data-suf="${suf}"><input inputmode="decimal" aria-label="Meta ${esc(KPI_CORTO[k])}" data-path="data.kpis.${k}.meta" data-type="dec" value="${esc(x.meta ?? '')}" placeholder="${esc(ref.kpis[k].meta)}"></span></td>
+      <td>${M.KPI_DEF[k].mejor}</td>
+      <td><input aria-label="Estado ${esc(KPI_CORTO[k])}" data-path="data.kpis.${k}.estado" data-type="text" value="${esc(x.estado ?? '')}"></td>
+      <td class="w-l"><input aria-label="Responsable ${esc(KPI_CORTO[k])}" data-path="data.kpis.${k}.responsable" data-type="text" value="${esc(x.responsable ?? '')}"></td></tr>`; }).join('')}
+    </tbody></table></div></div>
+  <div class="grid" style="margin-top:1rem">${['skus', 'rutas', 'proveedores', 'canales'].map(tablaEditable).join('')}</div>
+  <div class="card" style="margin-top:1rem"><h3>6. Matriz de escenarios y simulación de disrupciones</h3>
+    <div class="tw"><table><thead><tr><th>ID</th><th>Evento</th><th>Descripción</th><th>Impacto operativo estimado</th><th>KPI afectado</th></tr></thead><tbody>
+    ${d.escenarios.map(e => `<tr><td>${esc(e.id)}</td><td>${esc(e.nombre)}</td><td>${esc(e.desc)}</td><td>${esc(e.impacto)}</td><td>${esc(e.kpi)}</td></tr>`).join('') || '<tr><td colspan="5" class="muted">Sin escenarios en los datos; el simulador usa los parámetros del módulo Escenarios.</td></tr>'}
+    </tbody></table></div><p class="tiny muted">Los parámetros cuantitativos de cada escenario se ajustan en el módulo Escenarios.</p></div>`;
+};
+
+async function leerArchivoDatos(file) {
+  try {
+    let texto;
+    if (/\.xlsx?$/i.test(file.name)) {
+      const wb = XLSX.read(await file.arrayBuffer(), { type: 'array' });
+      texto = XLSX.utils.sheet_to_csv(wb.Sheets[wb.SheetNames[0]], { FS: ';', blankrows: true });
+    } else {
+      const buf = await file.arrayBuffer();
+      try { texto = new TextDecoder('utf-8', { fatal: true }).decode(buf); }
+      catch (e) { texto = new TextDecoder('windows-1252').decode(buf); }
+    }
+    const data = M.parseTemplateCSV(texto);
+    if (!data.skus.length && !data.rutas.length) { toast('El archivo no tiene el formato del template SIG (secciones "1. ", "2. "...).'); return; }
+    const antes = cmp ? { ih: cmp.base.ih, ihE: cmp.estrategia.ih, debil: cmp.base.kpiMasDebil } : null;
+    state.data = data; state.origen = file.name; compartido = false;
+    recalc(true);
+    const v = validar(data);
+    let msg = `Datos cargados de ${file.name}.`;
+    if (antes && cmp) {
+      const cambios = [];
+      if (Math.abs(antes.ih - cmp.base.ih) >= 0.1) cambios.push(`IH base ${nf(antes.ih)} → ${nf(cmp.base.ih)}`);
+      if (Math.abs(antes.ihE - cmp.estrategia.ih) >= 0.1) cambios.push(`IH con estrategia ${nf(antes.ihE)} → ${nf(cmp.estrategia.ih)}`);
+      if (antes.debil !== cmp.base.kpiMasDebil) cambios.push(`KPI más débil: ${KPI_CORTO[cmp.base.kpiMasDebil]}`);
+      msg += cambios.length ? ' Conclusiones que cambiaron: ' + cambios.join('; ') + '.' : ' Las conclusiones principales no cambiaron.';
+    }
+    if (v.some(x => x.n === 'error')) msg += ' Revisa los errores de validación.';
+    render(); toast(msg);
+  } catch (e) { console.error(e); toast('No se pudo leer el archivo: ' + e.message); }
+}
+
+/* ====================================================================
+ * 2. DIAGNÓSTICO
+ * ==================================================================== */
+function scoreKPIsBase() {
+  const b = cmp.base;
+  return `<div class="tw"><table><thead><tr><th>KPI</th><th class="num">Actual</th><th class="num">Meta</th><th class="num">Cumplimiento</th><th>Semáforo</th><th>Responsable</th></tr></thead><tbody>
+  ${KPIS.map(k => `<tr class="${state.rol !== 'comite' && KPI_ROL[k] === state.rol ? 'hl' : ''}"><td>${KPI_CORTO[k]}</td><td class="num">${fmtKPI(k, b.kpis[k].actual)}</td><td class="num">${fmtKPI(k, b.kpis[k].meta)}</td><td class="num">${pct(b.kpis[k].cumplimiento * 100, 0)}</td><td>${semDot(b.kpis[k].semaforo)}${b.kpis[k].semaforo}</td><td class="small">${esc(state.data.kpis[k].responsable)}</td></tr>`).join('')}
+  </tbody></table></div>`;
+}
+function bloqueRol(rol, titulo, cuerpo) {
+  const abierto = state.rol === 'comite' || state.rol === rol;
+  return `<details class="card role" ${abierto ? 'open' : ''} data-rol="${rol}"><summary>${esc(titulo)} <span class="tag">${esc(ROLES[rol].extra)}</span></summary><div style="margin-top:.7rem">${cuerpo}</div></details>`;
+}
+VISTAS.diagnostico = () => {
+  if (!cmp) return '<div class="banner bad">Sin resultados: revisa los datos.</div>';
+  const b = cmp.base, d = state.data, Xd = X, sk = Xd.skusDiag;
+  const cuenta = e => sk.filter(s => s.estado === e);
+  const sobre = cuenta('Sobrestock'), quieb = cuenta('Quiebre inminente'), reord = cuenta('Reordenar');
+  const capSobre = sum(sobre, s => s.valorInventario);
+  const rutasOrd = [...Xd.rutas].sort((a, c) => a.otif - c.otif), caras = [...Xd.rutas].sort((a, c) => c.costoKm - a.costoKm);
+  const ocios = Xd.rutas.filter(r => r.ocupacion < (state.estrategias.e2_consolidacion.ocupacionObjetivo || 90));
+  const prov = Xd.proveedores, can = Xd.canales;
+  const peorCanal = [...can.filas].sort((a, c) => a.perfectOrder - c.perfectOrder)[0];
+  const costoMes = d.ventas.valor * d.kpis.costo.actual / 100;
+  const orden = ['director', 'inventarios', 'transporte', 'compras', 'servicio'];
+  if (state.rol !== 'comite') orden.sort((a, c) => (c === state.rol) - (a === state.rol));
+  const bloques = {
+    director: bloqueRol('director', 'Director/a de Cadena de Suministro', `
+      <div class="grid g3">
+        <div class="tile"><span class="lbl">Índice de Homeostasis base</span><span class="val state-b">${nf(b.ih)}</span><span class="sub">${bandTag(b.banda)} · KPI más débil: <strong>${KPI_CORTO[b.kpiMasDebil]}</strong></span>${verCalc(explicarIH(b))}</div>
+        <div class="tile"><span class="lbl">Costo logístico mensual</span><span class="val">${money(costoMes)}</span><span class="sub">${pct(d.kpis.costo.actual)} de ventas vs. meta ${pct(d.kpis.costo.meta)} · exceso ${money(d.ventas.valor * (d.kpis.costo.actual - d.kpis.costo.meta) / 100)}/mes</span>${verCalc(`Costo $ = ventas × costo % / 100 = ${money(d.ventas.valor)} × ${d.kpis.costo.actual} / 100 = ${money(costoMes)}${d.ventas.fuente === 'Estimado' ? '\n(Ventas estimadas: supuesto)' : ''}`)}</div>
+        <div class="tile"><span class="lbl">KPIs en rojo</span><span class="val">${KPIS.filter(k => b.kpis[k].semaforo === 'rojo').length} / 5</span><span class="sub">La cadena está en ${b.banda.toLowerCase()} antes de cualquier disrupción.</span></div>
+      </div>
+      <h4 style="margin-top:1rem">Scorecard base vs. meta</h4>${scoreKPIsBase()}
+      <ul class="clean small" style="margin-top:.7rem">
+        <li>El KPI más alejado de su meta es <strong>${KPI_CORTO[b.kpiMasDebil]}</strong> (${pct(b.porKPI[b.kpiMasDebil] * 100, 0)} de cumplimiento): es un problema estructural, previo a las disrupciones.</li>
+        <li>Integración compras–almacén–distribución: lead time alto (${fmtKPI('leadTime', d.kpis.leadTime.actual)}) obliga a sostener inventario, mientras ${sobre.length} SKU acumulan sobrestock y ${quieb.length} están en quiebre inminente.</li>
+      </ul>`),
+    inventarios: bloqueRol('inventarios', 'Analista de Inventarios (WMS)', `
+      <div class="row small" style="margin-bottom:.6rem"><span class="tag bad">${quieb.length} quiebre inminente</span><span class="tag warn">${reord.length} reordenar</span><span class="tag">${sobre.length} sobrestock · ${money(capSobre)} inmovilizados</span><span class="tag ok">${cuenta('Sano').length} sano</span></div>
+      <div class="tw"><table><thead><tr><th>SKU</th><th>Producto</th><th class="num">Demanda/día</th><th class="num">Stock</th><th class="num">SS</th><th class="num">ROP</th><th class="num">SS rec.${tip('Demanda diaria × días de protección (supuesto)')}</th><th class="num">ROP rec.${tip('Demanda diaria × lead time + SS recomendado')}</th><th class="num">DIO calc.</th><th class="num">Cobertura</th><th>Estado</th></tr></thead><tbody>
+      ${sk.map(s => `<tr><td>${esc(s.sku)}</td><td>${esc(s.desc)}</td><td class="num">${nf(s.demandaDiaria)}</td><td class="num">${nf(s.stock, 0)}</td><td class="num">${nf(s.ss, 0)}</td><td class="num">${nf(s.rop, 0)}</td><td class="num">${nf(s.ssRecomendado, 0)}</td><td class="num">${nf(s.ropRecomendado, 0)}</td><td class="num">${nf(s.dioCalc)}</td><td class="num">${nf(s.coberturaDias)} d</td><td><span class="tag ${s.estado === 'Sano' ? 'ok' : s.estado === 'Quiebre inminente' ? 'bad' : 'warn'}">${s.estado}</span></td></tr>`).join('')}
+      </tbody></table></div>
+      ${verCalc(sk.slice(0, 2).map(s => `${s.sku}: d = ${s.dem}/30 = ${nf(s.demandaDiaria, 2)}; SS rec = ${nf(s.demandaDiaria, 2)} × ${state.params.diasProteccion} = ${s.ssRecomendado}; ROP rec = ${nf(s.demandaDiaria, 2)} × ${nf(s.leadTime)} + ${s.ssRecomendado} = ${s.ropRecomendado}; DIO = ${s.stock}/${s.dem} × 30 = ${nf(s.dioCalc)}`).join('\n') + `\nEstado: Quiebre inminente si stock < SS; Reordenar si stock < ROP; Sobrestock si DIO > ${state.params.umbralSobrestockDIO}.`)}
+      <div class="grid g2" style="margin-top:1rem">${chartCard('d_stock', 'Stock vs. SS vs. ROP por SKU', 'Unidades. El ROP recomendado usa el lead time real del proveedor.')}${chartCard('d_dio', 'DIO por SKU', `Días de inventario calculados; la línea marca el umbral de sobrestock (${state.params.umbralSobrestockDIO} días, supuesto).`)}</div>
+      <p class="small"><strong>IRA:</strong> no calculable con el SIG (no hay conteos físicos) — brecha de información.</p>`),
+    transporte: bloqueRol('transporte', 'Coordinador/a de Transporte (TMS)', `
+      <div class="tw"><table><thead><tr><th>Ruta</th><th>Origen → destino</th><th class="num">Km</th><th class="num">Flete/viaje</th><th class="num">Costo/km</th><th class="num">OTIF</th><th class="num">Ocupación</th><th class="num">Capacidad ociosa</th><th>Tipo</th></tr></thead><tbody>
+      ${Xd.rutas.map(r => `<tr><td>${esc(r.id)}</td><td class="small">${esc(r.origen)} → ${esc(r.destino)}</td><td class="num">${nf(r.km, 0)}</td><td class="num">${money(r.flete)}</td><td class="num">$${nf(r.costoKm, 2)}</td><td class="num">${pct(r.otif, 0)}</td><td class="num">${pct(r.ocupacion, 0)}</td><td class="num">${pct(r.capacidadOciosa, 0)}</td><td>${r.troncal ? 'Troncal' : 'Última milla'}</td></tr>`).join('')}
+      </tbody></table></div>
+      <ul class="clean small" style="margin-top:.6rem"><li>Menor OTIF: <strong>${esc(rutasOrd[0].id)}</strong> (${pct(rutasOrd[0].otif, 0)}); ninguna ruta alcanza la meta global de ${pct(d.kpis.otif.meta, 0)}.</li>
+      <li>Mayor costo por km: <strong>${esc(caras[0].id)}</strong> (${'$' + nf(caras[0].costoKm, 2)}/km) — tramos de última milla.</li>
+      <li>${ocios.length} rutas con ocupación inferior al ${state.estrategias.e2_consolidacion.ocupacionObjetivo}%: oportunidad de consolidación.</li>
+      <li>Costo de transporte por unidad: no calculable (el TMS no trae volúmenes por ruta) — brecha de información.</li></ul>
+      ${chartCard('d_rutas', 'OTIF y costo por km por ruta', 'Barras: OTIF (%); línea: costo por km ($).')}`),
+    compras: bloqueRol('compras', 'Gestor/a de Compras', `
+      <div class="tw"><table><thead><tr><th>#</th><th>Proveedor</th><th>Categoría</th><th class="num">Lead time</th><th class="num">Fill rate</th><th class="num">A tiempo</th><th class="num">Calidad</th><th class="num">Índice de riesgo${tip('(lead time / meta) × (1 − fill rate) × (10 / calidad)')}</th></tr></thead><tbody>
+      ${prov.map(p => `<tr><td>${p.rankingRiesgo}</td><td>${esc(p.id)} · ${esc(p.nombre)}</td><td>${esc(p.cat)}</td><td class="num">${nf(p.lt, 0)} d</td><td class="num">${pct(p.fill, 0)}</td><td class="num">${pct(p.aTiempo, 0)}</td><td class="num">${nf(p.calidad)}</td><td class="num"><strong>${nf(p.riesgo, 2)}</strong></td></tr>`).join('')}
+      </tbody></table></div>
+      ${verCalc(`${prov[0].id}: (${prov[0].lt} / ${d.kpis.leadTime.meta}) × (1 − ${prov[0].fill}/100) × (10 / ${prov[0].calidad}) = ${nf(prov[0].riesgo, 2)}`)}
+      <ul class="clean small" style="margin-top:.6rem"><li>Proveedor de mayor riesgo: <strong>${esc(prov[0].nombre)}</strong>. ${prov.filter(p => p.lt > d.kpis.leadTime.meta).length} de ${prov.length} proveedores superan la meta de lead time (${d.kpis.leadTime.meta} días).</li>
+      ${fin(Xd.ltPond) ? `<li>Lead time ponderado por valor de la demanda: ${nf(Xd.ltPond)} días vs. KPI reportado ${nf(d.kpis.leadTime.actual, 0)} días.</li>` : ''}</ul>
+      ${chartCard('d_prov', 'Lead time vs. fill rate por proveedor', 'Tamaño de la burbuja: índice de riesgo. Ideal: abajo a la derecha.')}`),
+    servicio: bloqueRol('servicio', 'Analista de Servicio al Cliente', `
+      <div class="tw"><table><thead><tr><th>Canal</th><th class="num">Pedidos</th><th class="num">Perfect Order</th><th class="num">Reclamos</th><th class="num">Devoluciones daño</th><th class="num">Costo inverso</th><th class="num">Costo inverso/pedido</th></tr></thead><tbody>
+      ${can.filas.map(c => `<tr><td>${esc(c.canal)}</td><td class="num">${nf(c.total, 0)}</td><td class="num">${pct(c.perfectOrder)}</td><td class="num">${pct(c.tasaReclamos)}</td><td class="num">${pct(c.devPct)}</td><td class="num">${money(c.costoInv)}</td><td class="num">${'$' + nf(c.costoInvPorPedido, 2)}</td></tr>`).join('')}
+      <tr><td><strong>Global</strong></td><td class="num">${nf(can.pedidosTotales, 0)}</td><td class="num"><strong>${pct(can.perfectOrderGlobal)}</strong></td><td></td><td></td><td class="num">${money(sum(can.filas, c => c.costoInv))}</td><td></td></tr>
+      </tbody></table></div>
+      ${verCalc(`Perfect Order global = Σ conformes / Σ totales = ${sum(d.canales, c => c.conformes)} / ${can.pedidosTotales} × 100 = ${nf(can.perfectOrderGlobal)}%`)}
+      <ul class="clean small" style="margin-top:.6rem"><li>Canal más débil: <strong>${esc(peorCanal.canal)}</strong> (${pct(peorCanal.perfectOrder)} perfect order, ${pct(peorCanal.devPct)} devoluciones por daño).</li></ul>
+      ${chartCard('d_canal', 'Perfect Order y devoluciones por canal', 'Barras: Perfect Order (%); línea: devoluciones por daño (%).')}`)
+  };
+  return `<div class="section"><h2>2 · Diagnóstico inicial por rol</h2><span class="small muted">Estado base, sin disrupciones</span></div>
+  <p class="lead">Lectura de la cadena desde cada rol del comité. ${state.rol !== 'comite' ? `Vista priorizada: <strong>${esc(ROLES[state.rol].n)}</strong>; los demás roles quedan plegados para mantener la visión sistémica.` : ''}</p>
+  <div class="grid">${orden.map(r => bloques[r]).join('')}</div>
+  <div class="grid g2" style="margin-top:1rem">
+    <div class="card"><h3>Hallazgos de calidad de datos</h3><p class="tiny muted">Datos reportados que no cuadran con su cálculo. Se conserva el dato original.</p>
+      ${X.hall.length ? `<ul class="clean small">${X.hall.map(h => `<li><strong>${esc(h.area)} · ${esc(h.item)}:</strong> ${esc(h.h)}</li>`).join('')}</ul>` : '<p class="small">Sin hallazgos.</p>'}</div>
+    <div class="card"><h3>Brechas de información</h3><p class="tiny muted">Lo que el SIG no permite calcular.</p><ul class="clean small">${BRECHAS.map(([a, b]) => `<li><strong>${esc(a)}:</strong> ${esc(b)}</li>`).join('')}</ul></div>
+  </div>`;
+};
+
+
+/* ====================================================================
+ * "Ver cálculo": fórmulas con valores sustituidos
+ * ==================================================================== */
+function invProm(st) { return { b: sum(st.skus, s => s.simBase.stockPromedio * s.costo), n: sum(st.skus, s => s.sim.stockPromedio * s.costo) }; }
+function explicarIH(st) {
+  const P = state.params.pesosIH;
+  return `IH = 100 × Σ (peso × cumplimiento)\n= 100 × (${KPIS.map(k => `${nf(P[k], 2)}×${nf(st.porKPI[k], 2)} [${KPI_MIN[k]}]`).join(' + ')})\n= ${nf(st.ih)} → ${st.banda}\nBandas: ≥ ${state.params.bandasIH.equilibrio} Equilibrio · ${state.params.bandasIH.tension}–${state.params.bandasIH.equilibrio - 0.1} Tensión · < ${state.params.bandasIH.tension} Desequilibrio\nKPI más débil (menor cumplimiento): ${KPI_CORTO[st.kpiMasDebil]}`;
+}
+function explicarKPI(st, k) {
+  const R = st.resumen, kb = state.data.kpis, tot = sum(state.data.canales, c => c.total), a = st.kpis[k].actual, met = st.kpis[k].meta;
+  const pedPct = R.pedidosAfectados / tot * 100;
+  let f = '';
+  if (k === 'costo') f = `Costo % = (costo logístico base $ + Δ costos) / ventas del estado × 100\n= (${money(R.costoLogisticoBase)} + ${money(R.deltaCosto)}) / ${money(R.ventasNuevas)} × 100 = ${nf(a)}%\nVentas del estado = ventas − ventas perdidas = ${money(R.ventasBase)} − ${money(R.ventasPerdidas)}`;
+  if (k === 'otif') { const dT = a - kb.otif.actual + pedPct; f = `OTIF = OTIF base + Δ OTIF transporte − pedidos afectados / pedidos totales × 100\n= ${nf(kb.otif.actual)} + (${signed(dT, 2)}) − ${nf(R.pedidosAfectados)} / ${tot} × 100 = ${nf(a)}%\nPedidos afectados = unidades no atendidas extra / unidades por pedido = ${nf(R.unidadesNoAtendidasExtra)} / ${nf(R.unidadesPorPedido, 2)}`; }
+  if (k === 'rotacion') { const I = invProm(st); f = `Rotación = rotación base × (ventas del estado / ventas) × (inventario prom. base / inventario prom. del estado)\n= ${nf(kb.rotacion.actual)} × (${money(R.ventasNuevas)} / ${money(R.ventasBase)}) × (${money(I.b)} / ${money(I.n)}) = ${nf(a)} veces`; }
+  if (k === 'leadTime') { const w = sum(st.skus, s => s.dem * s.costo), lb = sum(st.skus, s => s.dem * s.costo * (s.leadTime || 0)) / w, ln = sum(st.skus, s => s.dem * s.costo * (s.ltEfectivo || 0)) / w; f = `Lead time = lead time base × (LT efectivo ponderado / LT base ponderado), ponderando por demanda × costo\n= ${nf(kb.leadTime.actual)} × (${nf(ln, 2)} / ${nf(lb, 2)}) = ${nf(a)} días`; }
+  if (k === 'perfectOrder') { const q = a - kb.perfectOrder.actual + pedPct; f = `Perfect Order = base − pedidos afectados / pedidos totales × 100 + pedidos recuperados por calidad / pedidos totales × 100\n= ${nf(kb.perfectOrder.actual)} − ${nf(pedPct, 2)} + ${nf(q, 2)} = ${nf(a)}%`; }
+  const mejor = M.KPI_DEF[k].mejor;
+  f += `\nCumplimiento = mín(${mejor === 'mayor' ? `${nf(a)} / ${nf(met)}` : `${nf(met)} / ${nf(a)}`}, 1) = ${nf(st.kpis[k].cumplimiento, 2)} (${mejor} es mejor)`;
+  return f;
+}
+const explicarRecup = () => cmp.recuperacion === null ? 'Tasa de recuperación: no aplica (la disrupción no reduce el IH en más de 0,05 puntos).' :
+  `Recuperación = (IH estrategia − IH disrupción) / (IH base − IH disrupción) × 100\n= (${nf(cmp.estrategia.ih)} − ${nf(cmp.disrupcion.ih)}) / (${nf(cmp.base.ih)} − ${nf(cmp.disrupcion.ih)}) × 100 = ${nf(cmp.recuperacion, 0)}%\nMás de 100% = la organización queda mejor que antes del choque.`;
+const explicarCostoH = () => cmp.costoHomeostasis === null ? 'Costo de la homeostasis: no aplica (las estrategias no recuperan puntos de IH).' :
+  `Costo de la homeostasis = Σ costos atribuibles a las estrategias / puntos de IH recuperados\n= ${money(cmp.costoEstrategias)} / (${nf(cmp.estrategia.ih)} − ${nf(cmp.disrupcion.ih)}) = ${money(cmp.costoHomeostasis)} por punto\n${Object.entries(cmp.estrategia.costosEstrategia).map(([k, v]) => `  ${EST_META[k].n}: ${money(v)}`).join('\n')}\n(Negativo = ahorro neto mensual)`;
+
+/* ====================================================================
+ * 3. ESCENARIOS
+ * ==================================================================== */
+const impacto$ = st => st.resumen.deltaCosto + st.resumen.ventasPerdidas;
+function filaImpacto(lbl, st, cls) {
+  return `<tr class="${cls || ''}"><th scope="row">${lbl}</th>${KPIS.map(k => `<td class="num">${semDot(st.kpis[k].semaforo)}${fmtKPI(k, st.kpis[k].actual)}</td>`).join('')}
+  <td class="num">${money(st.resumen.deltaCosto)}</td><td class="num">${money(st.resumen.ventasPerdidas)}</td><td class="num"><strong>${money(impacto$(st))}</strong></td><td class="num"><strong>${nf(st.ih)}</strong></td><td>${bandTag(st.banda)}</td></tr>`;
+}
+function detalleEsc(k) {
+  const st = X.porEsc[k], E = state.escenarios[k], b = cmp.base;
+  if (k === 'esc01') { const r = st.rutas.find(x => x.id === E.ruta) || {}; return `<ul class="clean small"><li>OTIF mensual de ${esc(E.ruta)}: ${pct(r.otif, 0)} → ${pct(r.otifMes)} (durante el bloqueo ${pct(r.otif / (1 + E.tiempoPct / 100))}).</li><li>Alza de combustible: ${money(st.costos.transporte)}/mes · desvío: ${money(st.costos.desvio)}.</li><li>Δ OTIF global: ${signed(st.kpis.otif.actual - b.kpis.otif.actual)} pts.</li></ul>
+    ${verCalc(`Combustible = Σ (viajes × flete) × ${E.combustiblePct}% × ${state.params.participacionCombustible * 100}% = ${money(st.costos.transporte)}\nDesvío = ${state.params.viajesMesPorRuta} viajes × (${E.dias}/30) × ${money(r.flete)} × ${E.fleteDesvioPct}% = ${money(st.costos.desvio)}\nOTIF en bloqueo = ${r.otif} / ${1 + E.tiempoPct / 100} ; OTIF mes = (${E.dias}/30) × bloqueo + (1 − ${E.dias}/30) × ${r.otif} = ${nf(r.otifMes)}`)}`; }
+  if (k === 'esc02') { const s = st.skus.find(x => x.sku === E.sku) || { sim: {}, simBase: {} }; return `<ul class="clean small"><li>${esc(E.sku)}: demanda diaria ${nf(s.demandaDiaria)} × ${nf(s.multiplicador, 2)} = ${nf(s.demandaDiaria * s.multiplicador)} u/día.</li><li>Día de quiebre: <strong>${s.sim.diaQuiebre ?? 'sin quiebre'}</strong> (base: ${s.simBase.diaQuiebre ?? 'sin quiebre'}).</li><li>Unidades no atendidas extra: ${nf(s.deltaNoAtendidas, 0)} · ventas perdidas ${money(st.resumen.ventasPerdidas)}.</li></ul>
+    ${verCalc(`Demanda diaria = ${s.dem}/30 × ${nf(s.multiplicador, 2)} = ${nf(s.demandaDiaria * s.multiplicador, 1)}\nStock ${s.stock} alcanza para ${nf(s.stock / (s.demandaDiaria * s.multiplicador))} días → quiebre el día ${s.sim.diaQuiebre}\nVentas perdidas = Δ no atendidas × costo × (1 + margen) = ${nf(s.deltaNoAtendidas)} × ${money(s.costo)} × ${1 + state.params.margen}`)}`; }
+  const af = st.skus.filter(s => s.suspendido);
+  return `<ul class="clean small"><li>SKU afectados (${esc(af[0] ? af[0].cat : '—')}): ${af.map(s => esc(s.sku)).join(', ') || 'ninguno'}.</li>${af.map(s => `<li>${esc(s.sku)}: reposición día ${Math.round(s.leadTime + E.diasSuspension) > state.params.horizonteDias ? 'fuera del mes' : Math.round(s.leadTime + E.diasSuspension)}; quiebre día ${s.sim.diaQuiebre ?? '—'}; ${nf(s.deltaNoAtendidas, 0)} u no atendidas extra.</li>`).join('')}<li>Lead time efectivo de la categoría: ${af[0] ? nf(af[0].ltEfectivo) : '—'} días.</li></ul>`;
+}
+VISTAS.escenarios = () => {
+  if (!cmp) return '<div class="banner bad">Sin resultados.</div>';
+  const act = escActivos();
+  return `<div class="section"><h2>3 · Simulador de disrupciones</h2><span class="small muted">Activa, combina y ajusta los escenarios</span></div>
+  <p class="lead">Cada escenario modifica el estado base durante un horizonte de ${state.params.horizonteDias} días. Los parámetros por defecto vienen del enunciado y de la matriz de escenarios del SIG; cualquier cambio queda como supuesto del comité.</p>
+  <div class="grid g3">${Object.keys(ESC_META).map(k => { const m = ESC_META[k], E = state.escenarios[k], txt = state.data.escenarios.find(e => e.id === m.id);
+    return `<div class="card lever ${E.activo ? 'on' : ''}"><div class="row"><h3 style="margin:0">${m.id} · ${esc(m.n)}</h3><span class="spacer"></span>${campo(`escenarios.${k}.activo`, E.activo ? 'Activo' : 'Inactivo', 'bool')}</div>
+    <p class="small muted">${esc(txt ? txt.desc + ' — ' + txt.impacto : '')}</p>
+    <div class="fields">${m.params.map(([f, l, t, h, max]) => campo(`escenarios.${k}.${f}`, l, t, h, { max })).join('')}</div>
+    <h4 style="margin-top:.8rem">Impacto aislado</h4>${detalleEsc(k)}
+    <dl class="kv small"><dt>IH aislado</dt><dd>${nf(X.porEsc[k].ih)} (${signed(X.porEsc[k].ih - cmp.base.ih)} pts)</dd><dt>Impacto $/mes</dt><dd>${money(impacto$(X.porEsc[k]))}</dd></dl></div>`; }).join('')}</div>
+  <div class="card" style="margin-top:1rem"><h3>Impacto en los cinco KPIs, en $ y en el Índice de Homeostasis</h3>
+  <div class="tw"><table><thead><tr><th>Estado</th>${KPIS.map(k => `<th class="num">${KPI_MIN[k]}</th>`).join('')}<th class="num">Δ costo log.</th><th class="num">Ventas perdidas</th><th class="num">Impacto $</th><th class="num">IH</th><th>Banda</th></tr></thead><tbody>
+  <tr><th scope="row">Meta</th>${KPIS.map(k => `<td class="num muted">${fmtKPI(k, cmp.base.kpis[k].meta)}</td>`).join('')}<td colspan="5"></td></tr>
+  ${filaImpacto('Base', cmp.base)}
+  ${Object.keys(ESC_META).map(k => filaImpacto(`${ESC_META[k].id} aislado${state.escenarios[k].activo ? '' : ' <span class="tag">inactivo</span>'}`, X.porEsc[k])).join('')}
+  ${act.length ? filaImpacto(`<strong>Disrupción combinada</strong> <span class="tiny muted">(${act.map(k => ESC_META[k].id).join(' + ')})</span>`, cmp.disrupcion, 'hl') : ''}
+  </tbody></table></div>
+  ${act.length ? `<p class="small" style="margin-top:.6rem">La disrupción combinada baja el IH de <strong>${nf(cmp.base.ih)}</strong> a <strong>${nf(cmp.disrupcion.ih)}</strong> (${signed(cmp.disrupcion.ih - cmp.base.ih)} pts) y cuesta ${money(impacto$(cmp.disrupcion))} al mes entre mayor costo logístico y ventas perdidas. KPI más débil: ${KPI_CORTO[cmp.disrupcion.kpiMasDebil]}.</p>${verCalc(explicarIH(cmp.disrupcion))}` : '<div class="banner warn">No hay escenarios activos: el estado "Disrupción" es igual al base.</div>'}
+  </div>
+  <div class="grid g2" style="margin-top:1rem">${chartCard('e_ih', 'IH por escenario', 'Base, cada escenario aislado y la combinación activa.')}${chartCard('e_sim', 'Stock diario del SKU afectado', 'Simulación día a día: base vs. disrupción.', 280, selSku())}</div>`;
+};
+function skuSimSel() {
+  const ids = state.data.skus.map(s => s.sku);
+  if (state.skuSim && ids.includes(state.skuSim)) return state.skuSim;
+  if (state.escenarios.esc02.activo && ids.includes(state.escenarios.esc02.sku)) return state.escenarios.esc02.sku;
+  const p = state.data.proveedores.find(x => x.id === state.escenarios.esc03.proveedor);
+  const s = p && state.data.skus.find(x => x.cat === p.cat); return s ? s.sku : ids[0];
+}
+const selSku = () => `<select class="no-print" aria-label="SKU a simular" data-path="skuSim" data-type="sel" style="border:1px solid var(--border);border-radius:6px;background:var(--surface);padding:.2rem">${state.data.skus.map(s => `<option ${s.sku === skuSimSel() ? 'selected' : ''}>${esc(s.sku)}</option>`).join('')}</select>`;
+
+/* ====================================================================
+ * 4. ESTRATEGIAS
+ * ==================================================================== */
+function datoSIG(k) {
+  const d = state.data, E = state.escenarios, sk = X.skusDiag;
+  if (k === 'e1_3pl') { const r = d.rutas.find(x => x.id === E.esc01.ruta); return r ? `${r.id}: OTIF ${r.otif}%, flete ${money(r.flete)}/viaje, ${r.km} km` : '—'; }
+  if (k === 'e2_consolidacion') { const o = state.estrategias.e2_consolidacion.ocupacionObjetivo; const rs = d.rutas.filter(r => r.ocupacion < o); return rs.length ? 'Ocupación: ' + rs.map(r => `${r.id} ${r.ocupacion}%`).join(', ') : `Ninguna ruta bajo ${o}%`; }
+  if (k === 'e3_ssrop') { const s = sk.filter(x => x.ropRecomendado !== null && x.stock < x.ropRecomendado); return s.length ? s.map(x => `${x.sku} stock ${x.stock} < ROP rec. ${x.ropRecomendado}`).join('; ') : 'Ningún SKU bajo el ROP recomendado'; }
+  if (k === 'e4_rebalanceo') { const s = sk.filter(x => x.dioCalc > state.params.umbralSobrestockDIO); return s.length ? 'DIO: ' + s.map(x => `${x.sku} ${nf(x.dioCalc)} d`).join(', ') : 'Sin SKU en sobrestock'; }
+  if (k === 'e5_alterno') { const p = d.proveedores.find(x => x.id === E.esc03.proveedor); return p ? `${p.id} ${p.nombre}: LT ${p.lt} d, fill rate ${p.fill}%, calidad ${p.calidad}` : '—'; }
+  if (k === 'e6_sop') { const s = d.skus.find(x => x.sku === E.esc02.sku); return s ? `${s.sku}: demanda ${s.dem} u/mes, stock ${s.stock}, pico +${E.esc02.demandaPct}%` : '—'; }
+  if (k === 'e7_calidad') return 'Devoluciones por daño: ' + d.canales.map(c => `${c.canal.split(' ')[0]} ${c.devPct}%`).join(', ') + `; costo inverso ${money(sum(d.canales, c => c.costoInv))}/mes`;
+}
+function decisionTxt(k) {
+  const s = state.estrategias[k];
+  const det = { e1_3pl: `OTIF objetivo ${s.otifObjetivo ?? 'base de la ruta'}${s.otifObjetivo != null ? '%' : ''}, sobrecosto ${s.sobrecostoPct}%`, e2_consolidacion: `ocupación ${s.ocupacionObjetivo}%`, e3_ssrop: `${state.params.diasProteccion} días de protección`, e4_rebalanceo: `DIO objetivo ${s.dioObjetivo} d`, e5_alterno: `LT ${s.leadTime} d, fill ${s.fillRate}%, +${s.sobrecostoPct}%${s.reemplazaProveedor ? ', reemplazo definitivo' : ''}`, e6_sop: `−${s.reduccionPicoPct}% del pico`, e7_calidad: `−${s.reduccionDevolucionesPct}% devoluciones` }[k];
+  return `${EST_META[k].n} (${det})`;
+}
+function costoEst(k) { return state.estrategias[k].activo && k in cmp.estrategia.costosEstrategia ? cmp.estrategia.costosEstrategia[k] : (X.porEst[k].costosEstrategia[k] ?? 0); }
+VISTAS.estrategias = () => {
+  if (!cmp) return '<div class="banner bad">Sin resultados.</div>';
+  const act = estActivas();
+  const orden = Object.keys(EST_META).sort((a, b) => state.rol === 'comite' ? 0 : (rolDeTexto(state.estrategias[b].rol) === state.rol) - (rolDeTexto(state.estrategias[a].rol) === state.rol));
+  return `<div class="section"><h2>4 · Palancas de estrategia</h2><div class="row no-print"><button class="btn sm" type="button" data-act="todas">Activar todas</button><button class="btn sm" type="button" data-act="ninguna">Desactivar todas</button></div></div>
+  <p class="lead">Cada estrategia tiene un rol responsable, parámetros y costo. Se evalúan contra la disrupción activa${escActivos().length ? ` (${escActivos().map(k => ESC_META[k].id).join(' + ')})` : ' (no hay escenarios activos: se comparan contra la base)'}. Regla conservadora: una estrategia puede, como máximo, borrar el daño de la disrupción; los quiebres que ya existían en la base no cuentan como ganancia.</p>
+  <div class="grid g4" style="margin:.8rem 0">
+    <div class="card tile d"><span class="lbl">IH con disrupción</span><span class="val state-d">${nf(cmp.disrupcion.ih)}</span><span class="sub">${bandTag(cmp.disrupcion.banda)}</span></div>
+    <div class="card tile e"><span class="lbl">IH con estrategia</span><span class="val state-e">${nf(cmp.estrategia.ih)}</span><span class="sub">${bandTag(cmp.estrategia.banda)} · ${act.length} de 7 activas</span></div>
+    <div class="card tile"><span class="lbl">Recuperación</span><span class="val">${cmp.recuperacion === null ? 'n/a' : nf(cmp.recuperacion, 0) + '%'}</span>${verCalc(explicarRecup())}</div>
+    <div class="card tile"><span class="lbl">Costo neto de las estrategias</span><span class="val">${money(cmp.costoEstrategias)}</span><span class="sub">por mes${cmp.costoEstrategias < 0 ? ' (ahorro)' : ''}</span></div>
+  </div>
+  <div class="grid g2">${orden.map(k => { const m = EST_META[k], S = state.estrategias[k], rk = rolDeTexto(S.rol), d = X.dIH(k), c = costoEst(k);
+    return `<div class="card lever ${S.activo ? 'on' : ''} ${state.rol === rk ? 'hl' : ''}"><div class="row"><h3 style="margin:0">${esc(m.n)}</h3><span class="spacer"></span>${campo(`estrategias.${k}.activo`, S.activo ? 'Activa' : 'Inactiva', 'bool')}</div>
+      <div class="meta"><span class="tag">${esc(S.rol)}</span><span class="tag">KPI: ${KPI_CORTO[m.kpi]}</span>${m.params.length ? SUP : ''}</div>
+      <p class="small">${esc(m.d)}</p>
+      <p class="small"><strong>Dato del SIG:</strong> ${esc(datoSIG(k))}</p>
+      ${m.params.length ? `<div class="fields">${m.params.map(([f, l, t, h, max, nul]) => campo(`estrategias.${k}.${f}`, l, t, h, { max, nul, ph: nul ? 'base' : '' })).join('')}</div>` : `<p class="tiny muted">Usa los días de protección (${state.params.diasProteccion}) y el lead time del proveedor; se ajustan en Supuestos.</p>`}
+      <dl class="kv small" style="margin-top:.6rem"><dt>Δ IH aislada</dt><dd><strong>${signed(d)}</strong> pts sobre la disrupción</dd><dt>Costo / mes</dt><dd>${money(c)}${c < 0 ? ' (ahorro)' : ''}${k === 'e6_sop' ? ' · sin costo directo (supuesto)' : ''}</dd></dl>
+      ${verCalc(explicarEst(k))}</div>`; }).join('')}</div>`;
+};
+function explicarEst(k) {
+  const S = state.estrategias[k], st = X.porEst[k], p = state.params, E = state.escenarios;
+  const r = state.data.rutas.find(x => x.id === E.esc01.ruta) || {};
+  const t = {
+    e1_3pl: `OTIF de ${E.esc01.ruta} durante el bloqueo = ${S.otifObjetivo ?? r.otif}%\nCosto = ${p.viajesMesPorRuta} viajes × (${E.esc01.dias}/30) × ${money(r.flete)} × ${S.sobrecostoPct}% = ${money(st.costos.tercerizacion)} (reemplaza el desvío)`,
+    e2_consolidacion: `Rutas con ocupación < ${S.ocupacionObjetivo}%: viajes = ${p.viajesMesPorRuta} × ocupación / ${S.ocupacionObjetivo}\nAhorro = viajes eliminados × flete (incluye alza de combustible) = ${money(st.costos.consolidacion)}`,
+    e3_ssrop: `SKU con stock < ROP rec. piden ROP rec − stock + demanda en su reposición\nCapital adicional = ${money(st.resumen.capitalAdicional)} × ${p.tasaMantenerInventarioMes * 100}% = ${money(st.resumen.capitalAdicional * p.tasaMantenerInventarioMes)}/mes`,
+    e4_rebalanceo: `SKU con DIO > ${p.umbralSobrestockDIO} bajan a ${S.dioObjetivo} días\nCapital liberado = ${money(st.resumen.capitalLiberado)}; ahorro = × ${p.tasaMantenerInventarioMes * 100}% = ${money(-st.resumen.capitalLiberado * p.tasaMantenerInventarioMes)}/mes`,
+    e5_alterno: `Pedido = faltante extra por la disrupción × ${S.fillRate}%, llega el día ${S.leadTime}\nCosto = unidades × costo × ${S.sobrecostoPct}% = ${money(st.costos.proveedorAlterno)}\nLead time posterior: ${S.reemplazaProveedor ? 'el del alterno (reemplazo definitivo)' : 'vuelve al del proveedor habitual'}`,
+    e6_sop: `Multiplicador de demanda = 1 + ${E.esc02.demandaPct}% × (1 − ${S.reduccionPicoPct}%) = ${nf(1 + E.esc02.demandaPct / 100 * (1 - S.reduccionPicoPct / 100), 2)}\nSin costo directo (supuesto del comité)`,
+    e7_calidad: `Pedidos que dejan de devolverse = Σ (pedidos × % dev.) × ${S.reduccionDevolucionesPct}% → pasan a perfectos\nAhorro = costo de logística inversa × ${S.reduccionDevolucionesPct}% = ${money(st.costos.logisticaInversa)}`
+  }[k];
+  return t + `\nΔ IH aislada = IH(disrupción + esta estrategia) − IH disrupción = ${nf(st.ih)} − ${nf(cmp.disrupcion.ih)} = ${signed(st.ih - cmp.disrupcion.ih)}`;
+}
+
+/* ====================================================================
+ * 5. DASHBOARD
+ * ==================================================================== */
+function matrizFilas() {
+  return estActivas().map(k => { const m = EST_META[k], S = state.estrategias[k];
+    return { rol: S.rol, rolKey: rolDeTexto(S.rol), decision: decisionTxt(k), dato: datoSIG(k), kpi: KPI_CORTO[m.kpi], kpiKey: m.kpi,
+      base: cmp.base.kpis[m.kpi].actual, disr: cmp.disrupcion.kpis[m.kpi].actual, estr: X.porEst[k].kpis[m.kpi].actual, estrTot: cmp.estrategia.kpis[m.kpi].actual,
+      costo: costoEst(k), dIH: X.dIH(k), k };
+  });
+}
+function sinergias() {
+  const A = new Set(estActivas()), out = [], c = cmp.estrategia.costosEstrategia, R = cmp.estrategia.resumen;
+  if (A.size >= 2) {
+    const s = X.sinergia;
+    out.push(`<strong>Sinergia neta: ${signed(s)} pts de IH.</strong> El conjunto recupera ${signed(X.conjunto)} pts; la suma de las estrategias aisladas daría ${signed(X.sumaIndiv)}. ${s > 0.05 ? 'Las estrategias se complementan: juntas logran más que por separado.' : s < -0.05 ? 'Hay solapamiento: varias estrategias atacan el mismo daño, y la regla conservadora impide contar dos veces la misma recuperación.' : 'Los efectos son prácticamente aditivos.'}`);
+  }
+  if (A.has('e1_3pl') && A.has('e2_consolidacion')) out.push(`<strong>Transporte:</strong> el ahorro de la consolidación (${money(c.e2_consolidacion)}) ${-c.e2_consolidacion >= c.e1_3pl ? 'cubre por completo' : 'cubre parcialmente'} el sobrecosto del 3PL (${money(c.e1_3pl)}). Neto: ${money(c.e1_3pl + c.e2_consolidacion)}/mes.`);
+  if (A.has('e3_ssrop') && A.has('e4_rebalanceo')) out.push(`<strong>Inventarios ↔ Finanzas:</strong> el rebalanceo libera ${money(R.capitalLiberado)} de capital, que ${R.capitalLiberado >= R.capitalAdicional ? 'financia por completo' : 'financia en parte'} los ${money(R.capitalAdicional)} de inventario adicional del recálculo de SS/ROP: se mueve capital de baja rotación a alta demanda.`);
+  if (A.has('e6_sop') && A.has('e5_alterno')) out.push(`<strong>Director ↔ Compras:</strong> el S&OP reduce el pico del efecto látigo, lo que achica el pedido de emergencia al proveedor alterno y su sobrecosto (${money(c.e5_alterno)}).`);
+  if (A.has('e3_ssrop') && A.has('e5_alterno')) out.push('<strong>Inventarios ↔ Compras:</strong> el ROP recalculado con el lead time real y el proveedor alterno atacan la misma causa estructural (lead time alto del proveedor principal); sin acción de compras, el inventario de seguridad queda como única defensa.');
+  if (A.has('e7_calidad')) out.push(`<strong>Servicio ↔ Almacén:</strong> el control de empaque eleva el Perfect Order y ahorra ${money(-c.e7_calidad)}/mes de logística inversa, que compensa parte del costo de las demás palancas.`);
+  if (A.has('e1_3pl') || A.has('e2_consolidacion')) out.push('<strong>Transporte ↔ Servicio:</strong> sostener el OTIF de la ruta afectada evita reclamos por demora en los canales que abastece.');
+  return out;
+}
+VISTAS.dashboard = () => {
+  if (!cmp) return '<div class="banner bad">Sin resultados.</div>';
+  const B = cmp.base, D = cmp.disrupcion, E = cmp.estrategia, P = state.params.pesosIH, mat = matrizFilas();
+  const tileIH = (st, cls, lbl) => `<div class="card tile ${cls}"><span class="lbl">${lbl}</span><span class="val state-${cls}">${nf(st.ih)}</span><span class="sub">${bandTag(st.banda)} · más débil: ${KPI_MIN[st.kpiMasDebil]}</span>${verCalc(explicarIH(st))}</div>`;
+  return `<div class="section"><h2>5 · Dashboard de evaluación</h2><span class="small muted">Base vs. Disrupción vs. Con estrategia</span></div>
+  <div class="grid g3">${tileIH(B, 'b', 'IH · Base')}${tileIH(D, 'd', 'IH · Disrupción')}${tileIH(E, 'e', 'IH · Con estrategia')}</div>
+  <div class="grid g3" style="margin-top:1rem">
+    <div class="card tile"><span class="lbl">Tasa de recuperación</span><span class="val">${cmp.recuperacion === null ? 'n/a' : nf(cmp.recuperacion, 0) + '%'}</span><span class="sub">del daño de la disrupción${cmp.recuperacion > 100 ? ' — queda mejor que antes del choque' : ''}</span>${verCalc(explicarRecup())}</div>
+    <div class="card tile"><span class="lbl">KPI más débil (con estrategia)</span><span class="val" style="font-size:1.35rem">${KPI_CORTO[E.kpiMasDebil]}</span><span class="sub">${fmtKPI(E.kpiMasDebil, E.kpis[E.kpiMasDebil].actual)} vs. meta ${fmtKPI(E.kpiMasDebil, E.kpis[E.kpiMasDebil].meta)} · cumplimiento ${pct(E.porKPI[E.kpiMasDebil] * 100, 0)}</span></div>
+    <div class="card tile"><span class="lbl">Costo de la homeostasis</span><span class="val">${cmp.costoHomeostasis === null ? 'n/a' : money(cmp.costoHomeostasis)}</span><span class="sub">por punto de IH recuperado · costo neto ${money(cmp.costoEstrategias)}/mes</span>${verCalc(explicarCostoH())}</div>
+  </div>
+  ${E.banda !== 'Equilibrio' ? `<div class="banner ${E.banda === 'Desequilibrio' ? 'bad' : 'warn'}" style="margin-top:1rem"><strong>Lectura del comité:</strong> aun con las estrategias activas la cadena queda en <strong>${E.banda.toLowerCase()}</strong>. El KPI más débil es ${KPI_CORTO[E.kpiMasDebil].toLowerCase()} (${pct(E.porKPI[E.kpiMasDebil] * 100, 0)} de cumplimiento): ${B.kpiMasDebil === E.kpiMasDebil ? 'es un problema estructural previo a la disrupción, que las palancas de contingencia no resuelven.' : 'conviene priorizar una palanca sobre ese indicador.'}</div>` : '<div class="banner ok" style="margin-top:1rem">La cadena alcanza la banda de equilibrio con las estrategias activas.</div>'}
+  <div class="card" style="margin-top:1rem"><h3>Scorecard de los cinco KPIs</h3>
+  <div class="tw"><table><thead><tr><th>KPI</th><th class="num">Meta</th><th class="num">Base</th><th class="num">Disrupción</th><th class="num">Con estrategia</th><th class="num">Δ vs. disrupción</th><th>Cálculo</th></tr></thead><tbody>
+  ${KPIS.map(k => `<tr><td>${KPI_CORTO[k]} <span class="tiny muted">(${M.KPI_DEF[k].mejor} es mejor)</span></td><td class="num">${fmtKPI(k, B.kpis[k].meta)}</td>
+  ${[B, D, E].map(st => `<td class="num">${semDot(st.kpis[k].semaforo)}${fmtKPI(k, st.kpis[k].actual)}</td>`).join('')}<td class="num">${signed(E.kpis[k].actual - D.kpis[k].actual)}</td>
+  <td style="min-width:9rem">${verCalc('BASE\n' + explicarKPI(B, k) + '\n\nDISRUPCIÓN\n' + explicarKPI(D, k) + '\n\nCON ESTRATEGIA\n' + explicarKPI(E, k))}</td></tr>`).join('')}
+  </tbody></table></div><p class="tiny muted">Semáforo: verde si cumple la meta; amarillo si alcanza al menos el 90%; rojo por debajo.</p></div>
+  <div class="grid g2" style="margin-top:1rem">
+    ${chartCard('db_radar', 'Radar de cumplimiento', 'Cumplimiento por KPI (0-100%, con tope en la meta) en los tres estados.', 320)}
+    ${chartCard('db_ih', 'Índice de Homeostasis por estado', 'Líneas: umbrales de las bandas (Tensión 75, Equilibrio 90).', 320)}
+    ${chartCard('db_kpi', 'KPIs actual vs. meta', '% de la meta alcanzado (100 = meta). Para costo y lead time: meta / actual.')}
+    ${chartCard('db_cascada', 'Cascada del costo logístico mensual', 'Del costo base al costo del estado, por componente ($).', 300, `<select class="no-print" aria-label="Estado" data-path="estadoCascada" data-type="sel" style="border:1px solid var(--border);border-radius:6px;background:var(--surface);padding:.2rem"><option value="disrupcion" ${state.estadoCascada === 'disrupcion' ? 'selected' : ''}>Disrupción</option><option value="estrategia" ${state.estadoCascada !== 'disrupcion' ? 'selected' : ''}>Con estrategia</option></select>`)}
+    ${chartCard('db_sim', 'Evolución diaria del stock del SKU afectado', 'Base, disrupción y con estrategia; la línea punteada es el stock de seguridad.', 300, selSku())}
+    ${chartCard('db_stock', 'Stock vs. SS vs. ROP por SKU', 'Unidades: stock actual, SS y ROP del WMS, y ROP recomendado.')}
+    ${chartCard('db_dio', 'DIO por SKU', 'DIO promedio simulado del mes en cada estado (días).')}
+    ${chartCard('db_rutas', 'OTIF y costo por km por ruta', 'Barras: OTIF mensual por estado; línea: costo por km.')}
+    ${chartCard('db_prov', 'Lead time vs. fill rate por proveedor', 'Burbuja = índice de riesgo; el rombo es el proveedor alterno (si está activo).')}
+    ${chartCard('db_canal', 'Perfect Order y devoluciones por canal', 'Barras: Perfect Order (%); línea: devoluciones por daño (%); con control de calidad, devoluciones proyectadas.')}
+  </div>
+  <div class="card" style="margin-top:1rem"><h3>Vista por rol: contribución al IH</h3>
+  <p class="tiny muted">Contribución = 100 × peso × cumplimiento del KPI a cargo del rol. El máximo de cada rol es 100 × su peso.</p>
+  <div class="tw"><table><thead><tr><th>Rol</th><th>KPI</th><th class="num">Peso</th><th class="num">Máximo</th><th class="num">Base</th><th class="num">Disrupción</th><th class="num">Con estrategia</th><th class="num">Brecha al máximo</th></tr></thead><tbody>
+  ${KPIS.map(k => { const r = KPI_ROL[k], c = st => 100 * P[k] * st.porKPI[k]; return `<tr class="${state.rol === r ? 'hl' : ''}"><td>${esc(ROLES[r].n)}</td><td>${KPI_CORTO[k]}</td><td class="num">${pct(P[k] * 100, 0)}</td><td class="num">${nf(100 * P[k])}</td><td class="num">${nf(c(B))}</td><td class="num">${nf(c(D))}</td><td class="num"><strong>${nf(c(E))}</strong></td><td class="num">${nf(100 * P[k] - c(E))}</td></tr>`; }).join('')}
+  <tr><td colspan="4"><strong>Índice de Homeostasis</strong></td><td class="num"><strong>${nf(B.ih)}</strong></td><td class="num"><strong>${nf(D.ih)}</strong></td><td class="num"><strong>${nf(E.ih)}</strong></td><td class="num">${nf(100 - E.ih)}</td></tr>
+  </tbody></table></div><p class="tiny muted">El OTIF global lo comparten Director/a y Transporte; aquí se asigna a Transporte para que cada rol tenga un KPI. El Director/a responde por el IH completo.</p></div>
+  <div class="card" style="margin-top:1rem"><h3>Matriz de decisiones estratégicas</h3>
+  ${mat.length ? `<div class="tw"><table><thead><tr><th>Rol</th><th>Decisión</th><th>Dato del SIG</th><th>KPI impactado</th><th class="num">Base → Disrupción → Con estrategia${tip('Valor del KPI en la base, con la disrupción y con esta estrategia aplicada sola')}</th><th class="num">Costo $/mes</th><th class="num">Δ IH</th></tr></thead><tbody>
+  ${mat.map(r => `<tr class="${state.rol === r.rolKey ? 'hl' : ''}"><td class="small">${esc(r.rol)}</td><td class="small">${esc(r.decision)}</td><td class="small">${esc(r.dato)}</td><td class="small">${esc(r.kpi)}</td><td class="num small">${fmtKPI(r.kpiKey, r.base)} → ${fmtKPI(r.kpiKey, r.disr)} → <strong>${fmtKPI(r.kpiKey, r.estr)}</strong></td><td class="num">${money(r.costo)}</td><td class="num"><strong>${signed(r.dIH)}</strong></td></tr>`).join('')}
+  <tr><td colspan="5"><strong>Conjunto de estrategias</strong> <span class="tiny muted">(Δ IH conjunto incluye la sinergia)</span></td><td class="num"><strong>${money(cmp.costoEstrategias)}</strong></td><td class="num"><strong>${signed(X.conjunto)}</strong></td></tr>
+  </tbody></table></div>` : '<div class="banner warn">No hay estrategias activas. Actívalas en el módulo Estrategias para construir la matriz.</div>'}</div>
+  <div class="grid g2" style="margin-top:1rem">
+    <div class="card"><h3>Sinergias entre áreas</h3>${sinergias().length ? `<ul class="clean small">${sinergias().map(s => `<li>${s}</li>`).join('')}</ul>` : '<p class="small muted">Activa dos o más estrategias para ver sinergias.</p>'}</div>
+    <div class="card"><h3>Supuestos en uso</h3><ul class="clean small">${E.supuestos.map(s => `<li>${esc(s.supuesto)}: <strong>${esc(s.valor)}</strong></li>`).join('')}</ul><a href="#" class="small" data-tab="supuestos">Editar supuestos →</a></div>
+  </div>`;
+};
+
+
+/* ====================================================================
+ * Gráficos (Chart.js)
+ * ==================================================================== */
+const cssv = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+function rgba(c, a) { const h = c.replace('#', ''); const n = parseInt(h.length === 3 ? h.split('').map(x => x + x).join('') : h, 16); return `rgba(${n >> 16 & 255},${n >> 8 & 255},${n & 255},${a})`; }
+let COL = {};
+function chartCard(id, t, desc, h = 280, ctrl = '') {
+  return `<figure class="card chart"><figcaption><h3>${esc(t)}</h3><div class="row no-print">${ctrl}<button class="btn sm" type="button" data-act="png" data-id="${id}" aria-label="Descargar PNG: ${esc(t)}">PNG</button></div></figcaption>
+  <div class="cv" style="height:${h}px"><canvas id="${id}" role="img" aria-label="${esc(t)}. ${esc(desc)}"></canvas></div><p class="tiny muted" style="margin:.4rem 0 0">${esc(desc)}</p></figure>`;
+}
+function prepararCharts() {
+  if (!window.Chart) return;
+  COL = { b: cssv('--c-base'), d: cssv('--c-disr'), e: cssv('--c-estr'), meta: cssv('--c-meta'), ok: cssv('--ok'), warn: cssv('--warn'), bad: cssv('--bad'), text: cssv('--text'), muted: cssv('--muted'), grid: cssv('--border'), surface: cssv('--surface') };
+  Chart.defaults.color = COL.muted; Chart.defaults.borderColor = COL.grid; Chart.defaults.font.family = cssv('--font') || 'system-ui';
+  Chart.defaults.animation = false; Chart.defaults.maintainAspectRatio = false; Chart.defaults.responsive = true;
+  Chart.defaults.plugins.legend.labels.boxWidth = 12; Chart.defaults.plugins.legend.labels.boxHeight = 12;
+}
+if (window.Chart) Chart.register({
+  id: 'fondo', beforeDraw(c) { const x = c.ctx; x.save(); x.globalCompositeOperation = 'destination-over'; x.fillStyle = COL.surface || '#fff'; x.fillRect(0, 0, c.width, c.height); x.restore(); }
+}, {
+  id: 'ptLabels', afterDatasetsDraw(c, a, opts) {
+    if (!opts || !opts.labels) return; const x = c.ctx; x.save(); x.font = '11px system-ui'; x.fillStyle = COL.text;
+    opts.labels.forEach((L, di) => { const m = c.getDatasetMeta(di); if (!L || m.hidden) return; m.data.forEach((el, i) => { if (L[i]) x.fillText(L[i], el.x + (el.options.radius || 6) + 4, el.y + 4); }); });
+    x.restore();
+  }
+});
+function mk(id, config) {
+  if (!window.Chart) return; const el = document.getElementById(id); if (!el) return;
+  if (charts[id]) charts[id].destroy();
+  charts[id] = new Chart(el, config);
+}
+const linea = (label, data, color, extra = {}) => Object.assign({ type: 'line', label, data, borderColor: color, backgroundColor: color, borderWidth: 2, pointRadius: 0, borderDash: [6, 4] }, extra);
+const yT = t => ({ title: { display: true, text: t } });
+
+function chStock(id) {
+  const sk = X.skusDiag;
+  mk(id, { type: 'bar', data: { labels: sk.map(s => s.sku), datasets: [
+    { label: 'Stock actual', data: sk.map(s => s.stock), backgroundColor: COL.b },
+    { label: 'Stock de seguridad', data: sk.map(s => s.ss), backgroundColor: rgba(COL.warn, .8) },
+    { label: 'Punto de reorden', data: sk.map(s => s.rop), backgroundColor: rgba(COL.meta, .55) },
+    { type: 'line', label: 'ROP recomendado', data: sk.map(s => s.ropRecomendado), showLine: false, pointStyle: 'rectRot', pointRadius: 7, borderColor: COL.e, backgroundColor: COL.e }] },
+    options: { scales: { y: Object.assign({ type: 'logarithmic' }, yT('Unidades (escala logarítmica)')) } } });
+}
+function chDIODiag(id) {
+  const sk = X.skusDiag, u = state.params.umbralSobrestockDIO;
+  mk(id, { type: 'bar', data: { labels: sk.map(s => s.sku), datasets: [
+    { label: 'DIO calculado', data: sk.map(s => s.dioCalc), backgroundColor: sk.map(s => s.dioCalc > u ? COL.warn : COL.b) },
+    linea(`Umbral de sobrestock (${u} d)`, sk.map(() => u), COL.bad)] }, options: { scales: { y: yT('Días') } } });
+}
+function chDIOEstados(id) {
+  const dio = (s, sim) => sim.stockPromedio / s.dem * 30, u = state.params.umbralSobrestockDIO;
+  mk(id, { type: 'bar', data: { labels: cmp.base.skus.map(s => s.sku), datasets: [
+    { label: 'Base', data: cmp.base.skus.map(s => dio(s, s.sim)), backgroundColor: COL.b },
+    { label: 'Disrupción', data: cmp.disrupcion.skus.map(s => dio(s, s.sim)), backgroundColor: COL.d },
+    { label: 'Con estrategia', data: cmp.estrategia.skus.map(s => dio(s, s.sim)), backgroundColor: COL.e },
+    linea(`Umbral (${u} d)`, cmp.base.skus.map(() => u), COL.meta)] },
+    options: { scales: { y: yT('Días (promedio del mes)') }, plugins: { tooltip: { callbacks: { label: c => `${c.dataset.label}: ${nf(c.raw)} días` } } } } });
+}
+function chRutas(id, estados) {
+  const rs = cmp.base.rutas, ds = estados ? [
+    { label: 'OTIF base', data: rs.map(r => r.otifMes), backgroundColor: COL.b },
+    { label: 'OTIF disrupción', data: cmp.disrupcion.rutas.map(r => r.otifMes), backgroundColor: COL.d },
+    { label: 'OTIF con estrategia', data: cmp.estrategia.rutas.map(r => r.otifMes), backgroundColor: COL.e }] :
+    [{ label: 'OTIF ruta (%)', data: rs.map(r => r.otif), backgroundColor: COL.b }];
+  ds.push({ type: 'line', label: 'Costo por km ($)', data: X.rutas.map(r => r.costoKm), yAxisID: 'y1', borderColor: COL.warn, backgroundColor: COL.warn, pointRadius: 4, borderWidth: 2 });
+  mk(id, { type: 'bar', data: { labels: rs.map(r => r.id), datasets: ds }, options: { scales: { y: Object.assign({ min: 50, max: 100 }, yT('OTIF (%)')), y1: Object.assign({ position: 'right', grid: { drawOnChartArea: false } }, yT('$ por km')) } } });
+}
+function chProv(id, alt) {
+  const ps = X.proveedores, meta = state.data.kpis.leadTime.meta, A = state.estrategias.e5_alterno;
+  const datasets = [{ type: 'bubble', label: 'Proveedores', data: ps.map(p => ({ x: p.fill, y: p.lt, r: 5 + p.riesgo * 14 })), backgroundColor: rgba(COL.b, .55), borderColor: COL.b }];
+  const labels = [ps.map(p => p.id)];
+  if (alt && A.activo) { datasets.push({ type: 'bubble', label: 'Proveedor alterno', data: [{ x: A.fillRate, y: A.leadTime, r: 8 }], pointStyle: 'rectRot', backgroundColor: COL.e, borderColor: COL.e }); labels.push(['Alterno']); }
+  datasets.push({ type: 'line', label: `Meta lead time (${meta} d)`, data: [{ x: 50, y: meta }, { x: 100, y: meta }], borderColor: COL.ok, borderDash: [6, 4], pointRadius: 0, borderWidth: 2 });
+  mk(id, { type: 'bubble', data: { datasets }, options: { scales: { x: Object.assign({ type: 'linear', min: 50, max: 100 }, yT('Fill rate (%)')), y: Object.assign({ min: 0 }, yT('Lead time (días)')) },
+    plugins: { ptLabels: { labels }, tooltip: { callbacks: { label: c => { const p = ps[c.dataIndex]; return c.dataset.label === 'Proveedores' && p ? `${p.id} ${p.nombre}: LT ${p.lt} d, fill ${p.fill}%, riesgo ${nf(p.riesgo, 2)}` : `${c.dataset.label}: (${c.raw.x}%, ${c.raw.y} d)`; } } } } } });
+}
+function chCanal(id, est) {
+  const f = X.canales.filas, ds = [
+    { label: 'Perfect Order (%)', data: f.map(c => c.perfectOrder), backgroundColor: COL.b },
+    { type: 'line', label: 'Devoluciones por daño (%)', data: f.map(c => c.devPct), yAxisID: 'y1', borderColor: COL.d, backgroundColor: COL.d, pointRadius: 4, borderWidth: 2 }];
+  const S = state.estrategias.e7_calidad;
+  if (est && S.activo) ds.push({ type: 'line', label: 'Devoluciones con control de calidad (%)', data: f.map(c => c.devPct * (1 - S.reduccionDevolucionesPct / 100)), yAxisID: 'y1', borderColor: COL.e, backgroundColor: COL.e, pointRadius: 4, borderWidth: 2, borderDash: [5, 4] });
+  mk(id, { type: 'bar', data: { labels: f.map(c => c.canal.replace(/\s*\(.*\)/, '')), datasets: ds }, options: { scales: { y: Object.assign({ min: 0, max: 100 }, yT('Perfect Order (%)')), y1: Object.assign({ position: 'right', min: 0, grid: { drawOnChartArea: false } }, yT('Devoluciones (%)')) } } });
+}
+function chRadar(id) {
+  const d = (st, lbl, c) => ({ label: lbl, data: KPIS.map(k => st.porKPI[k] * 100), borderColor: c, backgroundColor: rgba(c, .1), pointBackgroundColor: c, borderWidth: 2 });
+  mk(id, { type: 'radar', data: { labels: KPIS.map(k => KPI_MIN[k]), datasets: [d(cmp.base, 'Base', COL.b), d(cmp.disrupcion, 'Disrupción', COL.d), d(cmp.estrategia, 'Con estrategia', COL.e)] },
+    options: { scales: { r: { min: 0, max: 100, ticks: { stepSize: 20, backdropColor: 'transparent' }, grid: { color: COL.grid }, angleLines: { color: COL.grid }, pointLabels: { color: COL.text } } }, plugins: { tooltip: { callbacks: { label: c => `${c.dataset.label}: ${nf(c.raw, 0)}%` } } } } });
+}
+function chIH(id, labels, vals, colors) {
+  const B = state.params.bandasIH;
+  mk(id, { type: 'bar', data: { labels, datasets: [{ label: 'Índice de Homeostasis', data: vals, backgroundColor: colors },
+    linea(`Equilibrio (${B.equilibrio})`, labels.map(() => B.equilibrio), COL.ok), linea(`Tensión (${B.tension})`, labels.map(() => B.tension), COL.warn)] },
+    options: { scales: { y: { min: 0, max: 100 } }, plugins: { tooltip: { callbacks: { label: c => `${c.dataset.label}: ${nf(c.raw)}` } } } } });
+}
+function chKPI(id) {
+  const idx = (st, k) => { const a = st.kpis[k].actual, m = st.kpis[k].meta; return M.KPI_DEF[k].mejor === 'mayor' ? a / m * 100 : m / a * 100; };
+  const sts = [[cmp.base, 'Base', COL.b], [cmp.disrupcion, 'Disrupción', COL.d], [cmp.estrategia, 'Con estrategia', COL.e]];
+  mk(id, { type: 'bar', data: { labels: KPIS.map(k => KPI_MIN[k]), datasets: sts.map(([st, l, c]) => ({ label: l, data: KPIS.map(k => idx(st, k)), backgroundColor: c })).concat([linea('Meta (100)', KPIS.map(() => 100), COL.text)]) },
+    options: { scales: { y: Object.assign({ min: 0, suggestedMax: 110 }, yT('% de la meta alcanzado')) }, plugins: { tooltip: { callbacks: { label: c => { const st = sts[c.datasetIndex]; if (!st) return 'Meta'; const k = KPIS[c.dataIndex]; return `${st[1]}: ${fmtKPI(k, st[0].kpis[k].actual)} (meta ${fmtKPI(k, st[0].kpis[k].meta)}) → ${nf(c.raw, 0)}%`; } } } } } });
+}
+function chCascada(id) {
+  const st = state.estadoCascada === 'disrupcion' ? cmp.disrupcion : cmp.estrategia, R = st.resumen;
+  const labels = ['Costo base'], data = [[0, R.costoLogisticoBase]], colors = [COL.b]; let cum = R.costoLogisticoBase;
+  for (const [k, v] of Object.entries(st.costos)) { if (Math.abs(v) < 0.5) continue; labels.push(COSTO_LBL[k] || k); data.push([cum, cum + v]); colors.push(v > 0 ? COL.bad : COL.ok); cum += v; }
+  labels.push(state.estadoCascada === 'disrupcion' ? 'Costo con disrupción' : 'Costo con estrategia'); data.push([0, R.costoLogisticoNuevo]); colors.push(state.estadoCascada === 'disrupcion' ? COL.d : COL.e);
+  const lo = Math.min(...data.flatMap(d => d[0] === 0 ? [d[1]] : d)); const min = Math.max(0, Math.floor(lo * 0.93 / 5000) * 5000);
+  mk(id, { type: 'bar', data: { labels, datasets: [{ label: 'Costo logístico ($/mes)', data, backgroundColor: colors }] },
+    options: { plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => { const [a, b] = c.raw; return c.dataIndex === 0 || c.dataIndex === data.length - 1 ? money(b) : `${b - a >= 0 ? '+' : ''}${money(b - a)}`; } } } },
+      scales: { y: Object.assign({ min, ticks: { callback: v => money(v) } }, yT('$ por mes')) } } });
+}
+function chSim(id, conEstr) {
+  const sku = skuSimSel(), i = cmp.base.skus.findIndex(s => s.sku === sku); if (i < 0) return;
+  const s0 = cmp.base.skus[i], ser = x => x.serie.map(p => p.stock);
+  const ds = [{ label: 'Base', data: ser(s0.simBase), borderColor: COL.b, backgroundColor: COL.b, borderWidth: 2, pointRadius: 0, tension: .15 },
+    { label: 'Disrupción', data: ser(cmp.disrupcion.skus[i].sim), borderColor: COL.d, backgroundColor: COL.d, borderWidth: 2, pointRadius: 0, tension: .15 }];
+  if (conEstr) ds.push({ label: 'Con estrategia', data: ser(cmp.estrategia.skus[i].sim), borderColor: COL.e, backgroundColor: COL.e, borderWidth: 2.5, pointRadius: 0, tension: .15 });
+  ds.push(linea(`Stock de seguridad (${s0.ss})`, s0.simBase.serie.map(() => s0.ss), COL.warn, { borderWidth: 1.5 }));
+  mk(id, { type: 'line', data: { labels: s0.simBase.serie.map(p => p.dia), datasets: ds }, options: { interaction: { mode: 'index', intersect: false }, scales: { x: yT(`Día del mes — ${sku} ${s0.desc}`), y: Object.assign({ min: 0 }, yT('Unidades en stock')) } } });
+}
+const DRAW = {
+  d_stock: chStock, db_stock: chStock, d_dio: chDIODiag, db_dio: chDIOEstados,
+  d_rutas: id => chRutas(id, false), db_rutas: id => chRutas(id, true),
+  d_prov: id => chProv(id, false), db_prov: id => chProv(id, true),
+  d_canal: id => chCanal(id, false), db_canal: id => chCanal(id, true),
+  db_radar: chRadar, db_kpi: chKPI, db_cascada: chCascada, db_sim: id => chSim(id, true), e_sim: id => chSim(id, false),
+  db_ih: id => chIH(id, ['Base', 'Disrupción', 'Con estrategia'], [cmp.base.ih, cmp.disrupcion.ih, cmp.estrategia.ih], [COL.b, COL.d, COL.e]),
+  e_ih: id => { const ks = Object.keys(ESC_META); chIH(id, ['Base', ...ks.map(k => ESC_META[k].id), 'Combinada'], [cmp.base.ih, ...ks.map(k => X.porEsc[k].ih), cmp.disrupcion.ih], [COL.b, ...ks.map(() => rgba(COL.d, .55)), COL.d]); }
+};
+function dibujar() {
+  if (!cmp || !window.Chart) return; prepararCharts();
+  for (const id of Object.keys(DRAW)) if (document.getElementById(id)) { try { DRAW[id](id); } catch (e) { console.error(id, e); } }
+}
+
+/* ====================================================================
+ * 6. SUPUESTOS
+ * ==================================================================== */
+VISTAS.supuestos = () => {
+  const pb = state.pesosBorrador, sp = sum(KPIS, k => Number(pb[k]) || 0), okP = Math.abs(sp - 100) < 0.05;
+  const cambiados = KPIS.some(k => Math.abs(state.params.pesosIH[k] - 0.2) > 1e-6);
+  const supEsc = Object.keys(ESC_META).flatMap(k => ESC_META[k].params.filter(p => !['ruta', 'sku', 'prov'].includes(p[2])).map(p => [`${ESC_META[k].id} · ${p[1]}`, state.escenarios[k][p[0]] + (p[2] === 'pct' ? '%' : p[2] === 'int' ? ' días' : '')]));
+  const supEst = Object.keys(EST_META).flatMap(k => EST_META[k].params.map(p => [`${EST_META[k].n} · ${p[1]}`, p[2] === 'bool' ? (state.estrategias[k][p[0]] ? 'Sí' : 'No') : state.estrategias[k][p[0]] === null ? 'OTIF base de la ruta' : state.estrategias[k][p[0]] + (p[2] === 'pct' ? '%' : ' días')]));
+  return `<div class="section"><h2>6 · Supuestos del comité</h2><button class="btn sm no-print" type="button" data-act="restaurarSupuestos">Restaurar valores por defecto</button></div>
+  <p class="lead">Lo que el SIG no trae se modela como parámetro editable, visible y etiquetado ${SUP}. Cualquier cambio recalcula todo el aplicativo.</p>
+  <div class="grid g2">
+    <div class="card"><h3>Parámetros del motor</h3><div class="fields">${PARAM_META.map(([f, l, t, h, nul]) => campo(`params.${f}`, l, t, h, { nul, ph: nul ? 'auto' : '' })).join('')}</div></div>
+    <div class="card"><h3>Índice de Homeostasis (IH) <span class="tag">Indicador propuesto por el comité</span></h3>
+      <p class="small">No proviene del documento de la actividad. Resume en una cifra el equilibrio de la cadena: <strong>IH = 100 × Σ peso × cumplimiento</strong>, con cumplimiento por KPI de 0 a 1 (mín(actual/meta, 1) si mayor es mejor; mín(meta/actual, 1) si menor es mejor). El tope en 1 impide que sobrecumplir un KPI compense el deterioro de otro: esa es la idea de equilibrio. Se acompaña siempre del KPI más débil, la tasa de recuperación y el costo de la homeostasis.</p>
+      <p class="small"><strong>Limitación:</strong> depende de las metas de la empresa; sirve para comparar estados del mismo caso, no empresas entre sí.</p>
+      <h4>Pesos (deben sumar 100%)</h4>
+      <div class="fields">${KPIS.map(k => campo(`pesosBorrador.${k}`, KPI_CORTO[k], 'dec', `Responsable: ${ROLES[KPI_ROL[k]].corto}`, { suf: '%' })).join('')}</div>
+      <p class="small" style="margin-top:.5rem">Suma: <strong class="${okP ? 'state-e' : 'state-d'}">${nf(sp)}%</strong> ${okP ? '<span class="tag ok">Aplicados</span>' : '<span class="tag bad">No se aplican hasta que sumen 100%</span>'}</p>
+      <div class="field"><label for="f_just">Justificación de los pesos ${cambiados ? '<span class="tag warn">Obligatoria: pesos distintos de 20%</span>' : '(pesos iguales = neutralidad entre roles)'}</label><textarea id="f_just" rows="3" data-path="justificacionPesos" data-type="text" placeholder="Explica por qué el comité prioriza un KPI sobre otro.">${esc(state.justificacionPesos)}</textarea></div>
+      <h4 style="margin-top:.8rem">Bandas</h4>
+      <div class="fields">${campo('params.bandasIH.equilibrio', 'Equilibrio desde', 'int', 'IH ≥ este valor')}${campo('params.bandasIH.tension', 'Tensión desde', 'int', 'IH ≥ este valor y menor que equilibrio; por debajo: Desequilibrio')}</div>
+    </div>
+  </div>
+  <div class="grid g2" style="margin-top:1rem">
+    <div class="card"><h3>Supuestos en uso (motor)</h3><div class="tw"><table><thead><tr><th>Supuesto</th><th>Valor</th></tr></thead><tbody>${(cmp ? cmp.estrategia.supuestos : []).map(s => `<tr><td>${esc(s.supuesto)}</td><td>${esc(s.valor)}</td></tr>`).join('')}</tbody></table></div></div>
+    <div class="card"><h3>Parámetros de escenarios y estrategias</h3><div class="tw"><table><thead><tr><th>Parámetro</th><th class="num">Valor</th></tr></thead><tbody>${supEsc.concat(supEst).map(([a, b]) => `<tr><td class="small">${esc(a)}</td><td class="num">${esc(b)}</td></tr>`).join('')}<tr><td class="small">Plan S&OP · costo directo</td><td class="num">$0 (supuesto)</td></tr></tbody></table></div></div>
+  </div>
+  <div class="grid g2" style="margin-top:1rem">
+    <div class="card"><h3>Hallazgos de calidad de datos</h3>${X && X.hall.length ? `<ul class="clean small">${X.hall.map(h => `<li><strong>${esc(h.area)} · ${esc(h.item)}:</strong> ${esc(h.h)}</li>`).join('')}</ul>` : '<p class="small">Sin hallazgos.</p>'}</div>
+    <div class="card"><h3>Brechas de información</h3><ul class="clean small">${BRECHAS.map(([a, b]) => `<li><strong>${esc(a)}:</strong> ${esc(b)}</li>`).join('')}</ul></div>
+  </div>`;
+};
+function aplicarPesos() {
+  const pb = state.pesosBorrador, s = sum(KPIS, k => Number(pb[k]) || 0);
+  if (Math.abs(s - 100) >= 0.05) return false;
+  const p = {}; KPIS.forEach(k => p[k] = (Number(pb[k]) || 0) / s); state.params.pesosIH = p; return true;
+}
+
+/* ====================================================================
+ * 7. EXPORTAR
+ * ==================================================================== */
+function checklist() {
+  const errs = validar(state.data).filter(v => v.n === 'error').length;
+  const cambiados = KPIS.some(k => Math.abs(state.params.pesosIH[k] - 0.2) > 1e-6);
+  return [
+    ['Datos del SIG cargados y sin errores de validación', errs === 0, errs ? `${errs} error(es) en Datos` : ''],
+    ['Diagnóstico inicial por rol', !!(cmp && cmp.base), ''],
+    ['Al menos un escenario de disrupción simulado', escActivos().length > 0, 'Activa un escenario'],
+    ['Dashboard integrado (tres estados calculados)', !!(cmp && !calcError), ''],
+    ['Matriz de decisiones estratégicas (≥ 1 estrategia)', estActivas().length > 0, 'Activa al menos una estrategia'],
+    ['Evaluación de sinergia y homeostasis (IH y recuperación)', !!(cmp && cmp.recuperacion !== null), 'Requiere una disrupción que reduzca el IH'],
+    ['Justificación de pesos del IH (si se cambiaron)', !cambiados || !!state.justificacionPesos.trim(), 'Escribe la justificación en Supuestos']
+  ];
+}
+VISTAS.exportar = () => {
+  const cl = checklist(), ok = cl.every(c => c[1]);
+  return `<div class="section"><h2>7 · Exportar y compartir</h2></div>
+  <div class="grid g2">
+    <div class="card"><h3>Checklist de la actividad</h3>
+      <ul class="clean check">${cl.map(([t, b, h]) => `<li>${b ? '<span class="tag ok">✓</span>' : '<span class="tag bad">✕</span>'} ${esc(t)}${!b && h ? ` <span class="tiny muted">— ${esc(h)}</span>` : ''}</li>`).join('')}</ul>
+      <div class="banner ${ok ? 'ok' : 'warn'}">${ok ? 'Listo: el análisis tiene los cuatro componentes del informe (diagnóstico, dashboard, matriz y homeostasis).' : 'Completa los puntos pendientes antes de exportar el informe.'}</div>
+      <p class="small muted">El Informe Ejecutivo Gerencial se genera a partir del JSON o XLSX exportado, para que todas sus cifras coincidan con el aplicativo.</p></div>
+    <div class="card"><h3>Descargas</h3>
+      <div class="grid" style="gap:.5rem">
+        <button class="btn" type="button" data-act="csv">CSV en formato template (secciones 1 a 7)</button>
+        <button class="btn" type="button" data-act="xlsx" ${window.XLSX ? '' : 'disabled'}>XLSX del análisis (Datos, KPIs, Escenarios, Estrategias, Homeostasis, Matriz, Supuestos)</button>
+        <button class="btn" type="button" data-act="json">JSON del estado completo</button>
+        <button class="btn" type="button" data-act="pngs" ${window.Chart ? '' : 'disabled'}>PNG de todos los gráficos del dashboard</button>
+        <button class="btn" type="button" data-act="imprimir">Vista imprimible / PDF</button>
+      </div></div>
+    <div class="card"><h3>Compartir</h3>
+      <p class="small">El link guarda el análisis completo comprimido en la URL (después de #). No pasa por ningún servidor y no requiere cuenta ni login.</p>
+      <div class="row"><button class="btn primary" type="button" data-act="link">Copiar link de este análisis</button><button class="btn" type="button" data-act="abrirJson">Abrir JSON</button></div>
+      <p class="tiny muted" style="margin-top:.5rem">Si el link supera ~8.000 caracteres, descarga el JSON y compártelo como archivo. Tamaño actual: ${window.LZString ? nf(linkDelEstado().largo, 0) : '—'} caracteres.</p></div>
+    <div class="card"><h3>Guardado</h3><p class="small">El análisis se guarda automáticamente en este navegador (si el almacenamiento está disponible). "Reiniciar" lo borra y carga el caso demo.</p><button class="btn" type="button" data-act="reiniciar">Reiniciar</button></div>
+  </div>`;
+};
+function descargar(nombre, contenido, tipo) {
+  const blob = contenido instanceof Blob ? contenido : new Blob([contenido], { type: tipo });
+  const url = URL.createObjectURL(blob), a = document.createElement('a');
+  a.href = url; a.download = nombre; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 2000);
+}
+const sello = () => new Date().toISOString().slice(0, 10);
+function filasTemplate() {
+  const d = state.data, R = [], u = (k, v) => v == null ? '' : M.KPI_DEF[k].unidad === '%' ? `${v}%` : `${v} ${M.KPI_DEF[k].unidad}`, p = v => v == null ? '' : `${v}%`, n = v => v == null ? '' : v;
+  const sec = (t, h, rows) => { R.push([t]); R.push(h); rows.forEach(r => R.push(r)); R.push(['']); };
+  sec('1. RESUMEN EJECUTIVO Y KPIS GLOBALES', ['Indicador', 'Valor Actual', 'Meta Objetivo', 'Estado', 'Responsable'], KPIS.map(k => [M.KPI_DEF[k].ind, u(k, d.kpis[k].actual), u(k, d.kpis[k].meta), d.kpis[k].estado, d.kpis[k].responsable]));
+  sec('2. GESTIÓN DE INVENTARIOS Y ALMACENES (DATOS WMS)', ['Código SKU', 'Descripción Producto', 'Categoría', 'Demanda Mensual (Unid)', 'Stock Actual (Unid)', 'Stock Seguridad (Unid)', 'Punto Reorden (Unid)', 'Costo Unitario ($)', 'Días Inventario (DIO)', 'Rotación Anual'], d.skus.map(s => [s.sku, s.desc, s.cat, n(s.dem), n(s.stock), n(s.ss), n(s.rop), n(s.costo), n(s.dio), n(s.rot)]));
+  sec('3. TRANSPORTE Y DISTRIBUCIÓN (DATOS TMS)', ['Ruta ID', 'Origen', 'Destino', 'Distancia (Km)', 'Tiempo Promedio (Horas)', 'Costo Flete Actual ($/viaje)', '% OTIF Ruta', 'Ocupación Flota (%)'], d.rutas.map(r => [r.id, r.origen, r.destino, n(r.km), n(r.horas), n(r.flete), p(r.otif), p(r.ocupacion)]));
+  sec('4. COMPRAS Y EVALUACIÓN DE PROVEEDORES (PROCUREMENT)', ['ID Proveedor', 'Nombre Proveedor', 'Categoría Suministrada', 'Lead Time Promedio (Días)', '% Fill Rate (Cumplimiento Cantidad)', '% Entregas a Tiempo', 'Calificación Calidad (1-10)'], d.proveedores.map(x => [x.id, x.nombre, x.cat, n(x.lt), p(x.fill), p(x.aTiempo), n(x.calidad)]));
+  sec('5. SERVICIO AL CLIENTE Y LOGÍSTICA INVERSA', ['Canal de Venta', 'Pedidos Totales / Mes', 'Pedidos Conformes', 'Reclamos por Demora', '% Devoluciones por Daño', 'Costo Logística Inversa ($)'], d.canales.map(c => [c.canal, n(c.total), n(c.conformes), n(c.reclamos), p(c.devPct), n(c.costoInv)]));
+  sec('6. MATRIZ DE ESCENARIOS Y SIMULACIÓN DE DISRUPCIONES', ['ID Escenario', 'Nombre Evento', 'Descripción Disrupción', 'Impacto Operativo Estimado', 'KPI Afectado Principalmente'], d.escenarios.map(e => [e.id, e.nombre, e.desc, e.impacto, e.kpi]));
+  sec('7. PARÁMETROS FINANCIEROS', ['Parámetro', 'Valor', 'Unidad', 'Fuente'], [['Ventas Mensuales ($)', n(d.ventas.valor), '$ por mes', d.ventas.fuente === 'Estimado' ? 'Estimado (demanda × costo × 1.25)' : 'Capturado']]);
+  return R;
+}
+function exportarCSV() {
+  const rows = filasTemplate();
+  const txt = window.Papa ? Papa.unparse(rows, { delimiter: ';', newline: '\r\n' }) : rows.map(r => r.map(c => /[;"\n]/.test(String(c)) ? `"${String(c).replace(/"/g, '""')}"` : c).join(';')).join('\r\n');
+  descargar(`SIG_LogiTech_template_${sello()}.csv`, '﻿' + txt, 'text/csv;charset=utf-8');
+}
+function resultados() {
+  const st = s => ({ ih: s.ih, banda: s.banda, kpiMasDebil: s.kpiMasDebil, porKPI: s.porKPI, kpis: Object.fromEntries(KPIS.map(k => [k, { actual: s.kpis[k].actual, meta: s.kpis[k].meta, cumplimiento: s.kpis[k].cumplimiento, semaforo: s.kpis[k].semaforo }])), costos: s.costos, costosEstrategia: s.costosEstrategia, resumen: s.resumen });
+  return { base: st(cmp.base), disrupcion: st(cmp.disrupcion), estrategia: st(cmp.estrategia), recuperacion: cmp.recuperacion, costoEstrategias: cmp.costoEstrategias, costoHomeostasis: cmp.costoHomeostasis,
+    escenariosAislados: Object.fromEntries(Object.keys(X.porEsc).map(k => [k, st(X.porEsc[k])])),
+    estrategiasAisladas: Object.fromEntries(Object.keys(X.porEst).map(k => [k, { activa: state.estrategias[k].activo, deltaIH: Math.round(X.dIH(k) * 10) / 10, costo: costoEst(k), kpis: st(X.porEst[k]).kpis }])),
+    matriz: matrizFilas(), sinergiaNetaIH: Math.round(X.sinergia * 10) / 10, sinergias: sinergias().map(s => s.replace(/<[^>]+>/g, '')),
+    diagnostico: { skus: X.skusDiag, rutas: X.rutas, proveedores: X.proveedores, canales: X.canales },
+    hallazgos: X.hall, brechas: BRECHAS.map(([a, b]) => ({ brecha: a, tratamiento: b })), supuestos: cmp.estrategia.supuestos, checklist: checklist().map(([t, b]) => ({ item: t, ok: b })) };
+}
+function exportarJSON() {
+  const obj = Object.assign({}, state, { version: VERSION, exportado: new Date().toISOString(), resultados: cmp ? resultados() : null });
+  descargar(`SIG_LogiTech_analisis_${sello()}.json`, JSON.stringify(obj, null, 2), 'application/json');
+}
+function exportarXLSX() {
+  if (!window.XLSX || !cmp) return;
+  const wb = XLSX.utils.book_new(), add = (n, aoa, w) => { const ws = XLSX.utils.aoa_to_sheet(aoa); if (w) ws['!cols'] = w.map(x => ({ wch: x })); XLSX.utils.book_append_sheet(wb, ws, n); };
+  add('Datos', filasTemplate(), [28, 26, 22, 18, 18, 18, 18, 16, 14, 12]);
+  const r1 = v => fin(v) ? Math.round(v * 10) / 10 : v;
+  add('KPIs', [['KPI', 'Mejor si', 'Meta', 'Base', 'Disrupción', 'Con estrategia', 'Cumpl. base', 'Cumpl. disrupción', 'Cumpl. estrategia', 'Semáforo estrategia'],
+    ...KPIS.map(k => [KPI_CORTO[k], M.KPI_DEF[k].mejor, cmp.base.kpis[k].meta, cmp.base.kpis[k].actual, cmp.disrupcion.kpis[k].actual, cmp.estrategia.kpis[k].actual, cmp.base.kpis[k].cumplimiento, cmp.disrupcion.kpis[k].cumplimiento, cmp.estrategia.kpis[k].cumplimiento, cmp.estrategia.kpis[k].semaforo])], [28, 10, 8, 8, 12, 14, 12, 16, 16, 18]);
+  const filaE = (n, s, act) => [n, act, ...KPIS.map(k => s.kpis[k].actual), r1(s.resumen.deltaCosto), r1(s.resumen.ventasPerdidas), r1(impacto$(s)), s.ih, s.banda];
+  add('Escenarios', [['Estado', 'Activo', ...KPIS.map(k => KPI_MIN[k]), 'Δ costo logístico $', 'Ventas perdidas $', 'Impacto $', 'IH', 'Banda'], filaE('Base', cmp.base, ''),
+    ...Object.keys(ESC_META).map(k => filaE(`${ESC_META[k].id} ${ESC_META[k].n} (aislado)`, X.porEsc[k], state.escenarios[k].activo ? 'Sí' : 'No')), filaE('Disrupción combinada', cmp.disrupcion, ''), [],
+    ['Parámetros'], ...Object.keys(ESC_META).flatMap(k => ESC_META[k].params.map(p => [`${ESC_META[k].id} · ${p[1]}`, state.escenarios[k][p[0]]]))], [40, 8, 10, 8, 10, 10, 14, 18, 16, 14, 8, 14]);
+  add('Estrategias', [['Estrategia', 'Rol', 'Activa', 'KPI impactado', 'Parámetros', 'Dato del SIG', 'Costo $/mes', 'Δ IH aislada'],
+    ...Object.keys(EST_META).map(k => [EST_META[k].n, state.estrategias[k].rol, state.estrategias[k].activo ? 'Sí' : 'No', KPI_CORTO[EST_META[k].kpi], decisionTxt(k), datoSIG(k), r1(costoEst(k)), r1(X.dIH(k))])], [30, 32, 8, 24, 50, 60, 12, 12]);
+  const P = state.params.pesosIH;
+  add('Homeostasis', [['Indicador', 'Base', 'Disrupción', 'Con estrategia'], ['Índice de Homeostasis', cmp.base.ih, cmp.disrupcion.ih, cmp.estrategia.ih], ['Banda', cmp.base.banda, cmp.disrupcion.banda, cmp.estrategia.banda], ['KPI más débil', KPI_CORTO[cmp.base.kpiMasDebil], KPI_CORTO[cmp.disrupcion.kpiMasDebil], KPI_CORTO[cmp.estrategia.kpiMasDebil]],
+    ...KPIS.map(k => [`Contribución ${KPI_CORTO[k]} (peso ${Math.round(P[k] * 1000) / 10}%)`, r1(100 * P[k] * cmp.base.porKPI[k]), r1(100 * P[k] * cmp.disrupcion.porKPI[k]), r1(100 * P[k] * cmp.estrategia.porKPI[k])]), [],
+    ['Tasa de recuperación (%)', cmp.recuperacion ?? 'No aplica'], ['Costo neto de las estrategias ($/mes)', cmp.costoEstrategias], ['Costo de la homeostasis ($ por punto de IH)', cmp.costoHomeostasis ?? 'No aplica'], ['Sinergia neta (pts IH)', r1(X.sinergia)], [],
+    ['Definición', 'IH = 100 × Σ peso × cumplimiento; cumplimiento con tope en 1. Indicador propuesto por el comité, no proviene del documento de la actividad.'], ['Bandas', `≥ ${state.params.bandasIH.equilibrio} Equilibrio; ${state.params.bandasIH.tension}-${state.params.bandasIH.equilibrio} Tensión; < ${state.params.bandasIH.tension} Desequilibrio`], ['Justificación de pesos', state.justificacionPesos || 'Pesos iguales: neutralidad entre roles'],
+    [], ['Sinergias'], ...sinergias().map(s => [s.replace(/<[^>]+>/g, '')])], [48, 14, 14, 16]);
+  add('Matriz', [['Rol', 'Decisión', 'Dato del SIG', 'KPI impactado', 'Base', 'Disrupción', 'Con estrategia', 'Costo $/mes', 'Δ IH'],
+    ...matrizFilas().map(r => [r.rol, r.decision, r.dato, r.kpi, r.base, r.disr, r.estr, r1(r.costo), r1(r.dIH)]), ['Conjunto', '', '', '', '', '', '', r1(cmp.costoEstrategias), r1(X.conjunto)]], [32, 50, 60, 24, 8, 10, 14, 12, 8]);
+  add('Supuestos', [['Tipo', 'Elemento', 'Valor / detalle'], ...cmp.estrategia.supuestos.map(s => ['Supuesto', s.supuesto, s.valor]),
+    ...Object.keys(EST_META).flatMap(k => EST_META[k].params.map(p => ['Supuesto (estrategia)', `${EST_META[k].n} · ${p[1]}`, String(state.estrategias[k][p[0]] ?? 'base')])),
+    ...X.hall.map(h => ['Hallazgo de calidad de datos', `${h.area} · ${h.item}`, h.h]), ...BRECHAS.map(([a, b]) => ['Brecha de información', a, b])], [28, 50, 90]);
+  const out = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+  descargar(`SIG_LogiTech_analisis_${sello()}.xlsx`, new Blob([out], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }));
+}
+function descargarPNG(id) { const c = charts[id]; if (!c) return; const a = document.createElement('a'); a.href = c.toBase64Image('image/png', 1); a.download = `SIG_${id}.png`; document.body.appendChild(a); a.click(); a.remove(); }
+function exportarPNGs() { ir('dashboard'); setTimeout(() => Object.keys(charts).forEach((id, i) => setTimeout(() => descargarPNG(id), i * 350)), 400); toast('Descargando los PNG de los gráficos del dashboard…'); }
+function imprimir() {
+  Object.keys(charts).forEach(k => { charts[k].destroy(); delete charts[k]; });
+  const mods = ['diagnostico', 'escenarios', 'estrategias', 'dashboard', 'supuestos'];
+  $('#main').innerHTML = `<div class="print-only"><h1>SIG-Logístico · LogiTech Solutions S.A.</h1><p>Análisis del Comité de Decisiones Logísticas — ${esc(state.origen)} — ${sello()} — ${VERSION}</p></div>` + mods.map(m => `<section class="mod">${VISTAS[m]()}</section>`).join('');
+  document.querySelectorAll('#main details').forEach(d => d.open = true);
+  dibujar();
+  setTimeout(() => { try { window.print(); } catch (e) { } }, 400);
+}
+window.addEventListener('afterprint', () => render());
+
+/* ====================================================================
+ * Eventos, recorrido guiado e inicio
+ * ==================================================================== */
+const ACC = {
+  addRow: el => { state.data[el.dataset.k].push(TABLAS[el.dataset.k].nuevo()); recalc(); },
+  delRow: el => { if (!confirmar('¿Eliminar esta fila?')) return; state.data[el.dataset.k].splice(Number(el.dataset.i), 1); recalc(); },
+  cargarArchivo: () => $('#fileData').click(),
+  demo: () => { state.data = M.parseTemplateCSV(DEMO_CSV); state.origen = 'Caso demo LogiTech'; compartido = false; recalc(); toast('Caso demo LogiTech cargado.'); },
+  reiniciar: reiniciar,
+  usarEstimado: () => { state.data.ventas = { valor: M.estimarVentas(state.data, state.params.margen), fuente: 'Estimado' }; recalc(); toast('Ventas estimadas: se tratan como supuesto en todos los cálculos.'); },
+  todas: () => { for (const k in state.estrategias) state.estrategias[k].activo = true; recalc(); },
+  ninguna: () => { for (const k in state.estrategias) state.estrategias[k].activo = false; recalc(); },
+  png: el => descargarPNG(el.dataset.id),
+  conservar: () => { compartido = false; history.replaceState(null, '', location.pathname + location.search); guardar(); render(); toast('Ahora es tu análisis: se guarda en este navegador.'); },
+  csv: exportarCSV, xlsx: exportarXLSX, json: exportarJSON, pngs: exportarPNGs, imprimir: imprimir,
+  link: copiarLink, abrirJson: () => $('#fileJSON').click(),
+  restaurarSupuestos: () => { state.params = clone(M.PARAMS_DEFAULT); state.pesosBorrador = pesosAPct(M.PARAMS_DEFAULT.pesosIH); const e = state.escenarios, s = state.estrategias; state.escenarios = clone(M.ESCENARIOS_DEFAULT); state.estrategias = clone(M.ESTRATEGIAS_DEFAULT); for (const k in e) state.escenarios[k].activo = e[k].activo; for (const k in s) state.estrategias[k].activo = s[k].activo; recalc(); toast('Supuestos restaurados a los valores por defecto.'); }
+};
+document.addEventListener('click', e => {
+  const t = e.target.closest('[data-tab]'); if (t) { e.preventDefault(); ir(t.dataset.tab); return; }
+  const a = e.target.closest('[data-act]'); if (a && ACC[a.dataset.act]) { e.preventDefault(); ACC[a.dataset.act](a); }
+});
+document.addEventListener('input', e => { const el = e.target; if (el.dataset && el.dataset.type && el.tagName === 'INPUT' && el.type !== 'checkbox') mascara(el); });
+document.addEventListener('change', e => {
+  const el = e.target; if (!el.dataset || !el.dataset.path) return;
+  const path = el.dataset.path, v = leerValor(el);
+  if (path.startsWith('pesosBorrador.')) { setPath(state, path, v ?? 0); aplicarPesos(); }
+  else setPath(state, path, v);
+  setTimeout(() => recalc(), 0);
+});
+$('#tabs').addEventListener('keydown', e => {
+  if (!['ArrowRight', 'ArrowLeft', 'Home', 'End'].includes(e.key)) return;
+  const i = TABS.findIndex(t => t[0] === state.tab);
+  const j = e.key === 'Home' ? 0 : e.key === 'End' ? TABS.length - 1 : (i + (e.key === 'ArrowRight' ? 1 : -1) + TABS.length) % TABS.length;
+  e.preventDefault(); ir(TABS[j][0]); document.getElementById('tab-' + TABS[j][0]).focus();
+});
+$('#selRol').addEventListener('change', e => { state.rol = e.target.value; guardar(); render(); });
+$('#btnShare').addEventListener('click', copiarLink);
+$('#fileData').addEventListener('change', e => { const f = e.target.files[0]; if (f) leerArchivoDatos(f); e.target.value = ''; });
+$('#fileJSON').addEventListener('change', async e => {
+  const f = e.target.files[0]; e.target.value = ''; if (!f) return;
+  try { const o = JSON.parse(await f.text()); if (!o || o.esquema !== ESQUEMA || !o.data) { toast('El JSON no corresponde a este aplicativo o es de otra versión.'); return; }
+    state = normalizarEstado(o); compartido = false; recalc(); toast(`Análisis cargado de ${f.name}.`); } catch (err) { toast('No se pudo leer el JSON: ' + err.message); }
+});
+function temaActual() { const t = document.documentElement.dataset.theme; return t || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); }
+$('#btnTheme').addEventListener('click', () => { const n = temaActual() === 'dark' ? 'light' : 'dark'; document.documentElement.dataset.theme = n; try { localStorage.setItem('sig-tema', n); } catch (e) { } render(); });
+try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { if (!document.documentElement.dataset.theme) render(); }); } catch (e) { }
+
+const TOUR_ROL = {
+  comite: ['Revisa las cinco áreas: el IH base resume dónde está el desequilibrio y cuál es el KPI más débil.', 'Activa los tres escenarios y observa cómo cae el IH y cuánto cuesta en $.', 'Combina las siete palancas y busca la mayor recuperación al menor costo por punto de IH.'],
+  director: ['Empieza por tu bloque: costo logístico en $ y OTIF global frente a la meta, y el IH base.', 'Mira el impacto combinado en $ (costo + ventas perdidas): es lo que defiendes ante la gerencia.', 'Tu palanca es el Plan S&OP; además, decides el portafolio completo según el costo de la homeostasis.'],
+  inventarios: ['Revisa el estado por SKU: quiebres inminentes, sobrestock y SS/ROP recomendados.', 'ESC-02 y ESC-03 pegan en tu stock: mira el día de quiebre en la simulación diaria.', 'Tus palancas: recálculo de SS/ROP y rebalanceo de sobrestock (libera capital).'],
+  transporte: ['Revisa OTIF, costo por km y ocupación por ruta.', 'ESC-01 bloquea una ruta troncal y sube el combustible: revisa el OTIF de la ruta y el costo.', 'Tus palancas: 3PL/ruta alterna y consolidación (que financia al 3PL).'],
+  compras: ['Revisa el índice de riesgo de proveedores: lead time, fill rate y calidad.', 'ESC-03 suspende al proveedor principal 3 semanas: mira qué SKU quedan sin reposición.', 'Tu palanca: proveedor alterno, con la opción de reemplazo definitivo (ataca el lead time estructural).'],
+  servicio: ['Revisa Perfect Order, reclamos y devoluciones por canal.', 'Las disrupciones generan pedidos imperfectos: observa la caída del Perfect Order.', 'Tu palanca: control de calidad en empaque (menos devoluciones, menos logística inversa).']
+};
+let tourI = 0;
+function pasosTour() { const r = TOUR_ROL[state.rol] || TOUR_ROL.comite; return [
+  ['datos', '1 · Datos', 'Carga el CSV del SIG o usa el caso demo. Revisa avisos, validaciones y los campos con ayuda (?). Las ventas estimadas se marcan como supuesto.'],
+  ['diagnostico', '2 · Diagnóstico', r[0]], ['escenarios', '3 · Escenarios', r[1]], ['estrategias', '4 · Estrategias', r[2]],
+  ['dashboard', '5 · Dashboard', 'Compara Base vs. Disrupción vs. Con estrategia. Cada cifra tiene "ver cálculo" con la fórmula y los valores sustituidos. Revisa la matriz de decisiones y las sinergias.'],
+  ['exportar', '6 · Exportar', 'Verifica el checklist de la actividad, exporta XLSX/JSON para el informe y copia el link para compartir el análisis sin login.']]; }
+function mostrarPaso() {
+  const P = pasosTour(), [tab, t, x] = P[tourI]; ir(tab);
+  $('#dlgT').textContent = t; $('#dlgB').innerHTML = `<p>${esc(x)}</p><p class="tiny muted">Vista: ${esc(ROLES[state.rol].n)}. Cambia el rol en el selector superior.</p>`;
+  $('#dlgN').textContent = `${tourI + 1} de ${P.length}`; $('#dlgPrev').disabled = tourI === 0; $('#dlgNext').textContent = tourI === P.length - 1 ? 'Terminar' : 'Siguiente';
+}
+$('#btnTour').addEventListener('click', () => { tourI = 0; mostrarPaso(); const d = $('#dlg'); if (d.showModal) d.showModal(); else d.setAttribute('open', ''); });
+$('#dlgPrev').addEventListener('click', () => { if (tourI > 0) { tourI--; mostrarPaso(); } });
+$('#dlgNext').addEventListener('click', () => { if (tourI < pasosTour().length - 1) { tourI++; mostrarPaso(); } else $('#dlg').close(); });
+$('#dlgClose').addEventListener('click', () => $('#dlg').close());
+
+(function init() {
+  try { const t = localStorage.getItem('sig-tema'); if (t) document.documentElement.dataset.theme = t; } catch (e) { }
+  $('#ver').textContent = `${VERSION} · ${FECHA}`;
+  $('#selRol').innerHTML = Object.entries(ROLES).map(([k, r]) => `<option value="${k}">${esc(r.n)}</option>`).join('');
+  const sh = window.LZString ? estadoDesdeURL() : null;
+  if (sh) { state = normalizarEstado(sh); compartido = true; }
+  else { const g = cargarGuardado(); state = g ? normalizarEstado(g) : estadoInicial(); }
+  recalc();
+  if (!window.Chart || !window.XLSX || !window.LZString) toast('Algunas librerías no cargaron (¿sin internet?): los gráficos o exportaciones pueden no estar disponibles; el cálculo funciona igual.');
+  else if (compartido) toast('Estás viendo un análisis compartido.');
+})();
+
+</script>
+</body>
+</html>
