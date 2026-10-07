@@ -1,0 +1,59 @@
+1. RESUMEN EJECUTIVO Y KPIS GLOBALES
+Indicador;Valor Actual;Meta Objetivo;Estado;Responsable;Unidad;Mejor si
+Costo Logístico Total (% sobre Ventas);14.2;10;Deficiente;Director/a de Cadena de Suministro;%;menor
+Nivel de Cumplimiento OTIF Global;81.5;95;Riesgo;Director/a de Cadena de Suministro;%;mayor
+Rotación de Inventarios (Anual);4.2;8;Bajo;Analista de Inventarios;veces;mayor
+Tiempo de Ciclo de Proveedores (Lead Time);12;5;Crítico;Gestor de Compras;días;menor
+Nivel de Pedidos Perfectos (Perfect Order Rate);78;92;Riesgo;Analista de Servicio al Cliente;%;mayor
+
+2. GESTIÓN DE INVENTARIOS Y ALMACENES (DATOS WMS)
+Código SKU;Descripción Producto;Categoría;Demanda Mensual (Unid);Stock Actual (Unid);Stock Seguridad (Unid);Punto Reorden (Unid);Costo Unitario ($);Días Inventario (DIO);Rotación Anual
+SKU-101;Smart TV 55 4K;Electro;450;120;150;300;450;8;4.5
+SKU-102;Laptop Gamer i7;Tecnología;800;250;200;500;850;9;3.8
+SKU-103;Smartphone Pro 128GB;Tecnología;1500;400;350;900;600;8;5.2
+SKU-104;Refrigeradora No Frost;Hogar;200;380;80;120;700;57;1.8
+SKU-105;Lavadora Carga Frontal;Hogar;180;310;60;100;550;51;2
+SKU-106;Audífonos Bluetooth;Accesorios;2200;4500;500;1200;35;61;1.2
+
+3. TRANSPORTE Y DISTRIBUCIÓN (DATOS TMS)
+Ruta ID;Origen;Destino;Distancia (Km);Tiempo Promedio (Horas);Costo Flete Actual ($/viaje);% OTIF Ruta;Ocupación Flota (%)
+RT-01;CD Central (Bogotá);Almacén Satélite 1 (Medellín);415;10;1200;84;92
+RT-02;CD Central (Bogotá);Almacén Satélite 2 (Cali);460;12;1450;79;88
+RT-03;CD Central (Bogotá);Almacén Satélite 3 (Bucaramanga);390;9;1100;88;95
+RT-04;Almacén Satélite 1;Clientes Retail Medellín;50;3;350;82;75
+RT-05;Almacén Satélite 2;Clientes Retail Cali;60;4;400;76;70
+RT-06;Almacén Satélite 3;Clientes Retail Bucaramanga;40;3;300;86;80
+
+4. COMPRAS Y EVALUACIÓN DE PROVEEDORES (PROCUREMENT)
+ID Proveedor;Nombre Proveedor;Categoría Suministrada;Lead Time Promedio (Días);% Fill Rate (Cumplimiento Cantidad);% Entregas a Tiempo;Calificación Calidad (1-10)
+PRV-01;TechImport Asia;Tecnología;25;82;78;7.5
+PRV-02;ElectroHogar Nacional;Hogar;8;91;89;8.8
+PRV-03;Global Sound Co.;Accesorios;18;70;65;6.2
+PRV-04;VisionDisplay Corp;Electro;15;88;85;8.1
+
+5. SERVICIO AL CLIENTE Y LOGÍSTICA INVERSA
+Canal de Venta;Pedidos Totales / Mes;Pedidos Conformes;Reclamos por Demora;% Devoluciones por Daño;Costo Logística Inversa ($)
+Grandes Superficies (Retail);1200;940;180;6.5;18500
+Tiendas Propias;450;390;40;2.1;3200
+E-Commerce (Venta Directa);2100;1650;310;8.2;24800
+
+6. MATRIZ DE ESCENARIOS Y SIMULACIÓN DE DISRUPCIONES
+ID Escenario;Nombre Evento;Descripción Disrupción;Impacto Operativo Estimado;KPI Afectado Principalmente;Modelo de Simulación
+ESC-01;Bloqueo Vial Ruta RT-02;Cierre de vía Bogotá-Cali por 5 días;"+35% en tiempo de tránsito; +20% costo flete desviación";OTIF Ruta RT-02 / Costo Transporte;ESC-01
+ESC-02;Efecto Látigo en Demanda;Campaña de marketing dispara demanda SKU-102 un +80%;"Quiebre de stock en 4 días; incapacidad de atención";Rotación / Pedidos Perfectos;ESC-02
+ESC-03;Quiebra de Proveedor PRV-01;Suspensión inmediata de entregas de Laptops por 3 semanas;Desabastecimiento total de línea Laptop Gamer;Ventas Totales / Lead Time Compras;ESC-03
+
+7. PARÁMETROS FINANCIEROS
+Parámetro;Valor;Unidad;Fuente
+Ventas Mensuales ($);2623125;$ por mes;Estimado (demanda × costo × 1.25)
+
+8. COSTOS LOGÍSTICOS Y FINANCIEROS (OPCIONAL)
+Concepto;Valor;Unidad;Fuente
+Transporte regular (fletes planificados);;$ por mes;
+Fletes urgentes / no planificados;;$ por mes;
+Almacenamiento (CD y almacenes satélite);;$ por mes;
+Mantenimiento de flota;;$ por mes;
+Administración y procesamiento de pedidos;;$ por mes;
+Costo de capital del inventario;;% anual;
+Costo de ventas (costo de la mercancía vendida);;$ por mes;
+Penalidad por pedido incumplido;;$ por pedido;

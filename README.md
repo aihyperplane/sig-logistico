@@ -1,6 +1,8 @@
 # Aplicativo SIG-Logístico — LogiTech Solutions S.A.
 
-Versión: v1.0.0 — Fecha: 2026-10-07
+Versión: v1.2.0 — Fecha: 2026-10-07
+
+Publicado en: https://aihyperplane.github.io/sig-logistico/
 
 Aplicativo web para resolver la actividad "Estrategas de la Cadena de Suministro: Decisiones Inteligentes con un SIG-Logístico". Funciona por completo en el navegador: no requiere cuenta, login ni servidor, y los datos no salen del equipo de quien lo usa.
 
@@ -8,12 +10,33 @@ Aplicativo web para resolver la actividad "Estrategas de la Cadena de Suministro
 1. **Datos** — carga del CSV del formulario SIG o del template (CSV/XLSX), captura manual con ayudas, máscaras y validaciones.
 2. **Diagnóstico** — lectura por rol (Director/a, Inventarios, Transporte, Compras, Servicio), hallazgos de calidad de datos y brechas de información.
 3. **Escenarios** — ESC-01 bloqueo vial y combustible, ESC-02 efecto látigo, ESC-03 quiebra de proveedor; editables y combinables.
-4. **Estrategias** — siete palancas con parámetros, costo, rol responsable y Δ IH.
+4. **Estrategias** — siete palancas de contingencia y un plan estructural, con parámetros, costo, rol responsable, Δ IH y optimizador de combinaciones.
 5. **Dashboard** — IH de Base / Disrupción / Con estrategia, recuperación, costo de la homeostasis, scorecard, 10 gráficos, vista por rol, matriz de decisiones y sinergias. Cada cifra tiene "ver cálculo".
-6. **Supuestos** — parámetros del motor, pesos y bandas del Índice de Homeostasis.
+6. **Supuestos** — parámetros del motor, pesos y bandas del Índice de Homeostasis, y análisis de sensibilidad.
 7. **Exportar** — checklist de la actividad, CSV (template), XLSX, JSON, PNG, vista imprimible y link para compartir.
 
+### Novedades v1.2.0
+- Secciones 1 (KPIs) y 6 (matriz de escenarios) editables: agregar, modificar y eliminar registros; indicadores adicionales informativos; modelo de simulación por evento (ESC-01/02/03 o cualitativo).
+- Listas estandarizadas (picklists) con opción "Otro…" que amplía el catálogo.
+- Template de referencia XLSX (listas desplegables, instrucciones y diccionario de campos) y CSV, descargables desde el módulo Datos.
+- Manual de usuario (`manual.html` y `Manual_SIG_Logistico.pdf`) con el paso a paso y la guía del ejercicio académico.
+- Aviso de propiedad intelectual de AI HYPERPLANE S.A.S. y términos de uso académico.
+
+### Novedades v1.1.0
+- **Sección 8 opcional de costos** (transporte, fletes urgentes, almacenamiento, mantenimiento de flota, administración, costo de capital, costo de ventas, penalidad por pedido): reemplaza supuestos por valores derivados, calcula el costo de transporte por unidad y valora fletes urgentes y penalidades. Botón de valores ilustrativos (marcados como supuesto).
+- **Optimizador**: evalúa las 256 combinaciones de las 8 palancas y muestra la frontera eficiente costo–IH.
+- **Análisis de sensibilidad** (±10/20/30%) con gráfico tornado y veredicto de robustez.
+- **Plan estructural de compras** (nueva palanca de mediano plazo) y comparación contingencia vs. estructural.
+- **Ayudas y guía académica**: ayudas emergentes accesibles, recomendaciones por módulo, glosario y referencias.
+- Motor 1.1.0: cambios documentados en `references/formulas.md` §9; los valores de control no cambian.
+
 Valores de control del caso demo: IH base 67,0 (Desequilibrio, KPI más débil: lead time); con los tres escenarios 46,5; con las siete estrategias 70,9 y recuperación de 119%.
+
+## Propiedad intelectual y uso
+© 2026 AI HYPERPLANE S.A.S. Propiedad intelectual de AI HYPERPLANE S.A.S. El simulador puede usarse libremente con fines académicos y educativos, citando la fuente; cualquier otro uso requiere autorización escrita. Ver `TERMINOS_DE_USO.md`.
+
+## Archivos del sitio
+`index.html` (simulador), `manual.html` + carpeta `manual/img/` (manual), `Manual_SIG_Logistico.pdf`, `SIG_Logistico_template_referencia.xlsx` y `.csv`, `staticwebapp.config.json`, `.nojekyll`.
 
 ## Uso
 1. Abrir el link. Para ver el caso de ejemplo: botón "Cargar caso demo" (se carga solo la primera vez).
@@ -44,4 +67,4 @@ El token se obtiene en el recurso → "Administrar token de implementación". No
 Abrir `index.html` con doble clic. Necesita internet solo para descargar las librerías (Chart.js, SheetJS, PapaParse, lz-string) desde cdnjs; sin ellas el cálculo funciona, pero no los gráficos ni las exportaciones XLSX.
 
 ## Actualizar
-Reemplazar `index.html`, subir la versión en el pie (constante `VERSION`) y en este README, hacer push. Los links compartidos (`#estado=`) de versiones anteriores siguen abriendo mientras no cambie el esquema del estado.
+En el repositorio: Add file → Upload files → arrastrar el nuevo `index.html` → Commit. Subir la versión en el pie (constante `VERSION`) y en este README, hacer push. Los links compartidos (`#estado=`) de versiones anteriores siguen abriendo mientras no cambie el esquema del estado.

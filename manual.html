@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Manual de usuario · SIG-Logístico</title>
+<meta name="description" content="Manual de usuario del simulador SIG-Logístico (LogiTech Solutions S.A.): paso a paso y guía del ejercicio académico. Propiedad intelectual de AI HYPERPLANE S.A.S.">
+<meta name="author" content="AI HYPERPLANE S.A.S.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230f6e7a'/%3E%3Cpath d='M7 21h6v-6h6v-6h6' stroke='white' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<style>
+:root{--bg:#f4f6f8;--surface:#fff;--surface-2:#eef2f5;--text:#16212b;--muted:#5b6b7a;--border:#d9e0e6;--accent:#0f6e7a;--accent-soft:#e1f1f2;--warn-bg:#fdf3e1;--warn:#b45309;--ok-bg:#e7f6ec;--ok:#15803d;--bad-bg:#fde8e8;--bad:#b91c1c;color-scheme:light}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#0e1419;--surface:#161e25;--surface-2:#1d2730;--text:#e6edf3;--muted:#9aabba;--border:#2a3743;--accent:#3fb6c2;--accent-soft:#163238;--warn-bg:#33270f;--warn:#fbbf24;--ok-bg:#12301f;--ok:#4ade80;--bad-bg:#3a1717;--bad:#f87171;color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.65 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+a{color:var(--accent)}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px;display:grid;grid-template-columns:250px minmax(0,1fr);gap:2rem}
+nav.toc{position:sticky;top:0;align-self:start;max-height:100vh;overflow:auto;padding:1.5rem 0;font-size:.88rem}
+nav.toc ol{list-style:none;padding:0;margin:0} nav.toc li{margin:.15rem 0} nav.toc ol ol{padding-left:.9rem;font-size:.84rem}
+nav.toc a{text-decoration:none;color:var(--muted)} nav.toc a:hover{color:var(--accent)}
+main{padding:1.5rem 0 4rem;min-width:0}
+header.cover{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.6rem;margin-bottom:2rem}
+header.cover h1{margin:.2rem 0 .4rem;font-size:1.9rem;line-height:1.2}
+.brand{display:flex;align-items:center;gap:.7rem}
+.logo{width:40px;height:40px;border-radius:10px;background:#0f6e7a;display:grid;place-items:center}
+h2{font-size:1.45rem;margin:2.6rem 0 .6rem;padding-top:.6rem;border-top:1px solid var(--border);line-height:1.25}
+h3{font-size:1.12rem;margin:1.8rem 0 .4rem}
+h4{font-size:1rem;margin:1.2rem 0 .3rem}
+p{margin:.4rem 0 .9rem;max-width:78ch}
+li{margin:.25rem 0}
+.muted{color:var(--muted)} .small{font-size:.88rem}
+.note{border-radius:10px;padding:.75rem 1rem;margin:1rem 0;border-left:4px solid var(--accent);background:var(--accent-soft)}
+.note.warn{border-left-color:var(--warn);background:var(--warn-bg)}
+.note.ok{border-left-color:var(--ok);background:var(--ok-bg)}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps>li{counter-increment:s;position:relative;padding-left:2.4rem;margin:.8rem 0}
+.steps>li::before{content:counter(s);position:absolute;left:0;top:.05rem;width:1.7rem;height:1.7rem;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:.85rem;font-weight:700}
+figure{margin:1rem 0 1.4rem;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:.6rem}
+figure img{display:block;width:100%;height:auto;border-radius:8px}
+figcaption{font-size:.84rem;color:var(--muted);margin-top:.4rem}
+.tw{overflow-x:auto;border:1px solid var(--border);border-radius:10px;background:var(--surface);margin:1rem 0}
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+th,td{padding:.5rem .65rem;border-bottom:1px solid var(--border);text-align:left;vertical-align:top}
+th{background:var(--surface-2)} tr:last-child td{border-bottom:0}
+code,kbd{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.86em;background:var(--surface-2);padding:.1rem .35rem;border-radius:5px}
+.formula{font-family:ui-monospace,Menlo,Consolas,monospace;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.7rem .9rem;font-size:.88rem;white-space:pre-wrap;overflow-x:auto}
+.btn{display:inline-block;background:var(--accent);color:#fff;text-decoration:none;padding:.5rem .9rem;border-radius:8px;font-weight:600}
+.pi{font-size:.85rem;color:var(--muted);border-top:1px solid var(--border);margin-top:3rem;padding-top:1rem}
+.tag{display:inline-block;font-size:.72rem;font-weight:700;padding:.05rem .45rem;border-radius:99px;background:var(--surface-2);color:var(--muted)}
+@media (max-width:900px){.wrap{grid-template-columns:1fr}nav.toc{position:static;max-height:none;border-bottom:1px solid var(--border)}}
+@media print{nav.toc{display:none}.wrap{display:block}body{background:#fff;font-size:11pt}figure,.note,.tw{break-inside:avoid}h2{break-before:page}header.cover{border:0}a{color:inherit;text-decoration:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav class="toc" aria-label="Contenido">
+  <strong>Contenido</strong>
+  <ol>
+    <li><a href="#intro">1. Introducción</a></li>
+    <li><a href="#ejercicio">2. El ejercicio académico</a></li>
+    <li><a href="#acceso">3. Acceso y requisitos</a></li>
+    <li><a href="#interfaz">4. La interfaz</a></li>
+    <li><a href="#pasos">5. Paso a paso</a>
+      <ol>
+        <li><a href="#carga">5.1 Datos y template</a></li>
+        <li><a href="#diagnostico">5.2 Diagnóstico</a></li>
+        <li><a href="#escenarios">5.3 Escenarios</a></li>
+        <li><a href="#estrategias">5.4 Estrategias</a></li>
+        <li><a href="#dashboard">5.5 Dashboard</a></li>
+        <li><a href="#supuestos">5.6 Supuestos</a></li>
+        <li><a href="#exportar">5.7 Exportar y compartir</a></li>
+      </ol></li>
+    <li><a href="#ih">6. Índice de Homeostasis</a></li>
+    <li><a href="#informe">7. El Informe Ejecutivo</a></li>
+    <li><a href="#referencia">8. Resultados de referencia</a></li>
+    <li><a href="#faq">9. Preguntas frecuentes</a></li>
+    <li><a href="#glosario">10. Glosario y referencias</a></li>
+    <li><a href="#terminos">11. Términos de uso</a></li>
+  </ol>
+</nav>
+<main id="main">
+<header class="cover">
+  <div class="brand"><div class="logo" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 32 32"><path d="M5 23h7v-7h7V9h8" stroke="#fff" stroke-width="3.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="muted small">AI HYPERPLANE S.A.S. · Simulador académico</span></div>
+  <h1>Manual de usuario — SIG-Logístico LogiTech Solutions S.A.</h1>
+  <p class="muted">Paso a paso del simulador y guía del ejercicio “Estrategas de la Cadena de Suministro: Decisiones Inteligentes con un SIG-Logístico”. Versión del aplicativo: v1.2.0 · octubre de 2026.</p>
+  <p><a class="btn" href="index.html">Abrir el simulador</a> &nbsp; <a href="Manual_SIG_Logistico.pdf">Descargar este manual en PDF</a> · <a href="SIG_Logistico_template_referencia.xlsx">Template de referencia (XLSX)</a></p>
+  <p class="small muted">© 2026 AI HYPERPLANE S.A.S. Propiedad intelectual de AI HYPERPLANE S.A.S. El simulador puede usarse libremente con fines académicos y educativos; cualquier otro uso requiere autorización escrita. Ver <a href="#terminos">términos de uso</a>.</p>
+</header>
+
+<h2 id="intro">1. Introducción</h2>
+<p>El <strong>SIG-Logístico</strong> es un simulador web que reproduce el Sistema de Información Gerencial de una empresa de distribución. Permite cargar los datos del SIG, diagnosticar la cadena de suministro por rol, simular disrupciones, aplicar estrategias y evaluar el resultado con un tablero integrado y un indicador síntesis, el <strong>Índice de Homeostasis</strong>.</p>
+<p>Está pensado para estudiantes y docentes de logística, cadena de suministro y sistemas de información gerencial. No requiere instalación, cuenta ni inicio de sesión: funciona por completo en el navegador y los datos no salen del equipo de quien lo usa.</p>
+<h3>El caso: LogiTech Solutions S.A.</h3>
+<p>LogiTech es una empresa <strong>ficticia</strong> que distribuye tecnología y electrodomésticos desde un Centro de Distribución (CD) en Bogotá hacia tres almacenes satélite en Medellín, Cali y Bucaramanga. Aunque sus ventas crecen, enfrenta:</p>
+<ul>
+  <li>Entregas tardías o incompletas que afectan su reputación con grandes cadenas y clientes finales.</li>
+  <li>Costos de almacenamiento elevados: sobrestock en productos de baja rotación y quiebres en los de alta demanda.</li>
+  <li>Sobrecostos de transporte por envíos urgentes y fletes no planificados.</li>
+  <li>Poca visibilidad e integración entre compras, almacén y distribución.</li>
+</ul>
+
+<h2 id="ejercicio">2. El ejercicio académico</h2>
+<h3>Objetivo de aprendizaje</h3>
+<p>Comprender cómo un Sistema de Información Gerencial en logística (ERP, WMS, TMS) respalda la planificación, la mitigación de riesgos y la toma de decisiones estratégicas para optimizar la cadena de suministro, garantizar la eficiencia operativa y maximizar el nivel de servicio al menor costo global posible.</p>
+<h3>Dinámica</h3>
+<p>Los estudiantes actúan como el <strong>Comité de Decisiones Logísticas</strong>. La organización se trata como un sistema autorregulado que busca la <strong>homeostasis</strong>: equilibrio interno, protección y continuidad del negocio. El comité extrae e interpreta la información del SIG, analiza el impacto sistémico de las disrupciones y formula estrategias sustentadas en datos.</p>
+<h3>Roles y KPIs</h3>
+<div class="tw"><table>
+<thead><tr><th>Rol</th><th>Responsabilidad</th><th>KPIs</th><th>Dónde se ven en el simulador</th></tr></thead>
+<tbody>
+<tr><td>Director/a de Cadena de Suministro</td><td>Visión holística y decisiones finales</td><td>Costo logístico % ventas, OTIF global</td><td>Diagnóstico (bloque Director), Dashboard, Índice de Homeostasis</td></tr>
+<tr><td>Analista de Inventarios (WMS)</td><td>Capacidad, stock y exactitud del registro</td><td>Rotación, DIO, IRA</td><td>Diagnóstico (tabla de SKU), gráficos de stock y DIO</td></tr>
+<tr><td>Coordinador/a de Transporte (TMS)</td><td>Rutas, flota, última milla y fletes</td><td>OTIF, costo de transporte por unidad</td><td>Diagnóstico (rutas), sección 8 de costos, gráfico OTIF y costo/km</td></tr>
+<tr><td>Gestor/a de Compras</td><td>Proveedores y tiempos de abastecimiento</td><td>Lead time, fill rate</td><td>Diagnóstico (índice de riesgo), plan estructural de compras</td></tr>
+<tr><td>Analista de Servicio al Cliente</td><td>Experiencia, reclamos y devoluciones</td><td>Perfect Order, devoluciones, costo de logística inversa</td><td>Diagnóstico (canales), control de calidad en empaque</td></tr>
+</tbody></table></div>
+<h3>Disrupciones del caso</h3>
+<ol>
+  <li><strong>Disrupción en transporte:</strong> bloqueo prolongado de una vía principal y alza del combustible del 20%.</li>
+  <li><strong>Efecto látigo:</strong> una campaña no notificada a logística eleva 80% la demanda de un grupo de productos.</li>
+  <li><strong>Fallo crítico de proveedor:</strong> el proveedor principal del producto de mayor margen quiebra y suspende despachos tres semanas.</li>
+</ol>
+<h3>Entregable y cómo lo cubre el simulador</h3>
+<div class="tw"><table>
+<thead><tr><th>Componente del Informe Ejecutivo Gerencial</th><th>Módulos del simulador</th></tr></thead>
+<tbody>
+<tr><td><strong>Diagnóstico Inicial</strong>: estado de la cadena antes de las medidas</td><td>2 · Diagnóstico (por rol, hallazgos de calidad de datos, brechas)</td></tr>
+<tr><td><strong>Dashboard Integrado</strong>: gráficas que evidencian el problema y la solución</td><td>5 · Dashboard (exporta cada gráfico en PNG)</td></tr>
+<tr><td><strong>Matriz de Decisiones Estratégicas</strong>: acción por rol y dato del SIG que la respalda</td><td>4 · Estrategias y la Matriz de decisiones del Dashboard</td></tr>
+<tr><td><strong>Evaluación de Sinergia y Homeostasis</strong></td><td>Dashboard: IH, recuperación, costo de la homeostasis, sinergias; Estrategias: contingencia vs. estructural</td></tr>
+<tr><td>Anexos: supuestos, hallazgos, brechas, fórmulas</td><td>6 · Supuestos (con sensibilidad) y 7 · Exportar (XLSX/JSON)</td></tr>
+</tbody></table></div>
+
+<h2 id="acceso">3. Acceso y requisitos</h2>
+<ul>
+  <li><strong>Acceso:</strong> abre el link del simulador en cualquier navegador moderno (Chrome, Edge, Safari o Firefox), en computador o celular. No hay registro ni contraseña.</li>
+  <li><strong>Internet:</strong> se necesita al abrir la página para descargar las librerías de gráficos y Excel. El cálculo funciona aunque fallen.</li>
+  <li><strong>Privacidad:</strong> todo el cálculo ocurre en tu navegador. Los datos no se envían a ningún servidor.</li>
+  <li><strong>Guardado:</strong> tu análisis se guarda automáticamente en el navegador que estás usando. Para llevarlo a otro equipo, descarga el JSON o copia el link del análisis.</li>
+  <li><strong>Recomendación:</strong> usa un computador para el trabajo completo; el celular sirve para consultar resultados.</li>
+</ul>
+<div class="note warn"><strong>Caso ficticio.</strong> No ingreses datos reales de empresas sin autorización.</div>
+
+<h2 id="interfaz">4. La interfaz</h2>
+<figure><img src="manual/img/01-datos.jpg" alt="Encabezado del simulador con el selector de vista, botones y pestañas de los siete módulos" loading="lazy"><figcaption>Figura 1. Encabezado y módulo Datos.</figcaption></figure>
+<div class="tw"><table>
+<thead><tr><th>Elemento</th><th>Para qué sirve</th></tr></thead>
+<tbody>
+<tr><td><strong>Vista</strong></td><td>Elige “Comité completo” o un rol. El simulador prioriza la información de ese rol (lo abre primero y lo resalta) sin ocultar la visión sistémica.</td></tr>
+<tr><td><strong>Recorrido guiado</strong></td><td>Tour corto de seis pasos adaptado al rol elegido.</td></tr>
+<tr><td><strong>Guía académica</strong></td><td>Paso a paso del entregable, buenas prácticas, glosario y referencias.</td></tr>
+<tr><td><strong>Manual</strong></td><td>Abre este documento.</td></tr>
+<tr><td><strong>Copiar link</strong></td><td>Copia un link que reproduce tu análisis exacto (datos, escenarios, estrategias y supuestos).</td></tr>
+<tr><td><strong>Tema</strong></td><td>Alterna entre modo claro y oscuro.</td></tr>
+<tr><td><strong>Pestañas 1 a 7</strong></td><td>Datos, Diagnóstico, Escenarios, Estrategias, Dashboard, Supuestos y Exportar, en el orden del ejercicio. Con el teclado: flechas izquierda y derecha.</td></tr>
+<tr><td><strong>“?” (ayudas)</strong></td><td>Pasa el cursor, enfoca con Tab o toca el “?” para ver la definición, la fórmula o cómo leer un gráfico.</td></tr>
+<tr><td><strong>ƒ ver cálculo</strong></td><td>Muestra la fórmula de cada cifra con los valores del caso sustituidos.</td></tr>
+<tr><td><strong>Recomendación académica</strong></td><td>Recuadro al inicio de cada módulo con lo que conviene llevar al informe. Se puede ocultar.</td></tr>
+</tbody></table></div>
+
+<h2 id="pasos">5. Paso a paso</h2>
+
+<h3 id="carga">5.1 Datos: cargar o capturar la información del SIG</h3>
+<p>Tienes tres caminos: usar el <strong>caso demo</strong> (se carga solo la primera vez), cargar un archivo con el <strong>template de referencia</strong> o capturar los datos directamente en las tablas.</p>
+<h4>Usar el template de referencia</h4>
+<ol class="steps">
+  <li>En <strong>Datos → Fuente de datos</strong>, pulsa <strong>XLSX con listas e instrucciones</strong> (o <strong>CSV</strong>). El archivo viene lleno con el caso LogiTech como ejemplo.</li>
+  <li>Abre el XLSX. Tiene cuatro hojas: <strong>Plantilla_SIG</strong> (la que se carga), <strong>Instrucciones</strong>, <strong>Diccionario</strong> (tipo, unidad, rango y uso de cada campo) y <strong>Listas</strong> (valores de las listas desplegables).</li>
+  <li>Reemplaza los valores respetando las reglas: no cambies los títulos numerados ni los encabezados; para agregar registros inserta filas dentro de la sección, sin dejar filas vacías; escribe números sin símbolos ni separadores de miles; porcentajes de 0 a 100.</li>
+  <li>Guarda el archivo y pulsa <strong>Cargar CSV / XLSX</strong>. El simulador lee la primera hoja.</li>
+  <li>Revisa la tarjeta <strong>Validación de datos</strong>: corrige los errores (en rojo) y evalúa las advertencias (en amarillo).</li>
+</ol>
+<div class="note">Las secciones del template son: 1 KPIs globales · 2 Inventarios (WMS) · 3 Transporte (TMS) · 4 Proveedores · 5 Servicio y logística inversa · 6 Matriz de escenarios · 7 Ventas · 8 Costos logísticos (opcional).</div>
+<h4>Capturar o editar en las tablas</h4>
+<ul>
+  <li>Cada campo tiene ayuda (“?”) y muestra el valor del caso de referencia como guía. Las máscaras impiden letras en campos numéricos y ajustan rangos (porcentajes de 0 a 100, calidad de 1 a 10).</li>
+  <li>Los códigos se completan solos: escribe <code>7</code> en el código de SKU y queda <code>SKU-7</code> (lo mismo con <code>RT-</code>, <code>PRV-</code> y <code>ESC-</code>).</li>
+  <li><strong>Listas estandarizadas (picklists):</strong> categorías, nodos de origen y destino, canales, estado y responsable de los KPIs, KPI afectado y modelo de simulación se eligen de una lista. Si necesitas un valor nuevo, elige <strong>“Otro…”</strong> y escríbelo: queda agregado a la lista para todo tu análisis.</li>
+  <li><strong>+ Agregar fila</strong> y <strong>✕</strong> agregan o eliminan registros en cada sección.</li>
+</ul>
+<figure><img src="manual/img/02-kpis.jpg" alt="Sección 1 con los cinco KPIs del IH, listas de estado y responsable" loading="lazy"><figcaption>Figura 2. Sección 1: los cinco KPIs del Índice de Homeostasis (fijos) y el botón para agregar indicadores adicionales.</figcaption></figure>
+<h4>Sección 1: KPIs globales e indicadores adicionales</h4>
+<p>Los cinco KPIs del Índice de Homeostasis (costo logístico, OTIF, rotación, lead time y Perfect Order) conservan su nombre; sus valores, metas, estado y responsable se editan. Con <strong>+ Agregar indicador</strong> puedes registrar otros indicadores —por ejemplo fill rate global, DIO o IRA— con su unidad y si “mayor” o “menor” es mejor. Son <strong>informativos</strong>: aparecen en el Diagnóstico con su semáforo y en las exportaciones, pero no entran al IH.</p>
+<figure><img src="manual/img/03-wms.jpg" alt="Tabla de inventarios con lista desplegable de categoría" loading="lazy"><figcaption>Figura 3. Sección 2 (WMS). La categoría conecta cada SKU con el lead time de su proveedor.</figcaption></figure>
+<h4>Sección 6: matriz de escenarios</h4>
+<p>Agrega, modifica o elimina eventos. Cada evento tiene un <strong>modelo de simulación</strong>:</p>
+<ul>
+  <li><strong>ESC-01 · Transporte</strong>: bloqueo de una ruta y alza del combustible.</li>
+  <li><strong>ESC-02 · Demanda</strong>: pico de demanda (efecto látigo) en un SKU.</li>
+  <li><strong>ESC-03 · Proveedor</strong>: suspensión de despachos de un proveedor.</li>
+  <li><strong>Cualitativo</strong>: eventos que el simulador no cuantifica (ciberataque, huelga, inundación). Se documentan en la matriz, aparecen en el módulo Escenarios y deben analizarse en el informe.</li>
+</ul>
+<p>Cada modelo cuantitativo simula un evento a la vez; si asignas el mismo modelo a dos eventos, el simulador cuantifica el primero y te avisa.</p>
+<figure><img src="manual/img/04-escenarios-matriz.jpg" alt="Matriz de escenarios editable con listas de KPI afectado y modelo de simulación" loading="lazy"><figcaption>Figura 4. Sección 6 editable.</figcaption></figure>
+<h4>Sección 7: ventas</h4>
+<p>Las ventas mensuales son obligatorias. Si no las tienes, <strong>Usar estimado</strong> las calcula como Σ(demanda × costo) × (1 + margen) y las marca como supuesto.</p>
+<h4>Sección 8: costos logísticos y financieros (opcional)</h4>
+<p>Permite ingresar transporte regular, fletes urgentes, almacenamiento, mantenimiento de flota, administración, costo de capital del inventario, costo de ventas y penalidad por pedido incumplido, cada uno con su fuente. Con estos datos el simulador:</p>
+<ul>
+  <li>Calcula el margen real, los viajes por ruta y el costo de mantener inventario (en lugar de suponerlos).</li>
+  <li>Calcula el <strong>costo de transporte por unidad</strong> (KPI del rol de Transporte) y el costo de almacenamiento por unidad.</li>
+  <li>Valora el ahorro de fletes urgentes (SS/ROP y S&amp;OP), de mantenimiento de flota (consolidación) y las penalidades de la disrupción.</li>
+  <li>Compara el desglose con el costo logístico reportado y lo señala como hallazgo si no cuadra.</li>
+</ul>
+<p>El botón <strong>Cargar valores ilustrativos</strong> llena la tabla con cifras coherentes con el caso (suman cerca del 14,2% de las ventas), marcadas como “Ilustrativo (supuesto)”. Úsalas para practicar, pero decláralas como supuestos en el informe. Si dejas la sección vacía, los resultados no cambian.</p>
+<figure><img src="manual/img/05-costos.jpg" alt="Sección 8 de costos con indicadores derivados" loading="lazy"><figcaption>Figura 5. Sección 8 con valores ilustrativos y los indicadores que se derivan.</figcaption></figure>
+
+<h3 id="diagnostico">5.2 Diagnóstico inicial por rol</h3>
+<p>Muestra el estado de la cadena <strong>antes</strong> de las disrupciones, en un bloque por rol:</p>
+<ul>
+  <li><strong>Director/a:</strong> IH base y su banda, costo logístico mensual en $ y su exceso sobre la meta, scorecard de los cinco KPIs, indicadores adicionales y, si ingresaste la sección 8, la composición del costo.</li>
+  <li><strong>Inventarios:</strong> por SKU, demanda diaria, stock, SS y ROP del WMS frente a los recomendados, DIO, cobertura y estado (quiebre inminente, reordenar, sobrestock o sano).</li>
+  <li><strong>Transporte:</strong> OTIF, costo por km, ocupación y capacidad ociosa por ruta; costo de transporte por unidad si hay costos.</li>
+  <li><strong>Compras:</strong> índice de riesgo de proveedores = (lead time / meta) × (1 − fill rate) × (10 / calidad), y el aviso del problema estructural de lead time.</li>
+  <li><strong>Servicio:</strong> Perfect Order, reclamos, devoluciones y costo de logística inversa por canal.</li>
+</ul>
+<p>Al final aparecen los <strong>hallazgos de calidad de datos</strong> (datos reportados que no cuadran con su cálculo; el original nunca se sobrescribe) y las <strong>brechas de información</strong> (lo que el SIG no permite calcular, como el IRA).</p>
+<figure><img src="manual/img/06-diag-director.jpg" alt="Bloque del Director con IH base, costo mensual y scorecard" loading="lazy"><figcaption>Figura 6. Diagnóstico: bloque del Director/a.</figcaption></figure>
+<figure><img src="manual/img/07-diag-compras.jpg" alt="Bloque de Compras con índice de riesgo y aviso estructural" loading="lazy"><figcaption>Figura 7. Diagnóstico: bloque de Compras con el aviso del problema estructural.</figcaption></figure>
+
+<h3 id="escenarios">5.3 Escenarios: simular las disrupciones</h3>
+<ol class="steps">
+  <li>Activa uno o varios escenarios con el interruptor de cada tarjeta.</li>
+  <li>Ajusta sus parámetros: ruta bloqueada, días, aumento del tiempo de tránsito, sobrecosto del desvío y alza del combustible (ESC-01); SKU y % de aumento de demanda (ESC-02); proveedor y días sin despacho (ESC-03).</li>
+  <li>Lee el impacto aislado en cada tarjeta (por ejemplo, el día de quiebre del SKU) y la tabla de impacto: los cinco KPIs, el Δ de costo logístico, las ventas perdidas, las penalidades, el impacto total en $ y el IH de cada escenario y de la combinación.</li>
+  <li>Usa el gráfico de stock diario para mostrar cuándo y cuánto se pierde.</li>
+</ol>
+<figure><img src="manual/img/08-esc-cards.jpg" alt="Tarjetas de los tres escenarios con parámetros e impacto aislado" loading="lazy"><figcaption>Figura 8. Tarjetas de escenarios.</figcaption></figure>
+<figure><img src="manual/img/09-esc-impacto.jpg" alt="Tabla de impacto por escenario y combinado" loading="lazy"><figcaption>Figura 9. Impacto en KPIs, $ e IH.</figcaption></figure>
+<div class="note">La combinación no es la suma de los escenarios: los efectos interactúan. Ese es el “impacto sistémico” que pide la actividad.</div>
+
+<h3 id="estrategias">5.4 Estrategias: palancas, plan estructural y optimizador</h3>
+<p>Hay siete <strong>palancas de contingencia</strong> y una <strong>estructural</strong>. Cada tarjeta muestra el rol responsable, el KPI que ataca, el <em>dato del SIG</em> que la justifica, sus parámetros (etiquetados como supuesto), su costo mensual y su Δ IH cuando se aplica sola.</p>
+<div class="tw"><table>
+<thead><tr><th>Palanca</th><th>Rol</th><th>Qué hace en el modelo</th></tr></thead>
+<tbody>
+<tr><td>3PL / ruta alterna</td><td>Transporte</td><td>Sostiene el OTIF de la ruta bloqueada; reemplaza el sobrecosto del desvío por el del 3PL.</td></tr>
+<tr><td>Consolidación / cross-docking</td><td>Transporte</td><td>Sube la ocupación de las rutas hasta el objetivo y elimina viajes.</td></tr>
+<tr><td>Recálculo de SS y ROP</td><td>Inventarios</td><td>Repone los SKU bajo el ROP recomendado; reduce fletes urgentes si hay costos.</td></tr>
+<tr><td>Rebalanceo de sobrestock</td><td>Inventarios</td><td>Lleva los SKU en sobrestock al DIO objetivo y libera capital.</td></tr>
+<tr><td>Proveedor alterno</td><td>Compras</td><td>Pedido de emergencia por el faltante que causa la disrupción; opción de reemplazo definitivo.</td></tr>
+<tr><td>Plan S&amp;OP</td><td>Director/a</td><td>Reduce el pico del efecto látigo; reduce fletes urgentes si hay costos.</td></tr>
+<tr><td>Control de calidad en empaque</td><td>Servicio</td><td>Reduce devoluciones por daño; esos pedidos pasan a perfectos.</td></tr>
+<tr><td><strong>Plan estructural de compras</strong></td><td>Compras</td><td>Lleva a los proveedores con lead time alto a un lead time objetivo, con sobrecosto de compra. Es de mediano plazo.</td></tr>
+</tbody></table></div>
+<figure><img src="manual/img/10-est-palanca.jpg" alt="Tarjeta de una palanca con dato del SIG, parámetros, costo y delta de IH" loading="lazy" style="max-width:620px"><figcaption>Figura 10. Tarjeta de una palanca.</figcaption></figure>
+<h4>Contingencia vs. plan estructural</h4>
+<p>Compara el resultado de las palancas de contingencia con y sin el plan estructural: IH, banda, KPI más débil, lead time, costo y costo por punto. Sirve para distinguir lo que <em>restaura</em> la operación de lo que <em>cambia</em> su punto de equilibrio.</p>
+<figure><img src="manual/img/11-est-estructural.jpg" alt="Tabla contingencia vs estructural con lectura automática" loading="lazy"><figcaption>Figura 11. Contingencia vs. plan estructural.</figcaption></figure>
+<h4>Optimizador de combinaciones</h4>
+<p>Evalúa las 256 combinaciones posibles de las ocho palancas con tus datos y escenarios. El gráfico ubica cada combinación por costo neto y por IH, y une la <strong>frontera eficiente</strong>: las combinaciones para las que no existe otra más barata con un IH igual o mayor. La tabla propone:</p>
+<ul>
+  <li><strong>Máximo IH</strong> alcanzable.</li>
+  <li><strong>Mejor $/punto que recupera todo el daño</strong>: la más eficiente entre las que devuelven al menos el IH previo al choque.</li>
+  <li><strong>Mejora y ahorra</strong>: mejora el IH con ahorro neto.</li>
+  <li><strong>Más barata en Tensión / Equilibrio</strong>: el costo mínimo para cambiar de banda.</li>
+</ul>
+<p>El botón <strong>Aplicar</strong> activa esa combinación. Si tu selección no está en la frontera, el simulador te dice qué combinación logra lo mismo o más por menos.</p>
+<figure><img src="manual/img/12-est-optimizador.jpg" alt="Optimizador con gráfico de frontera eficiente y tabla de criterios" loading="lazy"><figcaption>Figura 12. Optimizador.</figcaption></figure>
+
+<h3 id="dashboard">5.5 Dashboard de evaluación</h3>
+<p>Compara los tres estados: <strong>Base</strong> (azul), <strong>Disrupción</strong> (naranja) y <strong>Con estrategia</strong> (verde).</p>
+<ul>
+  <li><strong>Encabezado:</strong> IH de los tres estados con su banda, tasa de recuperación, KPI más débil y costo de la homeostasis.</li>
+  <li><strong>Scorecard:</strong> los cinco KPIs frente a la meta con semáforo (verde cumple; amarillo ≥ 90% de la meta; rojo por debajo) y “ver cálculo” de cada estado.</li>
+  <li><strong>Gráficos:</strong> radar de cumplimiento, IH por estado, KPIs vs. meta, cascada del costo logístico, stock diario del SKU afectado, stock vs. SS vs. ROP, DIO, OTIF y costo por km, lead time vs. fill rate, Perfect Order y devoluciones. Cada uno tiene “?” con “cómo leerlo” y botón <strong>PNG</strong>.</li>
+  <li><strong>Contingencia vs. estructural</strong> y resumen del optimizador.</li>
+  <li><strong>Vista por rol:</strong> contribución de cada rol al IH (100 × peso × cumplimiento de su KPI).</li>
+  <li><strong>Matriz de decisiones:</strong> Rol · Decisión · Dato del SIG · KPI impactado · Base → Disrupción → Con estrategia · Costo · Δ IH.</li>
+  <li><strong>Sinergias entre áreas</strong> y <strong>supuestos en uso</strong>.</li>
+</ul>
+<figure><img src="manual/img/13-dash-top.jpg" alt="Encabezado del dashboard con los tres IH" loading="lazy"><figcaption>Figura 13. Encabezado del Dashboard.</figcaption></figure>
+<figure><img src="manual/img/14-dash-scorecard.jpg" alt="Scorecard de cinco KPIs con semáforo" loading="lazy"><figcaption>Figura 14. Scorecard.</figcaption></figure>
+<figure><img src="manual/img/16-dash-sim.jpg" alt="Gráfico de evolución diaria del stock" loading="lazy" style="max-width:640px"><figcaption>Figura 15. Stock diario del SKU afectado: el día en que la línea toca cero empieza la venta perdida.</figcaption></figure>
+<figure><img src="manual/img/17-dash-matriz.jpg" alt="Matriz de decisiones estratégicas" loading="lazy"><figcaption>Figura 16. Matriz de decisiones estratégicas.</figcaption></figure>
+
+<h3 id="supuestos">5.6 Supuestos y sensibilidad</h3>
+<p>Todo lo que el SIG no trae es un parámetro editable etiquetado como <strong>Supuesto</strong>: margen, días de protección, umbral de sobrestock, viajes por ruta, participación del combustible, costo de mantener inventario y fracciones variables. Si ingresaste la sección 8, algunos se marcan como <strong>Derivado</strong> y se editan desde los costos.</p>
+<p>Aquí también se configuran los <strong>pesos del IH</strong> (deben sumar 100%; si los cambias, escribe la justificación) y las <strong>bandas</strong>.</p>
+<p>El <strong>análisis de sensibilidad</strong> mueve cada supuesto ±10, 20 o 30% y muestra cuánto cambia el IH con estrategia (gráfico tornado). El veredicto indica si la banda o el KPI más débil cambian: si no cambian, la conclusión es robusta.</p>
+<figure><img src="manual/img/18-sup-sensibilidad.jpg" alt="Análisis de sensibilidad con gráfico tornado" loading="lazy"><figcaption>Figura 17. Sensibilidad.</figcaption></figure>
+
+<h3 id="exportar">5.7 Exportar y compartir</h3>
+<ul>
+  <li><strong>Checklist de la actividad:</strong> verifica datos sin errores, diagnóstico, al menos un escenario, dashboard, matriz con al menos una estrategia, evaluación de homeostasis y justificación de pesos.</li>
+  <li><strong>CSV en formato template</strong> (secciones 1 a 8): vuelve a cargarse sin cambios.</li>
+  <li><strong>XLSX del análisis:</strong> hojas Datos, KPIs, Escenarios, Estrategias, Homeostasis, Matriz, Optimizador, Sensibilidad, Estructural, Costos y Supuestos.</li>
+  <li><strong>JSON del estado completo</strong>, con todos los resultados: es la fuente recomendada para escribir el informe.</li>
+  <li><strong>PNG de todos los gráficos</strong> del dashboard y <strong>vista imprimible / PDF</strong>.</li>
+  <li><strong>Copiar link de este análisis:</strong> quien lo abra ve exactamente tu análisis, sin cuenta. Si el link es muy largo, comparte el JSON (“Abrir JSON” lo carga).</li>
+</ul>
+<figure><img src="manual/img/19-exportar.jpg" alt="Módulo Exportar con checklist y descargas" loading="lazy"><figcaption>Figura 18. Exportar.</figcaption></figure>
+
+<h2 id="ih">6. El Índice de Homeostasis</h2>
+<p>Es un indicador <strong>propuesto por el comité</strong> (no proviene del documento de la actividad), inspirado en el concepto fisiológico de homeostasis (Cannon, 1932): la capacidad de un sistema de mantener su equilibrio interno ante perturbaciones.</p>
+<div class="formula">Cumplimiento por KPI (0 a 1, con tope en 1):
+  mayor es mejor → mín(actual / meta, 1)
+  menor es mejor → mín(meta / actual, 1)
+IH = 100 × Σ (peso × cumplimiento)          pesos por defecto: 20% cada KPI
+Bandas: ≥ 90 Equilibrio · 75 a 89,9 Tensión · < 75 Desequilibrio</div>
+<p><strong>Ejemplo con el caso base:</strong> costo 10/14,2 = 0,70; OTIF 81,5/95 = 0,86; rotación 4,2/8 = 0,53; lead time 5/12 = 0,42; Perfect Order 78/92 = 0,85. IH = 100 × 0,2 × (0,70 + 0,86 + 0,53 + 0,42 + 0,85) = <strong>67,0 → Desequilibrio</strong>; KPI más débil: lead time.</p>
+<p>Siempre se acompaña de:</p>
+<ul>
+  <li><strong>Tasa de recuperación</strong> = (IH estrategia − IH disrupción) / (IH base − IH disrupción) × 100. Más de 100% significa que la organización queda mejor que antes del choque.</li>
+  <li><strong>Costo de la homeostasis</strong> = costo neto mensual de las estrategias / puntos de IH recuperados.</li>
+  <li><strong>KPI más débil</strong>: el de menor cumplimiento, que indica la siguiente prioridad.</li>
+</ul>
+<p><strong>Por qué así:</strong> el tope en 1 impide que sobrecumplir un KPI compense el deterioro de otro, que es justamente la idea de equilibrio; los pesos iguales evitan sesgar hacia un rol. <strong>Limitación:</strong> depende de las metas de la empresa, por eso sirve para comparar estados del mismo caso, no empresas entre sí.</p>
+<h4>Regla conservadora</h4>
+<p>Una estrategia puede, como máximo, borrar el daño de la disrupción: los quiebres que ya existían en la base no se cuentan como ventas ganadas. Así los resultados son defendibles ante un evaluador.</p>
+
+<h2 id="informe">7. Cómo construir el Informe Ejecutivo Gerencial</h2>
+<ol class="steps">
+  <li><strong>Resumen ejecutivo</strong> (media página): problema, decisión recomendada, resultado esperado en IH y en $, y costo.</li>
+  <li><strong>Diagnóstico Inicial:</strong> scorecard base, IH base y su banda, lectura por rol, hallazgos de calidad de datos y brechas. Distingue síntomas de causas.</li>
+  <li><strong>Impacto de las disrupciones:</strong> tabla de impacto por escenario y combinado, en KPIs, $ e IH; incluye los eventos cualitativos de la matriz.</li>
+  <li><strong>Dashboard Integrado:</strong> 4 a 6 gráficos exportados en PNG, cada uno con una frase de lectura (radar, IH por estado, cascada de costo, stock diario, KPIs vs. meta).</li>
+  <li><strong>Matriz de Decisiones Estratégicas:</strong> la del dashboard, con una justificación por fila: qué dato del SIG la respalda y qué KPI mueve. Defiende la combinación con el optimizador.</li>
+  <li><strong>Evaluación de Sinergia y Homeostasis:</strong> IH de los tres estados, recuperación, costo de la homeostasis, sinergias entre áreas y contingencia vs. estructural.</li>
+  <li><strong>Conclusiones y recomendaciones</strong>, separando corto plazo (contingencia) y mediano plazo (estructural).</li>
+  <li><strong>Anexos:</strong> supuestos (con la sensibilidad), hallazgos, brechas, definición del IH y fórmulas (“ver cálculo”).</li>
+</ol>
+<div class="note ok"><strong>Consistencia:</strong> escribe el informe a partir del XLSX o JSON exportado, no de memoria. Todas las cifras deben coincidir con el simulador.</div>
+<h4>Errores frecuentes</h4>
+<ul>
+  <li>Presentar el IH como un indicador oficial o de la actividad: es una propuesta del comité.</li>
+  <li>No declarar los supuestos o presentar valores ilustrativos como datos de la empresa.</li>
+  <li>Reportar cifras sin interpretarlas: cada número debe responder “¿qué significa para la decisión?”.</li>
+  <li>Activar todas las estrategias sin justificar: el optimizador puede mostrar que hay combinaciones más eficientes.</li>
+  <li>Reclamar ventas por encima de la base (la regla conservadora lo impide; explícala).</li>
+</ul>
+
+<h2 id="referencia">8. Resultados de referencia del caso demo</h2>
+<p>Úsalos para verificar que el simulador y tu lectura van bien (valores por defecto, sin la sección 8):</p>
+<div class="tw"><table>
+<thead><tr><th>Estado</th><th>IH</th><th>Banda</th><th>Nota</th></tr></thead>
+<tbody>
+<tr><td>Base</td><td>67,0</td><td>Desequilibrio</td><td>KPI más débil: lead time (12 días vs. meta 5)</td></tr>
+<tr><td>Con los tres escenarios</td><td>46,5</td><td>Desequilibrio</td><td></td></tr>
+<tr><td>Con las siete palancas de contingencia</td><td>70,9</td><td>Desequilibrio</td><td>Recuperación 119%; costo de la homeostasis ≈ $2.733 por punto</td></tr>
+<tr><td>+ Plan estructural de compras</td><td>79,8</td><td>Tensión</td><td>Lead time 5,4 días; el KPI más débil pasa a ser el costo logístico</td></tr>
+<tr><td>Máximo alcanzable (optimizador)</td><td>81,9</td><td>Tensión</td><td>Ninguna combinación alcanza Equilibrio</td></tr>
+</tbody></table></div>
+<p>Lectura clave del caso: aun con todas las palancas de contingencia la cadena sigue en desequilibrio porque el problema de fondo es estructural (el lead time de compras), no la disrupción.</p>
+
+<h2 id="faq">9. Preguntas frecuentes y solución de problemas</h2>
+<h4>El archivo no carga o aparecen “Falta la sección…”</h4>
+<p>Verifica que los títulos numerados (“1. RESUMEN…”) y los encabezados estén intactos, que cada sección termine con una fila vacía y que el CSV use punto y coma. Si viene de Excel en español con tildes extrañas, guárdalo como “CSV UTF-8”.</p>
+<h4>Un SKU no tiene lead time</h4>
+<p>Su categoría no coincide con ninguna “Categoría suministrada” de proveedor. Elige la categoría de la lista en ambas tablas.</p>
+<h4>No veo los gráficos</h4>
+<p>Las librerías se descargan de internet al abrir la página. Revisa la conexión y recarga. El cálculo y las tablas funcionan igual.</p>
+<h4>Perdí mi análisis</h4>
+<p>El guardado es del navegador. Si usaste otro navegador, una ventana privada o borraste los datos del sitio, no estará. Descarga el JSON con frecuencia.</p>
+<h4>Abrí un link y dice “análisis compartido”</h4>
+<p>Estás viendo el análisis de otra persona: tus cambios no lo modifican ni se guardan. Pulsa “Conservar como mi análisis” para trabajar sobre él.</p>
+<h4>Quiero empezar de cero</h4>
+<p>Datos → <strong>Reiniciar</strong> borra lo guardado y carga el caso demo.</p>
+<h4>¿Puedo extender el horizonte a 60 o 90 días?</h4>
+<p>No en esta versión: los KPIs del template son mensuales y el motor asume una reposición por mes. Extenderlo exige cambiar esa regla.</p>
+
+<h2 id="glosario">10. Glosario y referencias</h2>
+<div class="tw"><table><tbody>
+<tr><th>OTIF</th><td>% de pedidos entregados a tiempo y completos.</td></tr>
+<tr><th>DIO</th><td>Días de inventario = stock / demanda mensual × 30.</td></tr>
+<tr><th>Rotación</th><td>Veces que el inventario se renueva al año ≈ 365 / DIO.</td></tr>
+<tr><th>IRA</th><td>Exactitud del registro de inventario frente al conteo físico.</td></tr>
+<tr><th>Lead time</th><td>Días desde la orden de compra hasta la disponibilidad de la mercancía.</td></tr>
+<tr><th>Fill rate</th><td>% de la cantidad pedida que el proveedor entrega.</td></tr>
+<tr><th>Perfect Order</th><td>% de pedidos sin error: a tiempo, completos, sin daño y bien documentados.</td></tr>
+<tr><th>SS / ROP</th><td>Stock de seguridad y punto de reorden (= demanda diaria × lead time + SS).</td></tr>
+<tr><th>Efecto látigo</th><td>Amplificación de la variabilidad de la demanda aguas arriba por falta de información compartida.</td></tr>
+<tr><th>3PL / 4PL</th><td>Operador logístico tercerizado / integrador de varios operadores.</td></tr>
+<tr><th>Cross-docking</th><td>Transferencia directa del muelle de recibo al de despacho, sin almacenar.</td></tr>
+<tr><th>S&amp;OP</th><td>Planeación de ventas y operaciones: alinea el plan comercial con compras, inventario y distribución.</td></tr>
+<tr><th>Frontera eficiente</th><td>Combinaciones sin otra más barata con IH igual o mayor.</td></tr>
+</tbody></table></div>
+<h4>Referencias sugeridas</h4>
+<ul class="small">
+  <li>Ballou, R. H. <em>Logística: administración de la cadena de suministro</em>. Pearson.</li>
+  <li>Cannon, W. B. (1932). <em>The Wisdom of the Body</em>. W. W. Norton.</li>
+  <li>Chopra, S. y Meindl, P. <em>Administración de la cadena de suministro: estrategia, planeación y operación</em>. Pearson.</li>
+  <li>Christopher, M. <em>Logistics &amp; Supply Chain Management</em>. Pearson.</li>
+  <li>Laudon, K. C. y Laudon, J. P. <em>Sistemas de información gerencial</em>. Pearson.</li>
+  <li>Lee, H. L., Padmanabhan, V. y Whang, S. (1997). The bullwhip effect in supply chains. <em>Sloan Management Review, 38</em>(3), 93–102.</li>
+  <li>Silver, E. A., Pyke, D. F. y Thomas, D. J. <em>Inventory and Production Management in Supply Chains</em>. CRC Press.</li>
+  <li>ASCM. Modelo SCOR (Supply Chain Operations Reference).</li>
+</ul>
+<figure><img src="manual/img/20-guia.jpg" alt="Ventana de la Guía académica del simulador" loading="lazy" style="max-width:720px"><figcaption>Figura 19. La Guía académica dentro del simulador.</figcaption></figure>
+
+<h2 id="terminos">11. Términos de uso y propiedad intelectual</h2>
+<ul>
+  <li>El simulador SIG-Logístico, su motor de cálculo, el Índice de Homeostasis tal como está implementado, el template de referencia y este manual son <strong>propiedad intelectual de AI HYPERPLANE S.A.S.</strong></li>
+  <li>Se autoriza su uso <strong>libre y gratuito con fines académicos y educativos</strong>: clases, talleres, ejercicios, trabajos de grado e investigación, citando la fuente.</li>
+  <li>Cualquier otro uso —comercial, consultoría, incorporación en productos o servicios, o redistribución modificada— requiere <strong>autorización previa y por escrito</strong> de AI HYPERPLANE S.A.S.</li>
+  <li>LogiTech Solutions S.A. es un caso ficticio. Los resultados del simulador son ilustrativos y dependen de los datos y supuestos ingresados; no constituyen asesoría profesional.</li>
+  <li>Cita sugerida: <em>AI HYPERPLANE S.A.S. (2026). Simulador SIG-Logístico LogiTech Solutions S.A. (versión del pie de página) [Aplicación web].</em></li>
+</ul>
+<p class="pi">© 2026 AI HYPERPLANE S.A.S. Todos los derechos reservados, salvo el uso académico autorizado en estos términos. Manual del simulador SIG-Logístico v1.2.0.</p>
+</main>
+</div>
+</body>
+</html>
