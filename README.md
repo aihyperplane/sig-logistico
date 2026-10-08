@@ -1,6 +1,6 @@
 # Aplicativo SIG-Logístico — LogiTech Solutions S.A.
 
-Versión: v1.4.0 — Fecha: 2026-10-07
+Versión: v1.4.1 — Fecha: 2026-10-07
 
 Publicado en: https://aihyperplane.github.io/sig-logistico/
 
@@ -14,6 +14,9 @@ Aplicativo web para resolver la actividad "Estrategas de la Cadena de Suministro
 5. **Dashboard** — IH de Base / Disrupción / Con estrategia, recuperación, costo de la homeostasis, scorecard, 10 gráficos, vista por rol, matriz de decisiones y sinergias. Cada cifra tiene "ver cálculo".
 6. **Supuestos** — parámetros del motor, pesos y bandas del Índice de Homeostasis, y análisis de sensibilidad.
 7. **Exportar** — checklist de la actividad, CSV (template), XLSX, JSON, PNG, vista imprimible y link para compartir.
+
+### v1.4.1
+- Corrección: botones de descarga del módulo Exportar se ajustan al ancho del celular.
 
 ### Novedades v1.4.0
 - **Preguntas de reflexión** por módulo, **autoevaluación de conceptos** (12 preguntas) y **rúbrica integrada** con nivel sugerido y autoevaluación.

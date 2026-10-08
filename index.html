@@ -44,6 +44,7 @@ p{margin:.25rem 0 .75rem}
 :focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:4px}
 button,select,input,textarea{font:inherit;color:inherit}
 .btn{display:inline-flex;align-items:center;gap:.4rem;border:1px solid var(--border);background:var(--surface);padding:.45rem .8rem;border-radius:8px;cursor:pointer;white-space:nowrap}
+.grid>.btn{white-space:normal;text-align:left;min-width:0}
 .btn:hover{border-color:var(--accent)}
 .btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
 .btn.ghost{background:transparent}
@@ -731,7 +732,7 @@ const TEMPLATE_XLSX_B64 = "UEsDBBQAAAAIAA2JR11Gx01IlQAAAM0AAAAQAAAAZG9jUHJvcHMvY
  * SIG-Logístico — interfaz. El motor (SIGMotor) es la única fuente de
  * cálculos; este archivo solo lee/escribe el estado y lo presenta.
  * ==================================================================== */
-const VERSION = 'v1.4.0', FECHA = '2026-10-07', ESQUEMA = 1, LS_KEY = 'sig-logistico-estado-v1';
+const VERSION = 'v1.4.1', FECHA = '2026-10-07', ESQUEMA = 1, LS_KEY = 'sig-logistico-estado-v1';
 const M = window.SIGMotor;
 const clone = o => JSON.parse(JSON.stringify(o));
 const $ = s => document.querySelector(s);
@@ -2705,7 +2706,7 @@ VISTAS.exportar = () => {
     <div class="card"><h3>Descargas</h3>
       <div class="grid" style="gap:.5rem">
         <button class="btn" type="button" data-act="csv">CSV en formato template (secciones 1 a 7)</button>
-        <button class="btn" type="button" data-act="xlsx" ${window.XLSX ? '' : 'disabled'}>XLSX del análisis (Datos, KPIs, Escenarios, Estrategias, Homeostasis, Matriz, Supuestos)</button>
+        <button class="btn" type="button" data-act="xlsx" ${window.XLSX ? '' : 'disabled'}>XLSX del análisis (todas las hojas, incluida la Bitácora)</button>
         <button class="btn" type="button" data-act="json">JSON del estado completo</button>
         <button class="btn" type="button" data-act="pngs" ${window.Chart ? '' : 'disabled'}>PNG de todos los gráficos del dashboard</button>
         <button class="btn" type="button" data-act="imprimir">Vista imprimible / PDF</button>
