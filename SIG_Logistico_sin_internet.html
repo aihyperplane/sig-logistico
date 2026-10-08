@@ -694,7 +694,10 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
     const H = p.horizonteDias, ventas = data.ventas.valor;
     const kb = data.kpis, skusDiag = diagnosticarSKUs(data, p);
     const pedidosTot = sum(data.canales, c => c.total), unidadesPorPedido = sum(data.skus, s => s.dem) / pedidosTot;
-    const provSusp = E.esc03.activo ? data.proveedores.find(x => x.id === E.esc03.proveedor) : null;
+    // v1.3: cada modelo admite varias instancias (esc01, esc01_2, …), una por evento de la matriz de escenarios.
+    const inst = m => Object.keys(E).filter(k => (k === m || k.startsWith(m + '_')) && E[k] && E[k].activo).map(k => E[k]);
+    const susp = inst('esc03').map(e => ({ prov: data.proveedores.find(x => x.id === e.proveedor), dias: Number(e.diasSuspension) || 0 })).filter(x => x.prov);
+    const picos = inst('esc02'), bloqueos = inst('esc01');
     const costos = { transporte: 0, desvio: 0, tercerizacion: 0, consolidacion: 0, proveedorAlterno: 0, mantenerInventario: 0, logisticaInversa: 0, fletesUrgentes: 0, estructural: 0 };
     // v1.1: proveedores alcanzados por el plan estructural (e8)
     const ltObj = S.e8_estructural.leadTimeObjetivo;
@@ -709,7 +712,8 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
       const simBase = simularStock({ stock0: s.stock, demandaDiaria: d, horizonte: H, llegadas: llegadasBase });
 
       let stock0 = s.stock, mult = 1, qtyRep = s.dem;
-      if (E.esc02.activo && s.sku === E.esc02.sku) mult = 1 + E.esc02.demandaPct / 100 * (S.e6_sop.activo ? 1 - S.e6_sop.reduccionPicoPct / 100 : 1);
+      const pctPico = sum(picos.filter(e => e.sku === s.sku), e => Number(e.demandaPct) || 0);
+      if (pctPico > 0) mult = 1 + pctPico / 100 * (S.e6_sop.activo ? 1 - S.e6_sop.reduccionPicoPct / 100 : 1);
       if (S.e3_ssrop.activo && s.ropRecomendado !== null && s.stock < s.ropRecomendado) {
         qtyRep = Math.max(s.dem, s.ropRecomendado - s.stock + s.dem);
         capitalAdicional += (qtyRep - s.dem) * s.costo;
@@ -718,11 +722,11 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
         const obj = Math.round(d * S.e4_rebalanceo.dioObjetivo);
         capitalLiberado += (s.stock - obj) * s.costo; stock0 = obj;
       }
-      const suspendido = provSusp && provSusp.cat === s.cat;
+      const sCat = susp.filter(x => x.prov.cat === s.cat), suspendido = sCat.length > 0, diasSusp = suspendido ? Math.max(...sCat.map(x => x.dias)) : 0;
       let llegadas = [];
-      if (lt !== null) { const dia = Math.round(lt + (suspendido ? E.esc03.diasSuspension : 0)); if (dia <= H) llegadas.push({ dia, qty: qtyRep }); }
+      if (lt !== null) { const dia = Math.round(lt + diasSusp); if (dia <= H) llegadas.push({ dia, qty: qtyRep }); }
       let sim = simularStock({ stock0, demandaDiaria: d, multiplicador: mult, horizonte: H, llegadas });
-      let ltEfectivo = lt === null ? null : lt + (suspendido ? E.esc03.diasSuspension : 0);
+      let ltEfectivo = lt === null ? null : lt + diasSusp;
       const faltanteExtra = sim.noAtendidas - simBase.noAtendidas;
       if (S.e5_alterno.activo && (suspendido || mult > 1) && faltanteExtra > 0) {
         // El alterno cubre solo el faltante que causa la disrupción, no los quiebres que ya existían en la base.
@@ -750,19 +754,20 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
 
     // --- transporte
     const rutasDiag = diagnosticarRutas(data), troncales = rutasDiag.filter(r => r.troncal).length || 1;
-    const fuel = E.esc01.activo ? E.esc01.combustiblePct / 100 * p.participacionCombustible : 0;
+    const fuel = bloqueos.length ? Math.max(...bloqueos.map(e => Number(e.combustiblePct) || 0)) / 100 * p.participacionCombustible : 0;
     const costoTranspBase = sum(rutasDiag, r => p.viajesMesPorRuta * r.flete);
     costos.transporte = costoTranspBase * fuel;
     let deltaOtifTransp = 0, viajesEliminados = 0;
     const rutas = rutasDiag.map(r => {
       let otifMes = r.otif, viajes = p.viajesMesPorRuta;
-      if (E.esc01.activo && r.id === E.esc01.ruta) {
-        const frac = Math.min(1, E.esc01.dias / H);
-        let otifDisr = r.otif / (1 + E.esc01.tiempoPct / 100);
+      const bq = bloqueos.filter(e => e.ruta === r.id).sort((a, b) => b.dias - a.dias)[0];
+      if (bq) {
+        const frac = Math.min(1, bq.dias / H);
+        let otifDisr = r.otif / (1 + bq.tiempoPct / 100);
         if (S.e1_3pl.activo) {
           otifDisr = S.e1_3pl.otifObjetivo ?? r.otif;
           costos.tercerizacion += viajes * frac * r.flete * S.e1_3pl.sobrecostoPct / 100;
-        } else costos.desvio += viajes * frac * r.flete * E.esc01.fleteDesvioPct / 100;
+        } else costos.desvio += viajes * frac * r.flete * bq.fleteDesvioPct / 100;
         otifMes = frac * otifDisr + (1 - frac) * r.otif;
         const part = p.participacionRutaAfectada ?? 1 / troncales;
         deltaOtifTransp += (otifMes - r.otif) * part;
@@ -870,7 +875,7 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
     return { base, disrupcion, estrategia, recuperacion, costoEstrategias: r2(costoEstr), costoHomeostasis };
   }
 
-  const VERSION_MOTOR = '1.2.0';
+  const VERSION_MOTOR = '1.3.0';
   const api = { VERSION_MOTOR, PARAMS_DEFAULT, ESCENARIOS_DEFAULT, ESTRATEGIAS_DEFAULT, ESTRATEGIAS_CONTINGENCIA, COSTOS_DEF, ORDEN_COSTOS, KPI_DEF, parseTemplateCSV, derivarParametros, desgloseCostos, estimarVentas, leadTimeCategoria,
     diagnosticarSKUs, diagnosticarRutas, diagnosticarProveedores, diagnosticarCanales, simularStock, cumplimiento, indiceHomeostasis,
     evaluar, compararEstados };
@@ -889,7 +894,7 @@ const TEMPLATE_XLSX_B64 = "UEsDBBQAAAAIAPOmR11Gx01IlQAAAM0AAAAQAAAAZG9jUHJvcHMvY
  * SIG-Logístico — interfaz. El motor (SIGMotor) es la única fuente de
  * cálculos; este archivo solo lee/escribe el estado y lo presenta.
  * ==================================================================== */
-const VERSION = 'v1.6.0', FECHA = '2026-10-07', ESQUEMA = 1, LS_KEY = 'sig-logistico-estado-v1';
+const VERSION = 'v1.6.1', FECHA = '2026-10-07', ESQUEMA = 1, LS_KEY = 'sig-logistico-estado-v1';
 const M = window.SIGMotor;
 const clone = o => JSON.parse(JSON.stringify(o));
 const $ = s => document.querySelector(s);
@@ -1005,6 +1010,7 @@ function normalizarEstado(s) {
   if (!o.data.costos) o.data.costos = {}; if (!o.data.costosFuente) o.data.costosFuente = {};
   if (o.verGuia === undefined) o.verGuia = true; if (o.modo !== 'guiado' && o.modo !== 'experto') o.modo = 'experto'; o.identificacion = Object.assign({ estudiantes: '', profesor: '', grupo: '' }, o.identificacion || {}); if (!o.sensPct) o.sensPct = 20;
   delete o.resultados;
+  try { asegurarInstancias(o); } catch (e) { }
   return o;
 }
 function guardar() {
@@ -1046,6 +1052,31 @@ async function copiarLink() {
 }
 
 /* ------------------------------------------------------------ cálculo */
+/* v1.6 — varias instancias por modelo: una por cada evento de la matriz (esc03, esc03_2, …) */
+const baseEsc = k => String(k).split('_')[0];
+const metaEsc = k => ESC_META[baseEsc(k)];
+function escInst(st) {
+  st = st || state; const out = [], cnt = {};
+  ((st.data && st.data.escenarios) || []).forEach((e, i) => { if (!/^esc0[123]$/.test(e.modelo)) return; cnt[e.modelo] = (cnt[e.modelo] || 0) + 1; out.push({ k: cnt[e.modelo] === 1 ? e.modelo : `${e.modelo}_${cnt[e.modelo]}`, base: e.modelo, ev: e, n: i + 1 }); });
+  Object.keys(ESC_META).forEach(m => { if (!cnt[m]) out.push({ k: m, base: m, ev: null, n: null }); });
+  return out;
+}
+const escKeys = st => escInst(st).map(x => x.k);
+const escId = k => { const x = escInst().find(y => y.k === k); return x && x.ev ? x.ev.id : metaEsc(k).id; };
+function adivinarParams(st, base, ev, k) {
+  const t = `${ev.id || ''} ${ev.nombre || ''} ${ev.desc || ''} ${ev.impacto || ''}`.toUpperCase(), d = st.data, o = {};
+  const usado = f => Object.keys(st.escenarios).filter(x => baseEsc(x) === base && x !== k).map(x => st.escenarios[x][f]);
+  if (base === 'esc03') { const m = (t.match(/PRV-?\d+/g) || []).map(x => x.replace(/PRV-?/, 'PRV-')).find(id => d.proveedores.some(p => p.id === id && !usado('proveedor').includes(id))); o.proveedor = m || (d.proveedores.find(p => !usado('proveedor').includes(p.id)) || d.proveedores[0] || {}).id; }
+  if (base === 'esc01') { const m = (t.match(/RT-?\d+/g) || []).map(x => x.replace(/RT-?/, 'RT-')).find(id => d.rutas.some(r => r.id === id && !usado('ruta').includes(id))); o.ruta = m || (d.rutas.find(r => /CD/i.test(r.origen) && !usado('ruta').includes(r.id)) || d.rutas[0] || {}).id; }
+  if (base === 'esc02') { const m = (t.match(/SKU-?\d+/g) || []).map(x => x.replace(/SKU-?/, 'SKU-')).find(id => d.skus.some(s => s.sku === id)); o.sku = m || (d.skus.find(s => !usado('sku').includes(s.sku)) || d.skus[0] || {}).sku; }
+  return o;
+}
+function asegurarInstancias(st) {
+  st = st || state; if (!st || !st.escenarios || !st.data) return;
+  const ins = escInst(st), keys = new Set(ins.map(x => x.k));
+  ins.forEach(x => { if (!st.escenarios[x.k]) st.escenarios[x.k] = Object.assign(clone(M.ESCENARIOS_DEFAULT[x.base]), x.ev ? adivinarParams(st, x.base, x.ev, x.k) : {}, { activo: !!(st.escenarios[x.base] && st.escenarios[x.base].activo) }); });
+  Object.keys(st.escenarios).forEach(k => { if (k.includes('_') && !keys.has(k)) delete st.escenarios[k]; });
+}
 const SIN_ESC = () => Object.fromEntries(Object.keys(M.ESCENARIOS_DEFAULT).map(k => [k, { activo: false }]));
 const SIN_EST = () => Object.fromEntries(Object.keys(M.ESTRATEGIAS_DEFAULT).map(k => [k, { activo: false }]));
 const cfg = () => ({ params: state.params, escenarios: state.escenarios, estrategias: state.estrategias });
@@ -1055,6 +1086,7 @@ const estActivas = () => Object.keys(state.estrategias).filter(k => state.estrat
 function recalc(noRender) {
   calcError = null;
   try {
+    asegurarInstancias(state);
     cmp = M.compararEstados(state.data, cfg());
     X = extras();
   } catch (e) { calcError = e.message; console.error(e); }
@@ -1064,7 +1096,7 @@ function recalc(noRender) {
 function extras() {
   const d = state.data, p = state.params;
   const porEsc = {}, porEst = {};
-  for (const k of Object.keys(M.ESCENARIOS_DEFAULT)) {
+  for (const k of escKeys()) {
     const e = SIN_ESC(); e[k] = Object.assign({}, state.escenarios[k], { activo: true });
     porEsc[k] = M.evaluar(d, { params: p, escenarios: e, estrategias: SIN_EST() });
   }
@@ -1094,6 +1126,9 @@ function extras() {
   const s2 = porEsc.esc02.skus.find(x => x.sku === state.escenarios.esc02.sku);
   if (m2 && s2 && s2.sim.diaQuiebre && Number(m2[1]) !== s2.sim.diaQuiebre)
     hall.push({ area: 'Escenarios', item: e2.id, h: `La matriz del SIG estima "quiebre en ${m2[1]} días"; con stock ${s2.stock} y demanda ${nf(s2.demandaDiaria * s2.multiplicador)} u/día la simulación da quiebre el día ${s2.sim.diaQuiebre}.` });
+  escInst().filter(x => x.ev).forEach(x => { const E = state.escenarios[x.k] || {}, t = `${x.ev.nombre || ''} ${x.ev.desc || ''}`.toUpperCase();
+    const chk = (re, val, lbl) => { const ids = (t.match(re) || []).map(v => v.replace(/-?(\d+)$/, '-$1')); if (ids.length && val && !ids.includes(String(val).toUpperCase())) hall.push({ area: 'Escenarios', item: x.ev.id, h: `La matriz menciona ${ids.join(', ')}, pero el simulador usa ${lbl} ${val}. Ajusta el parámetro o el texto del evento para que coincidan.` }); };
+    if (x.base === 'esc01') chk(/RT-?\d+/g, E.ruta, 'la ruta'); if (x.base === 'esc02') chk(/SKU-?\d+/g, E.sku, 'el SKU'); if (x.base === 'esc03') chk(/PRV-?\d+/g, E.proveedor, 'el proveedor'); });
   const desg = M.desgloseCostos(d, p);
   if (desg && Math.abs(desg.diferenciaPct) > 5) hall.push({ area: 'Finanzas', item: 'Costo logístico', h: `El desglose ingresado suma ${money(desg.total)} vs. ${money(desg.reportado)} del KPI reportado (${signed(desg.diferenciaPct)}%). Se conserva el KPI reportado.` });
   Object.keys(d.costosFuente || {}).filter(k => /ilustr/i.test(d.costosFuente[k]) && fin(d.costos[k])).length && hall.push({ area: 'Finanzas', item: 'Costos', h: 'Hay costos con fuente "Ilustrativo": son supuestos del comité, no datos del SIG.' });
@@ -1140,9 +1175,10 @@ function validar(d) {
     if (!fin(v) || v < 0) E(`Costos: "${def.lbl}" debe ser un número ≥ 0.`); else if (k === 'costoCapitalAnualPct' && v > 100) E('Costos: el costo de capital es un % anual entre 0 y 100.'); }
   if (fin((d.costos || {}).costoVentas) && fin(d.ventas.valor) && d.costos.costoVentas >= d.ventas.valor) A('Costos: el costo de ventas es mayor o igual a las ventas (margen ≤ 0).');
   const e = state.escenarios;
-  if (!d.rutas.some(r => r.id === e.esc01.ruta)) A(`ESC-01: la ruta ${e.esc01.ruta} no existe en los datos.`);
-  if (!d.skus.some(s => s.sku === e.esc02.sku)) A(`ESC-02: el SKU ${e.esc02.sku} no existe en los datos.`);
-  if (!d.proveedores.some(p => p.id === e.esc03.proveedor)) A(`ESC-03: el proveedor ${e.esc03.proveedor} no existe en los datos.`);
+  Object.keys(e).forEach(k => { const b = baseEsc(k), x = e[k]; if (!x) return; const id = (escInst().find(y => y.k === k) || {}).ev ? escId(k) : (ESC_META[b] || {}).id;
+    if (b === 'esc01' && !d.rutas.some(r => r.id === x.ruta)) A(`${id}: la ruta ${x.ruta} no existe en los datos.`);
+    if (b === 'esc02' && !d.skus.some(s => s.sku === x.sku)) A(`${id}: el SKU ${x.sku} no existe en los datos.`);
+    if (b === 'esc03' && !d.proveedores.some(p => p.id === x.proveedor)) A(`${id}: el proveedor ${x.proveedor} no existe en los datos.`); });
   return out;
 }
 
@@ -1491,9 +1527,10 @@ function filaImpacto(lbl, st, cls) {
 }
 function detalleEsc(k) {
   const st = X.porEsc[k], E = state.escenarios[k], b = cmp.base;
-  if (k === 'esc01') { const r = st.rutas.find(x => x.id === E.ruta) || {}; return `<ul class="clean small"><li>OTIF mensual de ${esc(E.ruta)}: ${pct(r.otif, 0)} → ${pct(r.otifMes)} (durante el bloqueo ${pct(r.otif / (1 + E.tiempoPct / 100))}).</li><li>Alza de combustible: ${money(st.costos.transporte)}/mes · desvío: ${money(st.costos.desvio)}.</li><li>Δ OTIF global: ${signed(st.kpis.otif.actual - b.kpis.otif.actual)} pts.</li></ul>
+  const bk = baseEsc(k);
+  if (bk === 'esc01') { const r = st.rutas.find(x => x.id === E.ruta) || {}; return `<ul class="clean small"><li>OTIF mensual de ${esc(E.ruta)}: ${pct(r.otif, 0)} → ${pct(r.otifMes)} (durante el bloqueo ${pct(r.otif / (1 + E.tiempoPct / 100))}).</li><li>Alza de combustible: ${money(st.costos.transporte)}/mes · desvío: ${money(st.costos.desvio)}.</li><li>Δ OTIF global: ${signed(st.kpis.otif.actual - b.kpis.otif.actual)} pts.</li></ul>
     ${verCalc(`Combustible = Σ (viajes × flete) × ${E.combustiblePct}% × ${state.params.participacionCombustible * 100}% = ${money(st.costos.transporte)}\nDesvío = ${state.params.viajesMesPorRuta} viajes × (${E.dias}/30) × ${money(r.flete)} × ${E.fleteDesvioPct}% = ${money(st.costos.desvio)}\nOTIF en bloqueo = ${r.otif} / ${1 + E.tiempoPct / 100} ; OTIF mes = (${E.dias}/30) × bloqueo + (1 − ${E.dias}/30) × ${r.otif} = ${nf(r.otifMes)}`)}`; }
-  if (k === 'esc02') { const s = st.skus.find(x => x.sku === E.sku) || { sim: {}, simBase: {} }; return `<ul class="clean small"><li>${esc(E.sku)}: demanda diaria ${nf(s.demandaDiaria)} × ${nf(s.multiplicador, 2)} = ${nf(s.demandaDiaria * s.multiplicador)} u/día.</li><li>Día de quiebre: <strong>${s.sim.diaQuiebre ?? 'sin quiebre'}</strong> (base: ${s.simBase.diaQuiebre ?? 'sin quiebre'}).</li><li>Unidades no atendidas extra: ${nf(s.deltaNoAtendidas, 0)} · ventas perdidas ${money(st.resumen.ventasPerdidas)}.</li></ul>
+  if (bk === 'esc02') { const s = st.skus.find(x => x.sku === E.sku) || { sim: {}, simBase: {} }; return `<ul class="clean small"><li>${esc(E.sku)}: demanda diaria ${nf(s.demandaDiaria)} × ${nf(s.multiplicador, 2)} = ${nf(s.demandaDiaria * s.multiplicador)} u/día.</li><li>Día de quiebre: <strong>${s.sim.diaQuiebre ?? 'sin quiebre'}</strong> (base: ${s.simBase.diaQuiebre ?? 'sin quiebre'}).</li><li>Unidades no atendidas extra: ${nf(s.deltaNoAtendidas, 0)} · ventas perdidas ${money(st.resumen.ventasPerdidas)}.</li></ul>
     ${verCalc(`Demanda diaria = ${s.dem}/30 × ${nf(s.multiplicador, 2)} = ${nf(s.demandaDiaria * s.multiplicador, 1)}\nStock ${s.stock} alcanza para ${nf(s.stock / (s.demandaDiaria * s.multiplicador))} días → quiebre el día ${s.sim.diaQuiebre}\nVentas perdidas = Δ no atendidas × costo × (1 + margen) = ${nf(s.deltaNoAtendidas)} × ${money(s.costo)} × ${1 + state.params.margen}`)}`; }
   const af = st.skus.filter(s => s.suspendido);
   return `<ul class="clean small"><li>SKU afectados (${esc(af[0] ? af[0].cat : '—')}): ${af.map(s => esc(s.sku)).join(', ') || 'ninguno'}.</li>${af.map(s => `<li>${esc(s.sku)}: reposición día ${Math.round(s.leadTime + E.diasSuspension) > state.params.horizonteDias ? 'fuera del mes' : Math.round(s.leadTime + E.diasSuspension)}; quiebre día ${s.sim.diaQuiebre ?? '—'}; ${nf(s.deltaNoAtendidas, 0)} u no atendidas extra.</li>`).join('')}<li>Lead time efectivo de la categoría: ${af[0] ? nf(af[0].ltEfectivo) : '—'} días.</li></ul>`;
@@ -1505,19 +1542,20 @@ VISTAS.escenarios = () => {
   <p class="lead">Cada escenario modifica el estado base durante un horizonte de ${state.params.horizonteDias} días. Los parámetros por defecto vienen del enunciado y de la matriz de escenarios del SIG; cualquier cambio queda como supuesto del comité.</p>
   ${guiaModulo('escenarios')}
   ${vistaMapaRed()}
-  <div class="grid g3" style="margin-top:1rem">${Object.keys(ESC_META).map(k => { const m = ESC_META[k], E = state.escenarios[k], txt = eventoDe(k);
+  <div class="grid g3" style="margin-top:1rem">${escKeys().map(k => { const m = metaEsc(k), E = state.escenarios[k], txt = eventoDe(k);
     return `<div class="card lever ${E.activo ? 'on' : ''}"><div class="row"><h3 style="margin:0">${txt ? `${esc(txt.id)} · ${esc(txt.nombre)}` : `${m.id} · ${esc(m.n)}`}<br><span class="tiny muted">Modelo ${m.id}: ${esc(m.n)}</span></h3><span class="spacer"></span>${campo(`escenarios.${k}.activo`, E.activo ? 'Activo' : 'Inactivo', 'bool')}</div>
     <p class="small muted">${esc(txt ? txt.desc + ' — ' + txt.impacto : '')}</p>
     <div class="fields">${m.params.map(([f, l, t, h, max]) => campo(`escenarios.${k}.${f}`, l, t, h, { max })).join('')}</div>
     <h4 style="margin-top:.8rem">Impacto aislado</h4>${detalleEsc(k)}
+    ${X.porEsc[k].ih > cmp.base.ih + 0.05 ? `<div class="banner info small">Este evento <strong>sube</strong> el IH aislado: ${baseEsc(k) === 'esc03' ? 'el proveedor abastece SKU con sobrestock; al detenerse la reposición baja el inventario y mejora la rotación sin ventas perdidas.' : 'mejora algún KPI del índice más de lo que empeora los otros.'} Analízalo en el informe: es un efecto real del modelo, no un error.</div>` : ''}
     <dl class="kv small"><dt>IH aislado</dt><dd>${nf(X.porEsc[k].ih)} (${signed(X.porEsc[k].ih - cmp.base.ih)} pts)</dd><dt>Impacto $/mes</dt><dd>${money(impacto$(X.porEsc[k]))}</dd></dl></div>`; }).join('')}</div>
   ${cualitativos()}
   <div class="card" style="margin-top:1rem"><h3>Impacto en los cinco KPIs, en $ y en el Índice de Homeostasis</h3>
   <div class="tw"><table><thead><tr><th>Estado</th>${KPIS.map(k => `<th class="num">${KPI_MIN[k]}</th>`).join('')}<th class="num">Δ costo log.</th><th class="num">Ventas perdidas</th><th class="num">Penalidades${tip('Pedidos afectados × penalidad por pedido incumplido (sección 8). $0 si no se ingresó.')}</th><th class="num">Impacto $</th><th class="num">IH</th><th>Banda</th></tr></thead><tbody>
   <tr><th scope="row">Meta</th>${KPIS.map(k => `<td class="num muted">${fmtKPI(k, cmp.base.kpis[k].meta)}</td>`).join('')}<td colspan="6"></td></tr>
   ${filaImpacto('Base', cmp.base)}
-  ${Object.keys(ESC_META).map(k => filaImpacto(`${ESC_META[k].id} aislado${state.escenarios[k].activo ? '' : ' <span class="tag">inactivo</span>'}`, X.porEsc[k])).join('')}
-  ${act.length ? filaImpacto(`<strong>Disrupción combinada</strong> <span class="tiny muted">(${act.map(k => ESC_META[k].id).join(' + ')})</span>`, cmp.disrupcion, 'hl') : ''}
+  ${escKeys().map(k => filaImpacto(`${escId(k)} aislado${state.escenarios[k].activo ? '' : ' <span class="tag">inactivo</span>'}`, X.porEsc[k])).join('')}
+  ${act.length ? filaImpacto(`<strong>Disrupción combinada</strong> <span class="tiny muted">(${act.map(k => escId(k)).join(' + ')})</span>`, cmp.disrupcion, 'hl') : ''}
   </tbody></table></div>
   ${act.length ? `<p class="small" style="margin-top:.6rem">La disrupción combinada baja el IH de <strong>${nf(cmp.base.ih)}</strong> a <strong>${nf(cmp.disrupcion.ih)}</strong> (${signed(cmp.disrupcion.ih - cmp.base.ih)} pts) y cuesta ${money(impacto$(cmp.disrupcion))} al mes entre mayor costo logístico, ventas perdidas y penalidades. KPI más débil: ${KPI_CORTO[cmp.disrupcion.kpiMasDebil]}.</p>${verCalc(explicarIH(cmp.disrupcion))}` : '<div class="banner warn">No hay escenarios activos: el estado "Disrupción" es igual al base.</div>'}
   </div>
@@ -1557,7 +1595,7 @@ VISTAS.estrategias = () => {
   const act = estActivas();
   const orden = Object.keys(EST_META).filter(k => !EST_META[k].estructural).sort((a, b) => state.rol === 'comite' ? 0 : (rolDeTexto(state.estrategias[b].rol) === state.rol) - (rolDeTexto(state.estrategias[a].rol) === state.rol));
   return `<div class="section"><h2>4 · Palancas de estrategia</h2><div class="row no-print"><button class="btn sm" type="button" data-act="todas">Activar todas</button><button class="btn sm" type="button" data-act="ninguna">Desactivar todas</button></div></div>
-  <p class="lead">Cada estrategia tiene un rol responsable, parámetros y costo. Se evalúan contra la disrupción activa${escActivos().length ? ` (${escActivos().map(k => ESC_META[k].id).join(' + ')})` : ' (no hay escenarios activos: se comparan contra la base)'}. Regla conservadora: una estrategia puede, como máximo, borrar el daño de la disrupción; los quiebres que ya existían en la base no cuentan como ganancia.</p>
+  <p class="lead">Cada estrategia tiene un rol responsable, parámetros y costo. Se evalúan contra la disrupción activa${escActivos().length ? ` (${escActivos().map(k => escId(k)).join(' + ')})` : ' (no hay escenarios activos: se comparan contra la base)'}. Regla conservadora: una estrategia puede, como máximo, borrar el daño de la disrupción; los quiebres que ya existían en la base no cuentan como ganancia.</p>
   <div class="grid g4" style="margin:.8rem 0">
     <div class="card tile d"><span class="lbl">IH con disrupción</span><span class="val state-d">${nf(cmp.disrupcion.ih)}</span><span class="sub">${bandTag(cmp.disrupcion.banda)}</span></div>
     <div class="card tile e"><span class="lbl">IH con estrategia</span><span class="val state-e">${nf(cmp.estrategia.ih)}</span><span class="sub">${bandTag(cmp.estrategia.banda)} · ${act.length} de 7 activas</span></div>
@@ -2074,8 +2112,8 @@ function tablaEscenarios() {
   const es = state.data.escenarios;
   const usados = m => es.filter(e => e.modelo === m).length;
   return `<div class="card" style="margin-top:1rem"><div class="row" style="margin-bottom:.5rem"><h3 style="margin:0">6. Matriz de escenarios y simulación de disrupciones</h3><span class="spacer"></span><span class="tiny muted">${es.length} evento(s)</span><button class="btn sm no-print" type="button" data-act="addEsc">+ Agregar evento</button></div>
-  <p class="small muted">Describe cada evento y asígnale un <strong>modelo de simulación</strong>: ESC-01 (transporte), ESC-02 (demanda) o ESC-03 (proveedor) se cuantifican en el módulo Escenarios; "Cualitativo" documenta eventos que el simulador no calcula (por ejemplo, un ciberataque o una huelga) para la matriz y el informe. Cada modelo cuantitativo admite un evento activo.</p>
-  ${['esc01', 'esc02', 'esc03'].filter(m => usados(m) > 1).map(m => `<div class="banner warn small">Hay ${usados(m)} eventos con el modelo ${m.toUpperCase().replace('ESC0', 'ESC-0')}: el simulador cuantifica el primero; los demás se tratan como variantes descriptivas.</div>`).join('')}
+  <p class="small muted">Describe cada evento y asígnale un <strong>modelo de simulación</strong>: ESC-01 (transporte), ESC-02 (demanda) o ESC-03 (proveedor) se cuantifican en el módulo Escenarios; "Cualitativo" documenta eventos que el simulador no calcula (por ejemplo, un ciberataque o una huelga) para la matriz y el informe. Un modelo puede usarse en varios eventos: cada uno se simula con sus propios parámetros (por ejemplo, dos proveedores que quiebran).</p>
+  ${['esc01', 'esc02', 'esc03'].filter(m => usados(m) > 1).map(m => `<div class="banner info small">Hay ${usados(m)} eventos con el modelo ${m.toUpperCase().replace('ESC0', 'ESC-0')}: cada uno se simula por separado con sus propios parámetros en el módulo Escenarios.</div>`).join('')}
   <div class="tw"><table class="edit"><thead><tr><th>ID${tip('Código del evento. Escribe el número; se agrega ESC-.')}</th><th>Nombre del evento</th><th>Descripción de la disrupción</th><th>Impacto operativo estimado</th><th>KPI afectado${tip('Lista estandarizada; "Otro…" agrega un valor.')}</th><th>Modelo de simulación${tip('Define cómo se cuantifica el evento en el módulo Escenarios.')}</th><th class="no-print"></th></tr></thead><tbody>
   ${es.map((e, i) => `<tr><td><input aria-label="ID evento ${i + 1}" data-path="data.escenarios.${i}.id" data-type="code:ESC-" value="${esc(e.id)}" style="min-width:5rem"></td>
     <td class="w-l"><input aria-label="Nombre evento ${i + 1}" data-path="data.escenarios.${i}.nombre" data-type="text" value="${esc(e.nombre)}"></td>
@@ -2086,7 +2124,7 @@ function tablaEscenarios() {
     <td class="no-print"><button class="btn sm ghost" type="button" aria-label="Eliminar evento ${i + 1}" data-act="delEsc" data-i="${i}">✕</button></td></tr>`).join('')}
   </tbody></table></div><p class="tiny muted">Los parámetros cuantitativos (días, % de aumento, ruta, SKU, proveedor) se ajustan en el módulo Escenarios.</p></div>`;
 }
-const eventoDe = k => state.data.escenarios.find(e => e.modelo === k);
+const eventoDe = k => (escInst().find(x => x.k === k) || {}).ev;
 function cualitativos() {
   const q = state.data.escenarios.filter(e => e.modelo === 'cualitativo');
   if (!q.length) return '';
@@ -2115,8 +2153,8 @@ let pendientePred = null, justifId = null;
 function etiquetaCambio(path) {
   const [g, k, f] = path.split('.');
   if (g === 'estrategias') { const m = EST_META[k], p = m.params.find(x => x[0] === f); return `${m.n}${f === 'activo' ? '' : ' · ' + (p ? p[1] : f)}`; }
-  const ev = eventoDe(k), p = ESC_META[k].params.find(x => x[0] === f);
-  return `${ev ? ev.id + ' ' + ev.nombre : ESC_META[k].id + ' ' + ESC_META[k].n}${f === 'activo' ? '' : ' · ' + (p ? p[1] : f)}`;
+  const ev = eventoDe(k), p = metaEsc(k).params.find(x => x[0] === f);
+  return `${ev ? ev.id + ' ' + ev.nombre : metaEsc(k).id + ' ' + metaEsc(k).n}${f === 'activo' ? '' : ' · ' + (p ? p[1] : f)}`;
 }
 const fmtVal = v => v === true ? 'activa' : v === false ? 'inactiva' : v === null || v === undefined || v === '' ? 'base' : String(v);
 function foto() { return cmp ? { e: cmp.estrategia.ih, d: cmp.disrupcion.ih, ke: Object.fromEntries(KPIS.map(k => [k, cmp.estrategia.kpis[k].actual])), kd: Object.fromEntries(KPIS.map(k => [k, cmp.disrupcion.kpis[k].actual])) } : null; }
@@ -2164,7 +2202,7 @@ function guardarJustif() {
 
 /* ------------------------------------------------------------ predecir antes de simular */
 function abrirPrediccion(path) {
-  const [g, k] = path.split('.'), esEst = g === 'estrategias', kpi = esEst ? EST_META[k].kpi : KPI_ESC[k];
+  const [g, k] = path.split('.'), esEst = g === 'estrategias', kpi = esEst ? EST_META[k].kpi : KPI_ESC[baseEsc(k)];
   pendientePred = { path, g, k, kpi };
   const est = esEst ? cmp.estrategia : cmp.disrupcion, v0 = est.kpis[kpi].actual;
   $('#predT').textContent = 'Antes de simular: ¿qué esperas que pase?';
@@ -2371,7 +2409,7 @@ async function capturarGraficos() {
   PRINT_ALL = false; state.tab = prev.tab; state.sub = prev.sub; render(); return out;
 }
 function bloquesInforme(imgs) {
-  const B = cmp.base, D = cmp.disrupcion, E = cmp.estrategia, d = state.data, mat = matrizFilas(), escs = escActivos().map(k => (eventoDe(k) || {}).nombre || ESC_META[k].n);
+  const B = cmp.base, D = cmp.disrupcion, E = cmp.estrategia, d = state.data, mat = matrizFilas(), escs = escActivos().map(k => (eventoDe(k) || {}).nombre || metaEsc(k).n);
   const roles = state.rol === 'comite' ? 'Comité completo' : ROLES[state.rol].n, Bk = [];
   const h = (n, t) => Bk.push({ t: 'h', n, x: t }), p = x => Bk.push({ t: 'p', x }), pend = x => Bk.push({ t: 'pend', x: `✍ [Escribe aquí: ${x}]` }), tab = (c, f) => Bk.push({ t: 'tabla', c, f }), nota = x => Bk.push({ t: 'nota', x });
   nota(`BORRADOR generado por el simulador SIG-Logístico ${VERSION} el ${new Date().toLocaleString('es-CO')}. Las cifras provienen del análisis; los recuadros amarillos son para la interpretación del comité. Elimina esta nota antes de entregar.`);
@@ -2392,7 +2430,7 @@ function bloquesInforme(imgs) {
   REFLEX.diagnostico.forEach((q, i) => { const r = (state.reflexiones.diagnostico || {})[i]; if (r) nota(`Tu reflexión — ${q} ${r}`); });
   h(2, 'Hallazgos de calidad de datos'); tab(['Área', 'Elemento', 'Hallazgo'], X.hall.map(x => [x.area, x.item, x.h]));
   h(1, '2. Impacto de las disrupciones');
-  tab(['Estado', ...KPIS.map(k => KPI_MIN[k]), 'Impacto $/mes', 'IH'], [['Base', ...KPIS.map(k => fmtKPI(k, B.kpis[k].actual)), '—', nf(B.ih)], ...Object.keys(ESC_META).map(k => [ESC_META[k].id + ' aislado', ...KPIS.map(x => fmtKPI(x, X.porEsc[k].kpis[x].actual)), money(impacto$(X.porEsc[k])), nf(X.porEsc[k].ih)]), ['Disrupción combinada', ...KPIS.map(k => fmtKPI(k, D.kpis[k].actual)), money(impacto$(D)), nf(D.ih)]]);
+  tab(['Estado', ...KPIS.map(k => KPI_MIN[k]), 'Impacto $/mes', 'IH'], [['Base', ...KPIS.map(k => fmtKPI(k, B.kpis[k].actual)), '—', nf(B.ih)], ...escKeys().map(k => [escId(k) + ' aislado', ...KPIS.map(x => fmtKPI(x, X.porEsc[k].kpis[x].actual)), money(impacto$(X.porEsc[k])), nf(X.porEsc[k].ih)]), ['Disrupción combinada', ...KPIS.map(k => fmtKPI(k, D.kpis[k].actual)), money(impacto$(D)), nf(D.ih)]]);
   const cual = d.escenarios.filter(e => e.modelo === 'cualitativo'); if (cual.length) p(`Eventos cualitativos registrados en la matriz del SIG: ${cual.map(e => `${e.id} ${e.nombre}`).join('; ')}.`);
   pend('por qué la combinación no es la suma de los escenarios y qué área absorbe el impacto');
   h(1, '3. Dashboard Integrado');
@@ -2606,7 +2644,7 @@ function vistaPlanes() {
   return `<div class="card"><div class="row"><h3 style="margin:0">Comparar planes A/B ${tip('Guarda la configuración de escenarios, estrategias y supuestos como Plan A o Plan B y compárala con la actual, con los mismos datos.')}</h3><span class="spacer"></span>
   <button class="btn sm" type="button" data-act="guardarPlan" data-l="A">Guardar actual como Plan A</button><button class="btn sm" type="button" data-act="guardarPlan" data-l="B">Guardar actual como Plan B</button></div>
   ${cols.length > 1 ? `<div class="tw" style="margin-top:.6rem"><table><thead><tr><th></th>${cols.map(x => `<th class="num">${x.L === 'actual' ? 'Actual' : `<input aria-label="Nombre del plan ${x.L}" data-path="planes.${x.L}.nombre" data-type="text" value="${esc(x.p.nombre)}" style="width:9rem;border:1px solid var(--border);border-radius:6px;padding:.2rem;background:var(--surface)">`}</th>`).join('')}</tr></thead><tbody>
-  ${f('Escenarios activos', x => Object.keys(x.p.escenarios).filter(k => x.p.escenarios[k].activo).map(k => ESC_META[k].id).join(', ') || '—')}
+  ${f('Escenarios activos', x => Object.keys(x.p.escenarios).filter(k => x.p.escenarios[k].activo).map(k => escId(k)).join(', ') || '—')}
   ${f('Palancas activas', x => `<span class="small">${Object.keys(x.p.estrategias).filter(k => x.p.estrategias[k].activo).map(k => EST_CORTO[k]).join(', ') || '—'}</span>`)}
   ${f('IH base → disrupción', x => `${nf(x.c.base.ih)} → ${nf(x.c.disrupcion.ih)}`)}${f('<strong>IH con estrategia</strong>', x => `<strong>${nf(x.c.estrategia.ih)}</strong> ${bandTag(x.c.estrategia.banda)}`)}
   ${f('Recuperación', x => x.c.recuperacion == null ? 'n/a' : nf(x.c.recuperacion, 0) + '%')}${f('Costo neto $/mes', x => money(x.c.costoEstrategias))}${f('$ por punto de IH', x => x.c.costoHomeostasis == null ? 'n/a' : money(x.c.costoHomeostasis))}
@@ -2940,7 +2978,10 @@ function svgRed(opts = {}) {
   const semOtif = v => v == null ? col.muted : v >= metaOtif ? col.ok : v >= metaOtif * .9 ? col.warn : col.bad;
   const ev = d.escenarios.map((e, i) => ({ e, n: i + 1 })), evDe = m => ev.find(x => x.e.modelo === m);
   const esc = t => String(t ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-  const ruta01 = E.esc01 && E.esc01.ruta, act = k => !!(E[k] && E[k].activo);
+  const act = k => !!(E[k] && E[k].activo), INS = escInst().filter(x => x.ev && E[x.k]);
+  const blq = {}, sus = {}; INS.forEach(x => { const on = act(x.k);
+    if (x.base === 'esc01') { const r = E[x.k].ruta, o = blq[r]; if (!o || (on && !o.on)) blq[r] = { n: x.n, on, extra: o ? [o.n] : [] }; else o.extra.push(x.n); }
+    if (x.base === 'esc03') { const pr = E[x.k].proveedor, o = sus[pr]; if (!o || (on && !o.on)) sus[pr] = { n: x.n, on, extra: o ? [o.n] : [] }; else o.extra.push(x.n); } });
   let s = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-labelledby="mrT mrD" font-family="Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif"><title id="mrT">Red de distribución y disrupciones de la matriz de escenarios</title><desc id="mrD">Esquema generado con las rutas, proveedores y escenarios del SIG. Las rutas se colorean por OTIF frente a la meta; los marcadores numerados corresponden a la matriz de escenarios.</desc>`;
   s += `<rect width="${W}" height="${H}" rx="14" fill="${col.surf}"/>`;
   for (let x = 14; x < W; x += 20) for (let y = 14; y < H - 120; y += 20) s += `<circle cx="${x}" cy="${y}" r="1" fill="${col.muted}" opacity=".18"/>`;
@@ -2948,18 +2989,17 @@ function svgRed(opts = {}) {
   // proveedores
   const prov = d.proveedores, pw = Math.min(150, (W - 40) / Math.max(prov.length, 1) - 10), py = H - 92;
   const pPos = prov.map((p, i) => ({ p, x: 20 + (W - 40) * (i + .5) / prov.length, y: py }));
-  const e3 = evDe('esc03'), provSus = E.esc03 && E.esc03.proveedor;
-  pPos.forEach(({ p, x, y }) => { const sus = p.id === provSus, a = sus && act('esc03'); s += `<path d="M${x} ${y} Q ${(x + C.x) / 2} ${y - 40} ${C.x} ${C.y + 24}" fill="none" stroke="${a ? col.bad : col.muted}" stroke-width="${a ? 3 : 1.6}" stroke-dasharray="${a ? '8 6' : '2 6'}" stroke-linecap="round" opacity="${a ? 1 : .7}"><title>${esc(p.id)} → ${esc(red.cd)}</title></path>`; });
+  pPos.forEach(({ p, x, y }) => { const a = !!(sus[p.id] && sus[p.id].on); s += `<path d="M${x} ${y} Q ${(x + C.x) / 2} ${y - 40} ${C.x} ${C.y + 24}" fill="none" stroke="${a ? col.bad : col.muted}" stroke-width="${a ? 3 : 1.6}" stroke-dasharray="${a ? '8 6' : '2 6'}" stroke-linecap="round" opacity="${a ? 1 : .7}"><title>${esc(p.id)} → ${esc(red.cd)}</title></path>`; });
   // última milla
   red.ultima.forEach(r => { const a = P[r.origen] || P[red.satDe(r.origen)], b = P[r.destino]; if (!a || !b) return; s += `<line x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}" stroke="${semOtif(r.otif)}" stroke-width="2" stroke-dasharray="1 5" stroke-linecap="round"><title>${esc(r.id)} · ${esc(r.origen)} → ${esc(r.destino)} · OTIF ${r.otif ?? '—'}%</title></line>`; });
   // troncales
   red.troncales.forEach(r => {
-    const b = P[r.destino]; if (!b) return; const bloq = r.id === ruta01, a1 = bloq && act('esc01');
+    const b = P[r.destino]; if (!b) return; const bloq = blq[r.id], a1 = !!(bloq && bloq.on);
     const mx = (C.x + b.x) / 2, my = (C.y + b.y) / 2, nx = -(b.y - C.y), ny = b.x - C.x, nl = Math.hypot(nx, ny) || 1, cx = mx + nx / nl * 18, cy = my + ny / nl * 18;
     s += `<path d="M${C.x} ${C.y} Q ${cx} ${cy} ${b.x} ${b.y}" fill="none" stroke="${a1 ? col.disr : semOtif(r.otif)}" stroke-width="${a1 ? 5 : 4.5}" stroke-linecap="round" ${a1 ? 'stroke-dasharray="11 9"' : ''}><title>${esc(r.id)} · ${esc(r.km)} km · OTIF ${r.otif ?? '—'}%${a1 ? ' · BLOQUEADA (ESC-01)' : ''}</title></path>`;
     const t = .7, qx = (1 - t) * (1 - t) * C.x + 2 * (1 - t) * t * cx + t * t * b.x, qy = (1 - t) * (1 - t) * C.y + 2 * (1 - t) * t * cy + t * t * b.y, lx = qx + nx / nl * 30, ly = qy + ny / nl * 30 + 4;
     b.info = { t: `${r.id} · ${r.km ?? ''} km · OTIF ${r.otif ?? '—'}%`, c: a1 ? col.disr : semOtif(r.otif) };
-    if (bloq) { const e1 = evDe('esc01'); if (e1) r._m = { x: C.x + (b.x - C.x) * .36 + nx / nl * 6, y: C.y + (b.y - C.y) * .36 + ny / nl * 6, n: e1.n, c: col.disr, on: act('esc01') }; }
+    if (bloq) r._m = { x: C.x + (b.x - C.x) * .36 + nx / nl * 6, y: C.y + (b.y - C.y) * .36 + ny / nl * 6, n: [bloq.n, ...bloq.extra].join('·'), c: col.disr, on: bloq.on };
   });
   // nodos
   const lbl = (p, t1, t2, r) => { let left = Math.cos(p.a ?? 0) < -.2, anc = left ? 'end' : 'start', dx = left ? -(r + 8) : r + 8, y0 = p.info ? p.y - 8 : p.y - 2, x0 = p.x + dx;
@@ -2971,11 +3011,12 @@ function svgRed(opts = {}) {
   red.sats.forEach(sn => { const p = P[sn], pt = partesNodo(sn); s += `<circle cx="${p.x}" cy="${p.y}" r="15" fill="${col.acc}"/>` + lbl(p, pt.ciudad || pt.base, pt.ciudad ? pt.base : '', 15); });
   const cdp = partesNodo(red.cd);
   s += `<circle cx="${C.x}" cy="${C.y}" r="27" fill="${col.brand}"/><circle cx="${C.x}" cy="${C.y}" r="9" fill="${col.amber}"/><text x="${C.x + 36}" y="${C.y - 2}" font-size="15" font-weight="700" fill="${col.text}">${esc(cdp.base || 'CD Central')}</text>${cdp.ciudad ? `<text x="${C.x + 36}" y="${C.y + 15}" font-size="11.5" fill="${col.muted}">${esc(cdp.ciudad)}</text>` : ''}`;
-  pPos.forEach(({ p, x, y }) => { const sus = p.id === provSus, a = sus && act('esc03'); s += `<rect x="${x - pw / 2}" y="${y}" width="${pw}" height="46" rx="8" fill="${col.surf}" stroke="${a ? col.bad : col.muted}" stroke-width="${a ? 2.5 : 1.5}"/><text x="${x}" y="${y + 18}" font-size="11.5" font-weight="700" text-anchor="middle" fill="${a ? col.bad : col.text}">${esc(p.id)}${a ? ' · suspendido' : ''}</text><text x="${x}" y="${y + 34}" font-size="10.5" text-anchor="middle" fill="${col.muted}">${esc(p.cat || '')} · LT ${esc(p.lt ?? '—')} d · FR ${esc(p.fill ?? '—')}%</text>`;
-    if (sus && e3) s += marcador(x + pw / 2 - 4, y - 4, e3.n, col.bad, act('esc03')); });
+  pPos.forEach(({ p, x, y }) => { const sp = sus[p.id], a = !!(sp && sp.on); s += `<rect x="${x - pw / 2}" y="${y}" width="${pw}" height="46" rx="8" fill="${col.surf}" stroke="${a ? col.bad : col.muted}" stroke-width="${a ? 2.5 : 1.5}"/><text x="${x}" y="${y + 18}" font-size="11.5" font-weight="700" text-anchor="middle" fill="${a ? col.bad : col.text}">${esc(p.id)}${a ? ' · suspendido' : ''}</text><text x="${x}" y="${y + 34}" font-size="10.5" text-anchor="middle" fill="${col.muted}">${esc(p.cat || '')} · LT ${esc(p.lt ?? '—')} d · FR ${esc(p.fill ?? '—')}%</text>`;
+    if (sp) s += marcador(x + pw / 2 - 4, y - 4, [sp.n, ...sp.extra].join('·'), col.bad, sp.on); });
   red.troncales.forEach(r => { if (r._m) { s += marcador(r._m.x, r._m.y, r._m.n, r._m.c, r._m.on); delete r._m; } });
-  const e2 = evDe('esc02'); if (e2) { const sa = red.sats.map(n => Math.atan2(P[n].y - C.y, P[n].x - C.x)); let best = -Math.PI / 2, bd = -1; for (let g = -165; g <= -50; g += 5) { const a = g * Math.PI / 180, dmin = Math.min(...sa.map(x => Math.abs(Math.atan2(Math.sin(a - x), Math.cos(a - x)))), Math.PI); if (dmin > bd) { bd = dmin; best = a; } }
-    const mx = C.x + 74 * Math.cos(best), my = C.y + 74 * Math.sin(best), on = act('esc02'); s += `<line x1="${C.x}" y1="${C.y}" x2="${mx}" y2="${my}" stroke="${col.amber}" stroke-width="2" stroke-dasharray="2 4" opacity="${on ? .9 : .4}"/>`; s += marcador(mx, my, e2.n, col.amber, on) + `<text x="${mx}" y="${my - 20}" font-size="11" font-weight="700" text-anchor="middle" fill="${on ? col.warn : col.muted}">${esc(E.esc02.sku)} +${esc(E.esc02.demandaPct)}%</text>`; }
+  const P2 = INS.filter(x => x.base === 'esc02'); if (P2.length) { const sa = red.sats.map(n => Math.atan2(P[n].y - C.y, P[n].x - C.x)); let best = -Math.PI / 2, bd = -1; for (let g = -165; g <= -50; g += 5) { const a = g * Math.PI / 180, dmin = Math.min(...sa.map(x => Math.abs(Math.atan2(Math.sin(a - x), Math.cos(a - x)))), Math.PI); if (dmin > bd) { bd = dmin; best = a; } }
+   P2.forEach((x2, j) => { const e2 = x2, E2 = E[x2.k], ang = best + (j - (P2.length - 1) / 2) * 0.42;
+    const mx = C.x + 74 * Math.cos(ang), my = C.y + 74 * Math.sin(ang), on = act(x2.k); s += `<line x1="${C.x}" y1="${C.y}" x2="${mx}" y2="${my}" stroke="${col.amber}" stroke-width="2" stroke-dasharray="2 4" opacity="${on ? .9 : .4}"/>`; s += marcador(mx, my, e2.n, col.amber, on) + `<text x="${mx}" y="${my - 20}" font-size="11" font-weight="700" text-anchor="middle" fill="${on ? col.warn : col.muted}">${esc(E2.sku)} +${esc(E2.demandaPct)}%</text>`; }); }
   // cualitativos: marcadores huecos en la esquina
   ev.filter(x => x.e.modelo === 'cualitativo').forEach((x, i) => { s += `<g opacity=".9"><circle cx="${W - 30 - i * 32}" cy="30" r="13" fill="${col.surf}" stroke="${col.muted}" stroke-width="2" stroke-dasharray="3 3"/><text x="${W - 30 - i * 32}" y="34.5" font-size="12" font-weight="700" text-anchor="middle" fill="${col.muted}">${x.n}</text><title>${esc(x.e.id)} · ${esc(x.e.nombre)} (cualitativo)</title></g>`; });
   // leyenda de colores
@@ -2983,8 +3024,8 @@ function svgRed(opts = {}) {
   return s + '</svg>';
   function marcador(x, y, n, c, on) { return `<g opacity="${on ? 1 : .55}"><circle cx="${x}" cy="${y}" r="14" fill="${on ? c : col.surf}" stroke="${c}" stroke-width="2.5" ${on ? '' : 'stroke-dasharray="3 3"'}/><text x="${x}" y="${y + 4.5}" font-size="12.5" font-weight="700" text-anchor="middle" fill="${on ? '#fff' : c}">${n}</text></g>`; }
 }
-function dondeImpacta(e) {
-  const E = state.escenarios;
+function dondeImpacta(e, k) {
+  const E = { [e.modelo]: state.escenarios[k] || {} };
   if (e.modelo === 'esc01') return `Ruta ${E.esc01.ruta} · ${E.esc01.dias} días · +${E.esc01.tiempoPct}% tránsito · +${E.esc01.combustiblePct}% combustible`;
   if (e.modelo === 'esc02') return `${E.esc02.sku} · +${E.esc02.demandaPct}% de demanda`;
   if (e.modelo === 'esc03') return `Proveedor ${E.esc03.proveedor} · ${E.esc03.diasSuspension} días sin despachos`;
@@ -2993,8 +3034,9 @@ function dondeImpacta(e) {
 function vistaMapaRed() {
   if (!state.data.rutas.length) return '';
   const colM = { esc01: 'var(--c-disr)', esc02: 'var(--amber)', esc03: 'var(--bad)' };
-  const filas = state.data.escenarios.map((e, i) => { const k = /^esc0[123]$/.test(e.modelo) ? e.modelo : null, on = k && state.escenarios[k].activo, dih = k && X && X.porEsc[k] ? X.porEsc[k].ih - cmp.base.ih : null;
-    return `<tr><td><span class="mr-n" style="--c:${k ? colM[k] : 'var(--muted)'}" data-on="${on ? 1 : 0}">${i + 1}</span></td><td><strong>${esc(e.id)}</strong> · ${esc(e.nombre)}<div class="tiny muted">${esc(e.impacto || e.desc || '')}</div></td><td class="small">${esc(dondeImpacta(e))}</td><td class="small">${esc(e.kpi || '—')}</td><td class="num">${dih == null ? '—' : signed(dih)}</td><td>${k ? `<label class="switch small"><input type="checkbox" data-path="escenarios.${k}.activo" data-type="bool" ${on ? 'checked' : ''} aria-label="Activar ${esc(e.id)}"> ${on ? 'Activo' : 'Inactivo'}</label>` : '<span class="tag">cualitativo</span>'}</td></tr>`; }).join('');
+  const IN = escInst();
+  const filas = state.data.escenarios.map((e, i) => { const x = IN.find(y => y.ev === e), k = x ? x.k : null, on = k && state.escenarios[k].activo, dih = k && X && X.porEsc[k] ? X.porEsc[k].ih - cmp.base.ih : null;
+    return `<tr><td><span class="mr-n" style="--c:${k ? colM[baseEsc(k)] : 'var(--muted)'}" data-on="${on ? 1 : 0}">${i + 1}</span></td><td><strong>${esc(e.id)}</strong> · ${esc(e.nombre)}<div class="tiny muted">${esc(e.impacto || e.desc || '')}</div></td><td class="small">${esc(k ? dondeImpacta(e, k) : 'No se simula (cualitativo)')}</td><td class="small">${esc(e.kpi || '—')}</td><td class="num">${dih == null ? '—' : signed(dih)}</td><td>${k ? `<label class="switch small"><input type="checkbox" data-path="escenarios.${k}.activo" data-type="bool" ${on ? 'checked' : ''} aria-label="Activar ${esc(e.id)}"> ${on ? 'Activo' : 'Inactivo'}</label>` : '<span class="tag">cualitativo</span>'}</td></tr>`; }).join('');
   return `<div class="card mapa-red" style="margin-top:1rem"><figure class="chart" style="margin:0"><figcaption><h3>Mapa de la red y disrupciones${tip('Esquema generado automáticamente con las rutas, los proveedores y la matriz de escenarios del SIG. Las rutas troncales se colorean según su OTIF frente a la meta; los números corresponden a cada evento de la matriz. Un marcador relleno indica un escenario activo; uno punteado, inactivo o cualitativo. No está a escala.')}</h3><button class="btn sm no-print" type="button" data-act="mapaPNG">PNG</button></figcaption>
   <div class="mr-svg">${svgRed()}</div></figure>
   <div class="tw" style="margin-top:.6rem"><table class="mr-tab"><thead><tr><th>#</th><th>Evento de la matriz</th><th>Dónde impacta (parámetros actuales)</th><th>KPI afectado</th><th class="num">Δ IH aislado</th><th>Estado</th></tr></thead><tbody>${filas}</tbody></table></div></div>`;
@@ -3144,7 +3186,7 @@ const DRAW = {
   db_radar: chRadar, db_kpi: chKPI, db_cascada: chCascada, db_sim: id => chSim(id, true), e_sim: id => chSim(id, false),
   o_front: chFront, dc_grupos: chGrupos, s_tornado: chTornado, d_costos: chCostos,
   db_ih: id => chIH(id, ['Base', 'Disrupción', 'Con estrategia'], [cmp.base.ih, cmp.disrupcion.ih, cmp.estrategia.ih], [COL.b, COL.d, COL.e]),
-  e_ih: id => { const ks = Object.keys(ESC_META); chIH(id, ['Base', ...ks.map(k => ESC_META[k].id), 'Combinada'], [cmp.base.ih, ...ks.map(k => X.porEsc[k].ih), cmp.disrupcion.ih], [COL.b, ...ks.map(() => rgba(COL.d, .55)), COL.d]); }
+  e_ih: id => { const ks = escKeys(); chIH(id, ['Base', ...ks.map(k => escId(k)), 'Combinada'], [cmp.base.ih, ...ks.map(k => X.porEsc[k].ih), cmp.disrupcion.ih], [COL.b, ...ks.map(() => rgba(COL.d, .55)), COL.d]); }
 };
 function dibujar() {
   if (!cmp || !window.Chart) return; prepararCharts();
@@ -3157,7 +3199,7 @@ function dibujar() {
 VISTAS.supuestos = () => {
   const pb = state.pesosBorrador, sp = sum(KPIS, k => Number(pb[k]) || 0), okP = Math.abs(sp - 100) < 0.05;
   const cambiados = KPIS.some(k => Math.abs(state.params.pesosIH[k] - 0.2) > 1e-6);
-  const supEsc = Object.keys(ESC_META).flatMap(k => ESC_META[k].params.filter(p => !['ruta', 'sku', 'prov'].includes(p[2])).map(p => [`${ESC_META[k].id} · ${p[1]}`, state.escenarios[k][p[0]] + (p[2] === 'pct' ? '%' : p[2] === 'int' ? ' días' : '')]));
+  const supEsc = escKeys().flatMap(k => metaEsc(k).params.filter(p => !['ruta', 'sku', 'prov'].includes(p[2])).map(p => [`${escId(k)} · ${p[1]}`, state.escenarios[k][p[0]] + (p[2] === 'pct' ? '%' : p[2] === 'int' ? ' días' : '')]));
   const supEst = Object.keys(EST_META).flatMap(k => EST_META[k].params.map(p => [`${EST_META[k].n} · ${p[1]}`, p[2] === 'bool' ? (state.estrategias[k][p[0]] ? 'Sí' : 'No') : state.estrategias[k][p[0]] === null ? 'OTIF base de la ruta' : state.estrategias[k][p[0]] + (p[2] === 'pct' ? '%' : ' días')]));
   return `<div class="section"><h2>6 · Supuestos del comité</h2><button class="btn sm no-print" type="button" data-act="restaurarSupuestos">Restaurar valores por defecto</button></div>
   <p class="lead">Lo que el SIG no trae se modela como parámetro editable, visible y etiquetado ${SUP}. Cualquier cambio recalcula todo el aplicativo.</p>
@@ -3296,8 +3338,8 @@ function exportarXLSX() {
     ...KPIS.map(k => [KPI_CORTO[k], M.KPI_DEF[k].mejor, cmp.base.kpis[k].meta, cmp.base.kpis[k].actual, cmp.disrupcion.kpis[k].actual, cmp.estrategia.kpis[k].actual, cmp.base.kpis[k].cumplimiento, cmp.disrupcion.kpis[k].cumplimiento, cmp.estrategia.kpis[k].cumplimiento, cmp.estrategia.kpis[k].semaforo])], [28, 10, 8, 8, 12, 14, 12, 16, 16, 18]);
   const filaE = (n, s, act) => [n, act, ...KPIS.map(k => s.kpis[k].actual), r1(s.resumen.deltaCosto), r1(s.resumen.ventasPerdidas), r1(impacto$(s)), s.ih, s.banda];
   add('Escenarios', [['Estado', 'Activo', ...KPIS.map(k => KPI_MIN[k]), 'Δ costo logístico $', 'Ventas perdidas $', 'Impacto $', 'IH', 'Banda'], filaE('Base', cmp.base, ''),
-    ...Object.keys(ESC_META).map(k => filaE(`${ESC_META[k].id} ${ESC_META[k].n} (aislado)`, X.porEsc[k], state.escenarios[k].activo ? 'Sí' : 'No')), filaE('Disrupción combinada', cmp.disrupcion, ''), [],
-    ['Parámetros'], ...Object.keys(ESC_META).flatMap(k => ESC_META[k].params.map(p => [`${ESC_META[k].id} · ${p[1]}`, state.escenarios[k][p[0]]]))], [40, 8, 10, 8, 10, 10, 14, 18, 16, 14, 8, 14]);
+    ...escKeys().map(k => filaE(`${escId(k)} ${(eventoDe(k) || {}).nombre || metaEsc(k).n} (aislado)`, X.porEsc[k], state.escenarios[k].activo ? 'Sí' : 'No')), filaE('Disrupción combinada', cmp.disrupcion, ''), [],
+    ['Parámetros'], ...escKeys().flatMap(k => metaEsc(k).params.map(p => [`${escId(k)} · ${p[1]}`, state.escenarios[k][p[0]]]))], [40, 8, 10, 8, 10, 10, 14, 18, 16, 14, 8, 14]);
   add('Estrategias', [['Estrategia', 'Rol', 'Activa', 'KPI impactado', 'Parámetros', 'Dato del SIG', 'Costo $/mes', 'Δ IH aislada'],
     ...Object.keys(EST_META).map(k => [EST_META[k].n, state.estrategias[k].rol, state.estrategias[k].activo ? 'Sí' : 'No', KPI_CORTO[EST_META[k].kpi], decisionTxt(k), datoSIG(k), r1(costoEst(k)), r1(X.dIH(k))])], [30, 32, 8, 24, 50, 60, 12, 12]);
   const P = state.params.pesosIH;

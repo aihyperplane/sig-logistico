@@ -133,3 +133,14 @@ Caso de referencia con las siete de contingencia + plan estructural: IH 79,8 (Te
 - Sección 1: las filas que no corresponden a los cinco KPIs del IH se conservan como **indicadores adicionales** (`kpisExtra`), con columnas opcionales 6 (unidad) y 7 (mejor si: mayor/menor). Son informativos: no entran al Índice de Homeostasis.
 - Sección 6: columna opcional 6 **Modelo de simulación** (ESC-01 transporte, ESC-02 demanda, ESC-03 proveedor o Cualitativo). Si falta, se infiere del ID (ESC-01/02/03); los demás eventos quedan como cualitativos: se documentan en la matriz y el informe, pero el simulador no los cuantifica.
 - Ningún cálculo cambia; los valores de control se mantienen.
+
+## 11. Cambios v1.3 del motor (varios eventos por modelo de escenario) — supuesto del comité
+
+Solicitado por el usuario: si la matriz de escenarios tiene varios eventos con el mismo modelo (por ejemplo, dos quiebras de proveedor), cada uno se simula con sus propios parámetros.
+
+- Instancias: `esc01`, `esc01_2`, `esc01_3`…; igual para `esc02` y `esc03`. La primera fila de cada modelo en la matriz usa la clave base; las siguientes, `_2`, `_3`… El aplicativo crea las instancias a partir de la matriz e infiere el parámetro desde el texto del evento (RT-xx, SKU-xxx, PRV-xx) cuando existe en los datos.
+- ESC-03 (proveedor): un SKU queda suspendido si **cualquier** instancia activa suspende a un proveedor de su categoría; el retraso aplicado es el **máximo** de los días de suspensión de esas instancias (no se suman: el abastecimiento se reanuda cuando termina la suspensión más larga).
+- ESC-02 (demanda): los aumentos de las instancias activas sobre el **mismo SKU se suman** (dos campañas del +40% equivalen a +80%); el plan S&OP reduce el pico total.
+- ESC-01 (transporte): el alza de combustible es global y toma el **máximo** de las instancias activas (no se duplica). Cada ruta usa la instancia activa que la bloquea; si dos instancias bloquean la misma ruta, se usa la de más días.
+- Con una sola instancia por modelo los resultados son idénticos a la v1.2: los valores de control (67,0 / 46,5 / 70,9 / 119%) no cambian. Pruebas: `scripts/test_motor.js`, bloque "v1.3".
+- Observación del modelo (sin cambio): suspender a un proveedor de una categoría con sobrestock puede **subir** el IH aislado, porque baja el inventario y mejora la rotación sin ventas perdidas. El aplicativo lo señala en la tarjeta del escenario.

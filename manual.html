@@ -91,7 +91,7 @@ code,kbd{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.86em;backg
 <header class="cover">
   <div class="brand"><div class="logo" aria-hidden="true"><svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><rect width="64" height="64" rx="15" fill="#0B3A53"/><path d="M45 17 H25 a8.5 8.5 0 0 0 0 17 H39 a8.5 8.5 0 0 1 0 17 H21" fill="none" stroke="#14B8A6" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="47" cy="17" r="5" fill="#F59E0B"/><circle cx="19" cy="51" r="5" fill="none" stroke="#14B8A6" stroke-width="3.4"/></svg></div><span class="muted small">AI HYPERPLANE S.A.S. · Simulador académico</span></div>
   <h1>Manual de usuario — SIG-Logístico LogiTech Solutions S.A.</h1>
-  <p class="muted">Paso a paso del simulador y guía del ejercicio “Estrategas de la Cadena de Suministro: Decisiones Inteligentes con un SIG-Logístico”. Versión del aplicativo: v1.6.0 · octubre de 2026.</p>
+  <p class="muted">Paso a paso del simulador y guía del ejercicio “Estrategas de la Cadena de Suministro: Decisiones Inteligentes con un SIG-Logístico”. Versión del aplicativo: v1.6.1 · octubre de 2026.</p>
   <p><a class="btn" href="simulador.html">Abrir el simulador</a> &nbsp; <a href="index.html">Página de inicio</a> · <a href="Manual_SIG_Logistico.pdf">Descargar este manual en PDF</a> · <a href="SIG_Logistico_template_referencia.xlsx">Template de referencia (XLSX)</a></p>
   <p class="small muted">© 2026 AI HYPERPLANE S.A.S. Propiedad intelectual de AI HYPERPLANE S.A.S. El simulador puede usarse libremente con fines académicos y educativos; cualquier otro uso requiere autorización escrita. Ver <a href="#terminos">términos de uso</a>.</p>
 </header>
@@ -333,9 +333,11 @@ code,kbd{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.86em;backg
   <li>Las <strong>rutas troncales</strong> se colorean según su OTIF frente a la meta (verde cumple, ámbar ≥ 90% de la meta, rojo bajo). La ruta del bloqueo (ESC-01) se dibuja punteada en rojo cuando el escenario está activo.</li>
   <li>El marcador del <strong>efecto látigo</strong> (ESC-02) muestra el SKU y el aumento de demanda; el proveedor de la <strong>quiebra</strong> (ESC-03) aparece “suspendido”.</li>
   <li>Marcador relleno: escenario activo. Punteado: inactivo o evento <strong>cualitativo</strong> (no simulado).</li>
+  <li><strong>Varios eventos con el mismo modelo</strong> (por ejemplo, dos quiebras de proveedor): cada uno tiene su propia tarjeta, sus propios parámetros, su interruptor y su efecto aislado. El simulador toma el parámetro inicial del texto del evento (RT-xx, SKU-xxx o PRV-xx). En la disrupción combinada, las suspensiones de proveedores se aplican juntas, los picos de demanda sobre un mismo SKU se suman y el alza de combustible no se duplica.</li>
   <li>La tabla de abajo lista cada evento con sus parámetros actuales, el KPI afectado y su efecto aislado en el IH; el interruptor activa o desactiva el escenario.</li>
   <li>El mapa se actualiza con cada cambio (otra ruta bloqueada, otro proveedor, una variante del grupo o un CSV propio). <strong>PNG</strong> lo descarga, y el borrador del informe lo incluye como primera figura.</li>
 </ul>
+<p>Si el texto de un evento menciona un código distinto al parámetro elegido (por ejemplo, “Quiebra de Proveedor PRV-01” con el proveedor PRV-03), aparece un <strong>hallazgo de calidad de datos</strong>. Si un evento <strong>sube</strong> el IH (por ejemplo, la quiebra de un proveedor de una categoría con sobrestock), su tarjeta lo explica: es un efecto del modelo que conviene analizar en el informe.</p>
 <p>Las posiciones respetan la orientación geográfica aproximada de las ciudades conocidas, pero el esquema <strong>no está a escala</strong>.</p>
 <figure><img src="manual/img/61-mapa-red.jpg" alt="Mapa de la red con las rutas coloreadas por OTIF y los marcadores de la matriz de escenarios" loading="lazy"><figcaption>Figura 7b. Mapa de la red y disrupciones.</figcaption></figure>
 <figure><img src="manual/img/08-esc-cards.jpg" alt="Tarjetas de los tres escenarios con parámetros e impacto aislado" loading="lazy"><figcaption>Figura 8. Tarjetas de escenarios.</figcaption></figure>
@@ -626,7 +628,7 @@ Bandas: ≥ 90 Equilibrio · 75 a 89,9 Tensión · < 75 Desequilibrio</div>
   <li>LogiTech Solutions S.A. es un caso ficticio. Los resultados del simulador son ilustrativos y dependen de los datos y supuestos ingresados; no constituyen asesoría profesional.</li>
   <li>Cita sugerida: <em>AI HYPERPLANE S.A.S. (2026). Simulador SIG-Logístico LogiTech Solutions S.A. (versión del pie de página) [Aplicación web].</em></li>
 </ul>
-<p class="pi">© 2026 AI HYPERPLANE S.A.S. Todos los derechos reservados, salvo el uso académico autorizado en estos términos. Manual del simulador SIG-Logístico v1.6.0.</p>
+<p class="pi">© 2026 AI HYPERPLANE S.A.S. Todos los derechos reservados, salvo el uso académico autorizado en estos términos. Manual del simulador SIG-Logístico v1.6.1.</p>
 </main>
 </div>
 </body>

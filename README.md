@@ -1,6 +1,6 @@
 # Aplicativo SIG-Logístico — LogiTech Solutions S.A.
 
-Versión: v1.6.0 — Fecha: 2026-10-07
+Versión: v1.6.1 — Fecha: 2026-10-07
 
 Publicado en: https://aihyperplane.github.io/sig-logistico/
 
@@ -14,6 +14,10 @@ Aplicativo web para resolver la actividad "Estrategas de la Cadena de Suministro
 5. **Dashboard** — IH de Base / Disrupción / Con estrategia, recuperación, costo de la homeostasis, scorecard, 10 gráficos, vista por rol, matriz de decisiones y sinergias. Cada cifra tiene "ver cálculo".
 6. **Supuestos** — parámetros del motor, pesos y bandas del Índice de Homeostasis, y análisis de sensibilidad.
 7. **Exportar** — checklist de la actividad, CSV (template), XLSX, JSON, PNG, vista imprimible y link para compartir.
+
+### v1.6.1
+- **Varios eventos por modelo de escenario**: cada evento de la matriz (por ejemplo, dos quiebras de proveedor) tiene su propia tarjeta, parámetros, interruptor y efecto aislado, y aparece en el mapa, las tablas, el gráfico de IH, el XLSX y el borrador. Motor 1.3.0 (ver `formulas.md` §11); valores de control sin cambio.
+- Hallazgo de calidad de datos cuando el texto del evento menciona un código distinto al parámetro; nota explicativa cuando un evento sube el IH.
 
 ### Novedades v1.6.0
 - **Identificación del grupo** (estudiante(s), profesor/a y número de grupo) en la bienvenida y en Datos; aparece en CSV (sección 0, se relee al cargar), XLSX (hoja Identificación), JSON, borrador del informe, vista imprimible, nombres de archivo y comparación de entregas. El docente puede fijar su nombre en el link de la clase. Template de referencia con sección 0.
