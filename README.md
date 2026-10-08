@@ -1,6 +1,6 @@
 # Aplicativo SIG-Logístico — LogiTech Solutions S.A.
 
-Versión: v1.2.0 — Fecha: 2026-10-07
+Versión: v1.4.0 — Fecha: 2026-10-07
 
 Publicado en: https://aihyperplane.github.io/sig-logistico/
 
@@ -14,6 +14,20 @@ Aplicativo web para resolver la actividad "Estrategas de la Cadena de Suministro
 5. **Dashboard** — IH de Base / Disrupción / Con estrategia, recuperación, costo de la homeostasis, scorecard, 10 gráficos, vista por rol, matriz de decisiones y sinergias. Cada cifra tiene "ver cálculo".
 6. **Supuestos** — parámetros del motor, pesos y bandas del Índice de Homeostasis, y análisis de sensibilidad.
 7. **Exportar** — checklist de la actividad, CSV (template), XLSX, JSON, PNG, vista imprimible y link para compartir.
+
+### Novedades v1.4.0
+- **Preguntas de reflexión** por módulo, **autoevaluación de conceptos** (12 preguntas) y **rúbrica integrada** con nivel sugerido y autoevaluación.
+- **Borrador automático del Informe Ejecutivo** en Word (.docx) o HTML, con cifras, tablas y gráficos del análisis y espacios para la interpretación del comité.
+- **Modo docente**: comparación de los JSON de los grupos con verificación de integridad, gráfico costo vs. IH y exportación XLSX; **configuración de la clase** por link (`#clase=`) que fija supuestos, pesos, escenarios y datos.
+- **Subpestañas** en Estrategias y Dashboard, **planes A/B**, **deshacer/rehacer** (Ctrl/Cmd+Z).
+- **Accesibilidad**: modo Accesible (patrones en gráficos), "Ver datos del gráfico", tablas como tarjetas en celular.
+- **Versión sin internet**: `SIG_Logistico_sin_internet.html` (librerías incluidas, un solo archivo).
+
+### Novedades v1.3.0
+- **Bitácora de decisiones**: registra cada cambio con IH antes/después y justificación; alimenta la Matriz de Decisiones y se exporta (hoja Bitácora).
+- **Predecir antes de simular**: al activar escenarios o estrategias se pide una predicción y se compara con el resultado.
+- **Variantes del caso por grupo**: un código genera un caso reproducible de dificultad equivalente.
+- **Barra de avance** del ejercicio y navegación entre módulos; **diseño móvil** con menú y pestañas inferiores.
 
 ### Novedades v1.2.0
 - Secciones 1 (KPIs) y 6 (matriz de escenarios) editables: agregar, modificar y eliminar registros; indicadores adicionales informativos; modelo de simulación por evento (ESC-01/02/03 o cualitativo).
@@ -36,7 +50,7 @@ Valores de control del caso demo: IH base 67,0 (Desequilibrio, KPI más débil: 
 © 2026 AI HYPERPLANE S.A.S. Propiedad intelectual de AI HYPERPLANE S.A.S. El simulador puede usarse libremente con fines académicos y educativos, citando la fuente; cualquier otro uso requiere autorización escrita. Ver `TERMINOS_DE_USO.md`.
 
 ## Archivos del sitio
-`index.html` (simulador), `manual.html` + carpeta `manual/img/` (manual), `Manual_SIG_Logistico.pdf`, `SIG_Logistico_template_referencia.xlsx` y `.csv`, `staticwebapp.config.json`, `.nojekyll`.
+`index.html` (simulador), `SIG_Logistico_sin_internet.html` (misma versión con librerías incluidas), `manual.html` + carpeta `manual/img/` (manual), `Manual_SIG_Logistico.pdf`, `SIG_Logistico_template_referencia.xlsx` y `.csv`, `staticwebapp.config.json`, `.nojekyll`.
 
 ## Uso
 1. Abrir el link. Para ver el caso de ejemplo: botón "Cargar caso demo" (se carga solo la primera vez).
@@ -64,7 +78,7 @@ El token se obtiene en el recurso → "Administrar token de implementación". No
 3. URL: `https://<usuario>.github.io/<repositorio>/` (tarda uno o dos minutos la primera vez).
 
 ## Uso local
-Abrir `index.html` con doble clic. Necesita internet solo para descargar las librerías (Chart.js, SheetJS, PapaParse, lz-string) desde cdnjs; sin ellas el cálculo funciona, pero no los gráficos ni las exportaciones XLSX.
+Abrir `index.html` con doble clic. Necesita internet solo para descargar las librerías (Chart.js, SheetJS, PapaParse, lz-string) desde cdnjs; sin ellas el cálculo funciona, pero no los gráficos ni las exportaciones XLSX. Sin conexión, usar `SIG_Logistico_sin_internet.html`.
 
 ## Actualizar
-En el repositorio: Add file → Upload files → arrastrar el nuevo `index.html` → Commit. Subir la versión en el pie (constante `VERSION`) y en este README, hacer push. Los links compartidos (`#estado=`) de versiones anteriores siguen abriendo mientras no cambie el esquema del estado.
+En el repositorio: Add file → Upload files → arrastrar los archivos nuevos (`index.html`, `SIG_Logistico_sin_internet.html`, `manual.html`, `manual/img/`, PDF) → Commit. Subir la versión en el pie (constante `VERSION`) y en este README, hacer push. Los links compartidos (`#estado=`) de versiones anteriores siguen abriendo mientras no cambie el esquema del estado.

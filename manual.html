@@ -55,6 +55,7 @@ code,kbd{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.86em;backg
 <nav class="toc" aria-label="Contenido">
   <strong>Contenido</strong>
   <ol>
+    <li><a href="#novedades">Novedades v1.4</a></li>
     <li><a href="#intro">1. Introducción</a></li>
     <li><a href="#ejercicio">2. El ejercicio académico</a></li>
     <li><a href="#acceso">3. Acceso y requisitos</a></li>
@@ -65,9 +66,14 @@ code,kbd{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.86em;backg
         <li><a href="#diagnostico">5.2 Diagnóstico</a></li>
         <li><a href="#escenarios">5.3 Escenarios</a></li>
         <li><a href="#estrategias">5.4 Estrategias</a></li>
+        <li><a href="#bitacora">5.4.1 Bitácora y predicciones</a></li>
         <li><a href="#dashboard">5.5 Dashboard</a></li>
         <li><a href="#supuestos">5.6 Supuestos</a></li>
         <li><a href="#exportar">5.7 Exportar y compartir</a></li>
+        <li><a href="#reflexion">5.8 Reflexiones, quiz y rúbrica</a></li>
+        <li><a href="#borrador">5.9 Borrador del informe</a></li>
+        <li><a href="#docente">5.10 Modo docente</a></li>
+        <li><a href="#sininternet">5.11 Accesibilidad y uso sin internet</a></li>
       </ol></li>
     <li><a href="#ih">6. Índice de Homeostasis</a></li>
     <li><a href="#informe">7. El Informe Ejecutivo</a></li>
@@ -81,10 +87,27 @@ code,kbd{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.86em;backg
 <header class="cover">
   <div class="brand"><div class="logo" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 32 32"><path d="M5 23h7v-7h7V9h8" stroke="#fff" stroke-width="3.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="muted small">AI HYPERPLANE S.A.S. · Simulador académico</span></div>
   <h1>Manual de usuario — SIG-Logístico LogiTech Solutions S.A.</h1>
-  <p class="muted">Paso a paso del simulador y guía del ejercicio “Estrategas de la Cadena de Suministro: Decisiones Inteligentes con un SIG-Logístico”. Versión del aplicativo: v1.2.0 · octubre de 2026.</p>
+  <p class="muted">Paso a paso del simulador y guía del ejercicio “Estrategas de la Cadena de Suministro: Decisiones Inteligentes con un SIG-Logístico”. Versión del aplicativo: v1.4.0 · octubre de 2026.</p>
   <p><a class="btn" href="index.html">Abrir el simulador</a> &nbsp; <a href="Manual_SIG_Logistico.pdf">Descargar este manual en PDF</a> · <a href="SIG_Logistico_template_referencia.xlsx">Template de referencia (XLSX)</a></p>
   <p class="small muted">© 2026 AI HYPERPLANE S.A.S. Propiedad intelectual de AI HYPERPLANE S.A.S. El simulador puede usarse libremente con fines académicos y educativos; cualquier otro uso requiere autorización escrita. Ver <a href="#terminos">términos de uso</a>.</p>
 </header>
+
+<div class="note ok" id="novedades"><strong>Novedades de la versión 1.4</strong>
+<ul style="margin:.4rem 0 0">
+  <li><strong>Preguntas de reflexión</strong> al final de Diagnóstico, Escenarios, Estrategias, Dashboard y Supuestos; <strong>autoevaluación de conceptos</strong> (12 preguntas) y <strong>rúbrica integrada</strong> con nivel sugerido (<a href="#reflexion">5.8</a>).</li>
+  <li><strong>Borrador automático del Informe Ejecutivo</strong> en Word (.docx) o HTML, con las cifras y gráficos del análisis y espacios marcados para la interpretación del comité (<a href="#borrador">5.9</a>).</li>
+  <li><strong>Modo docente</strong>: compara los JSON de los grupos (con verificación de integridad) y <strong>fija parámetros de la clase</strong> con un link (<a href="#docente">5.10</a>).</li>
+  <li><strong>Subpestañas</strong> en Estrategias y Dashboard, <strong>comparación de planes A/B</strong> y <strong>deshacer/rehacer</strong> (↶ ↷, Ctrl/Cmd+Z) (<a href="#interfaz">4</a>, <a href="#dashboard">5.5</a>).</li>
+  <li><strong>Accesibilidad</strong>: modo “Accesible” con patrones en los gráficos y “Ver datos del gráfico” en cada uno; <strong>tablas como tarjetas</strong> en el celular; <strong>versión sin internet</strong> en un solo archivo (<a href="#sininternet">5.11</a>).</li>
+</ul></div>
+<div class="note"><strong>Novedades de la versión 1.3</strong>
+<ul style="margin:.4rem 0 0">
+  <li><strong>Bitácora de decisiones</strong>: cada cambio en escenarios y estrategias queda registrado con el IH antes y después y una justificación que alimenta la Matriz de Decisiones (<a href="#bitacora">5.4.1</a>).</li>
+  <li><strong>Predecir antes de simular</strong>: al activar un escenario o una estrategia, el estudiante anticipa el efecto y luego lo compara con el simulador (<a href="#bitacora">5.4.1</a>).</li>
+  <li><strong>Variantes del caso por grupo</strong>: un código genera un LogiTech distinto con dificultad equivalente, reproducible por el docente (<a href="#variantes">5.1</a>).</li>
+  <li><strong>Barra de avance</strong> del ejercicio y botones para pasar al módulo siguiente (<a href="#interfaz">4</a>).</li>
+  <li><strong>Celular</strong>: encabezado compacto con menú y pestañas en la parte inferior (<a href="#interfaz">4</a>).</li>
+</ul></div>
 
 <h2 id="intro">1. Introducción</h2>
 <p>El <strong>SIG-Logístico</strong> es un simulador web que reproduce el Sistema de Información Gerencial de una empresa de distribución. Permite cargar los datos del SIG, diagnosticar la cadena de suministro por rol, simular disrupciones, aplicar estrategias y evaluar el resultado con un tablero integrado y un indicador síntesis, el <strong>Índice de Homeostasis</strong>.</p>
@@ -133,7 +156,7 @@ code,kbd{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.86em;backg
 <h2 id="acceso">3. Acceso y requisitos</h2>
 <ul>
   <li><strong>Acceso:</strong> abre el link del simulador en cualquier navegador moderno (Chrome, Edge, Safari o Firefox), en computador o celular. No hay registro ni contraseña.</li>
-  <li><strong>Internet:</strong> se necesita al abrir la página para descargar las librerías de gráficos y Excel. El cálculo funciona aunque fallen.</li>
+  <li><strong>Internet:</strong> se necesita al abrir la página para descargar las librerías de gráficos y Excel. El cálculo funciona aunque fallen. Para clases sin conexión, descarga la <strong>versión sin internet</strong> (Exportar → “Descargar versión sin internet”): un solo archivo que funciona sin red (<a href="#sininternet">5.11</a>).</li>
   <li><strong>Privacidad:</strong> todo el cálculo ocurre en tu navegador. Los datos no se envían a ningún servidor.</li>
   <li><strong>Guardado:</strong> tu análisis se guarda automáticamente en el navegador que estás usando. Para llevarlo a otro equipo, descarga el JSON o copia el link del análisis.</li>
   <li><strong>Recomendación:</strong> usa un computador para el trabajo completo; el celular sirve para consultar resultados.</li>
@@ -146,6 +169,10 @@ code,kbd{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.86em;backg
 <thead><tr><th>Elemento</th><th>Para qué sirve</th></tr></thead>
 <tbody>
 <tr><td><strong>Vista</strong></td><td>Elige “Comité completo” o un rol. El simulador prioriza la información de ese rol (lo abre primero y lo resalta) sin ocultar la visión sistémica.</td></tr>
+<tr><td><strong>↶ ↷ Deshacer / Rehacer</strong></td><td>Revierte o repite el último cambio de escenarios, estrategias o supuestos (hasta 60 pasos). Atajos: Ctrl+Z / Ctrl+Shift+Z (Cmd en Mac).</td></tr>
+<tr><td><strong>Autoevaluación</strong></td><td>Quiz de 12 preguntas sobre OTIF, DIO, ROP, efecto látigo, IH y más, con retroalimentación inmediata (<a href="#reflexion">5.8</a>).</td></tr>
+<tr><td><strong>Modo docente</strong></td><td>Comparar entregas de los grupos y configurar la clase (<a href="#docente">5.10</a>).</td></tr>
+<tr><td><strong>Accesible</strong></td><td>Añade patrones y marcadores distintos a cada serie para leer los gráficos sin depender del color (<a href="#sininternet">5.11</a>).</td></tr>
 <tr><td><strong>Recorrido guiado</strong></td><td>Tour corto de seis pasos adaptado al rol elegido.</td></tr>
 <tr><td><strong>Guía académica</strong></td><td>Paso a paso del entregable, buenas prácticas, glosario y referencias.</td></tr>
 <tr><td><strong>Manual</strong></td><td>Abre este documento.</td></tr>
@@ -154,13 +181,32 @@ code,kbd{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.86em;backg
 <tr><td><strong>Pestañas 1 a 7</strong></td><td>Datos, Diagnóstico, Escenarios, Estrategias, Dashboard, Supuestos y Exportar, en el orden del ejercicio. Con el teclado: flechas izquierda y derecha.</td></tr>
 <tr><td><strong>“?” (ayudas)</strong></td><td>Pasa el cursor, enfoca con Tab o toca el “?” para ver la definición, la fórmula o cómo leer un gráfico.</td></tr>
 <tr><td><strong>ƒ ver cálculo</strong></td><td>Muestra la fórmula de cada cifra con los valores del caso sustituidos.</td></tr>
+<tr><td><strong>Subpestañas</strong></td><td>Estrategias (Palancas y bitácora · Contingencia vs. estructural · Optimizador) y Dashboard (Resumen · Gráficos · Matriz y sinergias · Por rol · Planes A/B) se dividen en subpestañas para no desplazarse por una página larga. La subpestaña elegida se recuerda.</td></tr>
+<tr><td><strong>Preguntas de reflexión</strong></td><td>Al final de cinco módulos; se guardan con el análisis (<a href="#reflexion">5.8</a>).</td></tr>
+<tr><td><strong>Barra de avance</strong></td><td>Muestra cuántos de los siete pasos están completos y cuál sigue (con enlace). Un paso se completa así: Datos sin errores; Diagnóstico revisado; al menos un escenario activo; palancas activas y justificadas en la bitácora; Dashboard y Supuestos revisados; análisis exportado. Las pestañas completas muestran ✓. Al final de cada módulo, el botón <strong>Continuar</strong> lleva al siguiente.</td></tr>
+<tr><td><strong>En el celular</strong></td><td>El encabezado se reduce al nombre y el botón <strong>☰ Menú</strong> (vista por rol, guía, manual, link y tema). Las siete pestañas pasan a una barra fija en la parte inferior.</td></tr>
 <tr><td><strong>Recomendación académica</strong></td><td>Recuadro al inicio de cada módulo con lo que conviene llevar al informe. Se puede ocultar.</td></tr>
 </tbody></table></div>
+<figure><img src="manual/img/30-encabezado.jpg" alt="Encabezado v1.4 con deshacer, rehacer, autoevaluación, modo docente y accesible" loading="lazy"><figcaption>Figura 1a. Encabezado de la versión 1.4.</figcaption></figure>
+<figure><img src="manual/img/32-subpestanas.jpg" alt="Subpestañas del Dashboard" loading="lazy"><figcaption>Figura 1d. Subpestañas del Dashboard.</figcaption></figure>
+<figure><img src="manual/img/21-avance.jpg" alt="Barra de avance del ejercicio con el siguiente paso sugerido" loading="lazy"><figcaption>Figura 1b. Barra de avance del ejercicio.</figcaption></figure>
+<figure><img src="manual/img/27-movil.jpg" alt="Vista en celular con menú y pestañas inferiores" loading="lazy" style="max-width:300px"><figcaption>Figura 1c. Vista en celular.</figcaption></figure>
+<p>En el celular, las tablas anchas se muestran como <strong>tarjetas</strong>: cada fila es una tarjeta con el nombre de cada columna junto a su valor, sin desplazamiento horizontal.</p>
+<figure><img src="manual/img/42-movil-tarjetas.jpg" alt="Tabla mostrada como tarjetas en el celular" loading="lazy" style="max-width:300px"><figcaption>Figura 1e. Tablas como tarjetas en el celular.</figcaption></figure>
 
 <h2 id="pasos">5. Paso a paso</h2>
 
 <h3 id="carga">5.1 Datos: cargar o capturar la información del SIG</h3>
 <p>Tienes tres caminos: usar el <strong>caso demo</strong> (se carga solo la primera vez), cargar un archivo con el <strong>template de referencia</strong> o capturar los datos directamente en las tablas.</p>
+<h4 id="variantes">Usar una variante del caso por grupo</h4>
+<p>Para que cada equipo trabaje con datos propios, el docente asigna un <strong>código de grupo</strong> (por ejemplo <code>G07</code>). En <strong>Datos → Fuente de datos → Variante del caso por grupo</strong>, escribe el código y pulsa <strong>Generar variante</strong>.</p>
+<ul>
+  <li>El simulador produce un LogiTech distinto: demandas, stock, costos, lead times, fill rates, OTIF de rutas, pedidos por canal y KPIs reportados varían dentro de rangos realistas; también cambian la ruta bloqueada, el SKU del pico de demanda y la matriz de escenarios.</li>
+  <li>La <strong>dificultad es equivalente</strong>: la variante se acepta solo si el IH base queda entre 58 y 75 (Desequilibrio) y las disrupciones lo bajan al menos 8 puntos.</li>
+  <li>Es <strong>reproducible</strong>: el mismo código genera siempre los mismos datos, así el docente puede verificar el análisis de cada grupo. El origen queda como “Variante del grupo G07” en el simulador y en las exportaciones.</li>
+  <li>Generar una variante reemplaza los datos actuales y vacía la bitácora.</li>
+</ul>
+<figure><img src="manual/img/22-variante.jpg" alt="Campo de código de grupo y botón Generar variante" loading="lazy"><figcaption>Figura 2b. Variante del caso por grupo.</figcaption></figure>
 <h4>Usar el template de referencia</h4>
 <ol class="steps">
   <li>En <strong>Datos → Fuente de datos</strong>, pulsa <strong>XLSX con listas e instrucciones</strong> (o <strong>CSV</strong>). El archivo viene lleno con el caso LogiTech como ejemplo.</li>
@@ -257,8 +303,35 @@ code,kbd{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.86em;backg
 <p>El botón <strong>Aplicar</strong> activa esa combinación. Si tu selección no está en la frontera, el simulador te dice qué combinación logra lo mismo o más por menos.</p>
 <figure><img src="manual/img/12-est-optimizador.jpg" alt="Optimizador con gráfico de frontera eficiente y tabla de criterios" loading="lazy"><figcaption>Figura 12. Optimizador.</figcaption></figure>
 
+<h3 id="bitacora">5.4.1 Bitácora de decisiones y predicciones</h3>
+<p>La bitácora convierte el uso del simulador en un razonamiento documentado. Está al inicio del módulo Estrategias.</p>
+<h4>Predecir antes de simular</h4>
+<p>Al <strong>activar</strong> un escenario o una estrategia, se abre una ventana que pide anticipar el efecto antes de verlo:</p>
+<ol class="steps">
+  <li>Elige el KPI que vas a observar (viene sugerido el KPI de la palanca o del escenario).</li>
+  <li>Indica si sube, baja o no cambia y, si quieres, cuánto (en unidades del KPI).</li>
+  <li>Indica qué pasará con el Índice de Homeostasis.</li>
+  <li>Escribe tu razonamiento: qué mecanismo esperas y qué dato del SIG lo sugiere. Queda como justificación en la bitácora.</li>
+  <li>Pulsa <strong>Simular y comparar</strong>: el simulador muestra tu predicción frente al resultado real, con ✓ o ✗ y el error de magnitud.</li>
+</ol>
+<p>Si la predicción no coincide, abre “ƒ ver cálculo” para entender el mecanismo que no anticipaste (efectos sistémicos, la regla conservadora, costos que se trasladan a otro KPI). Esa diferencia es materia valiosa para el informe. Puedes activar sin predecir o desactivar las predicciones desde la bitácora.</p>
+<figure><img src="manual/img/24-prediccion.jpg" alt="Ventana de predicción antes de simular" loading="lazy" style="max-width:560px"><figcaption>Figura 10b. Predicción antes de simular.</figcaption></figure>
+<figure><img src="manual/img/25-prediccion-resultado.jpg" alt="Comparación entre la predicción y el resultado del simulador" loading="lazy" style="max-width:560px"><figcaption>Figura 10c. Resultado frente a la predicción.</figcaption></figure>
+<h4>Justificar cada decisión</h4>
+<p>Cuando cambias un parámetro, desactivas una palanca o aplicas una combinación del optimizador, aparece un panel en la esquina inferior que pregunta <em>por qué</em> el comité toma esa decisión y qué dato del SIG la respalda. Puedes guardar u omitir; la justificación se puede editar después en la tabla de la bitácora.</p>
+<figure><img src="manual/img/23-justificacion.jpg" alt="Panel de justificación de una decisión" loading="lazy" style="max-width:460px"><figcaption>Figura 10d. Panel de justificación.</figcaption></figure>
+<h4>La tabla de la bitácora</h4>
+<ul>
+  <li>Registra fecha, tipo (estrategia, escenario o combinación), decisión, cambio, IH antes y después, resultado de la predicción y la justificación (editable).</li>
+  <li>Muestra el conteo de aciertos de predicción (KPI e IH).</li>
+  <li>Lista las <strong>palancas activas sin justificación</strong> con un botón para justificarlas; el paso Estrategias de la barra de avance y el checklist de Exportar no se completan hasta justificarlas todas.</li>
+  <li>La última justificación de cada palanca aparece en la columna <strong>Justificación</strong> de la Matriz de Decisiones del Dashboard y del XLSX.</li>
+  <li>Se exporta completa en la hoja <strong>Bitácora</strong> del XLSX y en el JSON (con el resumen de aciertos).</li>
+</ul>
+<figure><img src="manual/img/26-bitacora.jpg" alt="Bitácora de decisiones con predicciones y justificaciones" loading="lazy"><figcaption>Figura 10e. Bitácora de decisiones.</figcaption></figure>
+
 <h3 id="dashboard">5.5 Dashboard de evaluación</h3>
-<p>Compara los tres estados: <strong>Base</strong> (azul), <strong>Disrupción</strong> (naranja) y <strong>Con estrategia</strong> (verde).</p>
+<p>Compara los tres estados: <strong>Base</strong> (azul), <strong>Disrupción</strong> (naranja) y <strong>Con estrategia</strong> (verde). Está organizado en cinco subpestañas: <strong>Resumen</strong> (encabezado, scorecard y radar), <strong>Gráficos</strong>, <strong>Matriz y sinergias</strong>, <strong>Por rol</strong> y <strong>Planes A/B</strong>.</p>
 <ul>
   <li><strong>Encabezado:</strong> IH de los tres estados con su banda, tasa de recuperación, KPI más débil y costo de la homeostasis.</li>
   <li><strong>Scorecard:</strong> los cinco KPIs frente a la meta con semáforo (verde cumple; amarillo ≥ 90% de la meta; rojo por debajo) y “ver cálculo” de cada estado.</li>
@@ -272,6 +345,17 @@ code,kbd{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.86em;backg
 <figure><img src="manual/img/14-dash-scorecard.jpg" alt="Scorecard de cinco KPIs con semáforo" loading="lazy"><figcaption>Figura 14. Scorecard.</figcaption></figure>
 <figure><img src="manual/img/16-dash-sim.jpg" alt="Gráfico de evolución diaria del stock" loading="lazy" style="max-width:640px"><figcaption>Figura 15. Stock diario del SKU afectado: el día en que la línea toca cero empieza la venta perdida.</figcaption></figure>
 <figure><img src="manual/img/17-dash-matriz.jpg" alt="Matriz de decisiones estratégicas" loading="lazy"><figcaption>Figura 16. Matriz de decisiones estratégicas.</figcaption></figure>
+<h4 id="planes">Comparar planes A/B</h4>
+<ol class="steps">
+  <li>Con una combinación de escenarios, estrategias y supuestos, pulsa <strong>Guardar actual como Plan A</strong>.</li>
+  <li>Cambia la combinación (por ejemplo, la “eficiente” del optimizador) y pulsa <strong>Guardar actual como Plan B</strong>.</li>
+  <li>La tabla compara Plan A, Plan B y la configuración actual con los mismos datos: IH, banda, recuperación, costo neto, $/punto, KPI más débil y los cinco KPIs. <strong>Cargar</strong> restaura cualquiera de los dos.</li>
+</ol>
+<p>Úsalo en el informe para defender por qué el comité eligió un plan y no el otro. Los planes se exportan en el JSON y en la hoja Planes del XLSX.</p>
+<figure><img src="manual/img/33-planes.jpg" alt="Comparación de Plan A, Plan B y configuración actual" loading="lazy"><figcaption>Figura 16b. Comparar planes A/B.</figcaption></figure>
+<h4>Ver datos del gráfico</h4>
+<p>Debajo de cada gráfico, <strong>▸ Ver datos del gráfico</strong> despliega una tabla con los valores exactos. Sirve para citar cifras en el informe y para quien usa lector de pantalla.</p>
+<figure><img src="manual/img/34-datos-grafico.jpg" alt="Tabla de datos desplegada bajo un gráfico" loading="lazy" style="max-width:640px"><figcaption>Figura 16c. Datos de un gráfico.</figcaption></figure>
 
 <h3 id="supuestos">5.6 Supuestos y sensibilidad</h3>
 <p>Todo lo que el SIG no trae es un parámetro editable etiquetado como <strong>Supuesto</strong>: margen, días de protección, umbral de sobrestock, viajes por ruta, participación del combustible, costo de mantener inventario y fracciones variables. Si ingresaste la sección 8, algunos se marcan como <strong>Derivado</strong> y se editan desde los costos.</p>
@@ -281,14 +365,69 @@ code,kbd{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.86em;backg
 
 <h3 id="exportar">5.7 Exportar y compartir</h3>
 <ul>
-  <li><strong>Checklist de la actividad:</strong> verifica datos sin errores, diagnóstico, al menos un escenario, dashboard, matriz con al menos una estrategia, evaluación de homeostasis y justificación de pesos.</li>
+  <li><strong>Checklist de la actividad:</strong> verifica datos sin errores, diagnóstico, al menos un escenario, dashboard, matriz con al menos una estrategia, evaluación de homeostasis, justificación de pesos y decisiones justificadas en la bitácora.</li>
   <li><strong>CSV en formato template</strong> (secciones 1 a 8): vuelve a cargarse sin cambios.</li>
-  <li><strong>XLSX del análisis:</strong> hojas Datos, KPIs, Escenarios, Estrategias, Homeostasis, Matriz, Optimizador, Sensibilidad, Estructural, Costos y Supuestos.</li>
+  <li><strong>XLSX del análisis:</strong> hojas Datos, KPIs, Escenarios, Estrategias, Homeostasis, Matriz (con justificaciones), Bitácora, Optimizador, Sensibilidad, Estructural, Costos, Supuestos, Reflexiones, Rúbrica, Quiz y Planes.</li>
+  <li><strong>Borrador del informe</strong> en Word (.docx) o HTML (<a href="#borrador">5.9</a>).</li>
+  <li><strong>Versión sin internet</strong>: un archivo HTML con todo incluido (<a href="#sininternet">5.11</a>).</li>
   <li><strong>JSON del estado completo</strong>, con todos los resultados: es la fuente recomendada para escribir el informe.</li>
   <li><strong>PNG de todos los gráficos</strong> del dashboard y <strong>vista imprimible / PDF</strong>.</li>
   <li><strong>Copiar link de este análisis:</strong> quien lo abra ve exactamente tu análisis, sin cuenta. Si el link es muy largo, comparte el JSON (“Abrir JSON” lo carga).</li>
 </ul>
 <figure><img src="manual/img/19-exportar.jpg" alt="Módulo Exportar con checklist y descargas" loading="lazy"><figcaption>Figura 18. Exportar.</figcaption></figure>
+<figure><img src="manual/img/38-descargas.jpg" alt="Descargas de la versión 1.4 con borrador del informe y versión sin internet" loading="lazy"><figcaption>Figura 18b. Descargas.</figcaption></figure>
+
+<h3 id="reflexion">5.8 Reflexiones, autoevaluación y rúbrica</h3>
+<h4>Preguntas de reflexión</h4>
+<p>Al final de Diagnóstico, Escenarios, Estrategias, Dashboard y Supuestos hay una o dos preguntas abiertas (nueve en total). Piden explicar con cifras del simulador, por ejemplo: “¿Por qué la disrupción combinada no es la suma de los escenarios aislados?” o “Describe una cadena causal entre dos áreas”. Se recomiendan al menos 80 caracteres por respuesta (el contador lo indica). Las respuestas se guardan, se exportan (hoja Reflexiones y JSON), alimentan el borrador del informe y el docente las ve en el modo docente.</p>
+<figure><img src="manual/img/31-reflexion.jpg" alt="Preguntas de reflexión al final de un módulo" loading="lazy"><figcaption>Figura 18c. Preguntas de reflexión.</figcaption></figure>
+<h4>Autoevaluación de conceptos</h4>
+<p>El botón <strong>Autoevaluación</strong> del encabezado abre 12 preguntas de selección múltiple (OTIF, DIO, punto de reorden, efecto látigo, fill rate, IH, tasa de recuperación, regla conservadora, entre otras). Al calificar, cada pregunta muestra si acertaste y la explicación. Puedes repetirla; el resultado queda en la hoja Quiz y en el criterio “Dominio de conceptos” de la rúbrica.</p>
+<figure><img src="manual/img/36-quiz.jpg" alt="Autoevaluación de conceptos con retroalimentación" loading="lazy" style="max-width:620px"><figcaption>Figura 18d. Autoevaluación de conceptos.</figcaption></figure>
+<h4>Rúbrica integrada</h4>
+<p>En Exportar, la rúbrica muestra siete criterios (diagnóstico, impacto sistémico, matriz sustentada en datos, uso de evidencia cuantitativa, sinergia y homeostasis, supuestos y limitaciones, dominio de conceptos) en cuatro niveles (1 Insuficiente · 2 Básico · 3 Competente · 4 Destacado). Para cada criterio el simulador sugiere un nivel según la <strong>evidencia del proceso</strong> (módulos revisados, reflexiones, justificaciones, predicciones, frontera eficiente, quiz) y el grupo puede registrar su <strong>autoevaluación</strong>.</p>
+<div class="note warn">El nivel sugerido mide evidencia del proceso, no la calidad del texto del informe. La calificación final es del docente.</div>
+<figure><img src="manual/img/37-rubrica.jpg" alt="Rúbrica con nivel sugerido, evidencia y autoevaluación" loading="lazy"><figcaption>Figura 18e. Rúbrica integrada.</figcaption></figure>
+
+<h3 id="borrador">5.9 Borrador automático del Informe Ejecutivo</h3>
+<p>En Exportar → <strong>Borrador del Informe Ejecutivo (Word)</strong> o <strong>Borrador del informe en el navegador</strong> (HTML, para imprimir o copiar). El simulador arma el documento con la estructura de la sección <a href="#informe">7</a>: resumen ejecutivo, Diagnóstico Inicial, impacto de las disrupciones, Dashboard Integrado (con los gráficos como imágenes), Matriz de Decisiones con las justificaciones de la bitácora, Evaluación de Sinergia y Homeostasis, conclusiones y anexos (supuestos, hallazgos, brechas, fórmulas).</p>
+<ul>
+  <li>Todas las cifras salen del análisis actual, por lo que coinciden con el simulador.</li>
+  <li>Los recuadros amarillos <strong>“✍ [Escribe aquí: …]”</strong> marcan dónde el comité debe escribir su interpretación; si respondiste las reflexiones, se incluyen como punto de partida.</li>
+  <li>El .docx se abre en Word, Google Docs o LibreOffice. Antes de entregar: completa los recuadros, elimínalos y revisa el texto.</li>
+</ul>
+<div class="note warn"><strong>Uso académico responsable:</strong> el borrador organiza los datos; el análisis, la interpretación y las conclusiones son del comité.</div>
+<figure><img src="manual/img/43-borrador.jpg" alt="Primera página del borrador del informe en Word" loading="lazy" style="max-width:520px"><figcaption>Figura 18f. Primera página del borrador.</figcaption></figure>
+
+<h3 id="docente">5.10 Modo docente</h3>
+<p>El botón <strong>Modo docente</strong> abre una vista con dos herramientas. Todo ocurre en el navegador del docente; los archivos no se envían a ningún servidor.</p>
+<h4>Comparar entregas de los grupos</h4>
+<ol class="steps">
+  <li>Cada grupo descarga su <strong>JSON</strong> en Exportar y lo entrega (por correo o en la plataforma del curso), nombrado con su código de grupo.</li>
+  <li>El docente pulsa <strong>Cargar JSON de los grupos</strong> y selecciona todos los archivos a la vez.</li>
+  <li>La tabla muestra por grupo: IH base → disrupción → estrategia, banda, recuperación, costo, $/punto, palancas, si la selección está en la frontera eficiente, justificaciones, predicciones, reflexiones, quiz y rúbrica (sugerida / autoevaluación).</li>
+  <li>La columna <strong>Integridad</strong> recalcula cada entrega con el motor y compara el IH declarado: “ok” si coincide; si no, indica el valor declarado (archivo editado a mano o versión distinta).</li>
+  <li>El gráfico <strong>Costo vs. IH por grupo</strong> ubica a cada grupo (arriba a la izquierda: más homeostasis por menos dinero). <strong>Abrir</strong> carga la entrega completa para revisarla; <strong>Exportar comparación (XLSX)</strong> descarga la tabla.</li>
+</ol>
+<figure><img src="manual/img/39-docente.jpg" alt="Tabla de comparación de entregas con integridad y gráfico costo vs IH" loading="lazy"><figcaption>Figura 18g. Comparación de entregas.</figcaption></figure>
+<h4>Configuración de la clase (fijar parámetros)</h4>
+<ol class="steps">
+  <li>Deja el simulador con los valores que quieres para todos (por ejemplo, supuestos, pesos o parámetros de los escenarios).</li>
+  <li>En Modo docente, marca qué fijar: <strong>supuestos del motor</strong>, <strong>pesos y bandas del IH</strong>, <strong>parámetros de los escenarios</strong>, <strong>datos del caso</strong> y, si quieres, <strong>exigir variante por grupo</strong>. Agrega un mensaje para los estudiantes.</li>
+  <li>Pulsa <strong>Copiar link de la clase</strong> (o descarga la configuración en JSON) y compártelo.</li>
+  <li>Al abrirlo, el estudiante ve un aviso con el mensaje y los campos fijados quedan bloqueados 🔒. Puede activar o desactivar escenarios y estrategias, pero no cambiar lo fijado. Su trabajo se guarda en su navegador y la configuración se mantiene aunque pulse Reiniciar.</li>
+</ol>
+<figure><img src="manual/img/40-clase-config.jpg" alt="Formulario de configuración de la clase" loading="lazy"><figcaption>Figura 18h. Configuración de la clase.</figcaption></figure>
+<figure><img src="manual/img/41-clase-estudiante.jpg" alt="Vista del estudiante con aviso de la clase y campos bloqueados" loading="lazy"><figcaption>Figura 18i. Lo que ve el estudiante con la configuración de la clase.</figcaption></figure>
+
+<h3 id="sininternet">5.11 Accesibilidad y uso sin internet</h3>
+<ul>
+  <li><strong>Modo Accesible</strong> (casilla del encabezado): cada serie de los gráficos usa un patrón y un marcador distinto, además del color, y aumenta el contraste.</li>
+  <li><strong>Ver datos del gráfico</strong>: tabla con los valores de cada gráfico.</li>
+  <li><strong>Teclado</strong>: todas las funciones se usan con Tab, Enter y flechas; los “?” se abren con el foco.</li>
+  <li><strong>Versión sin internet</strong>: Exportar → “Descargar versión sin internet (1 archivo)”. Es el mismo simulador con las librerías incluidas (≈1,5 MB). Ábrelo con doble clic en cualquier navegador; no necesita conexión ni instalación.</li>
+</ul>
+<figure><img src="manual/img/35-accesible.jpg" alt="Gráfico en modo accesible con patrones" loading="lazy" style="max-width:640px"><figcaption>Figura 18j. Modo accesible.</figcaption></figure>
 
 <h2 id="ih">6. El Índice de Homeostasis</h2>
 <p>Es un indicador <strong>propuesto por el comité</strong> (no proviene del documento de la actividad), inspirado en el concepto fisiológico de homeostasis (Cannon, 1932): la capacidad de un sistema de mantener su equilibrio interno ante perturbaciones.</p>
@@ -314,12 +453,12 @@ Bandas: ≥ 90 Equilibrio · 75 a 89,9 Tensión · < 75 Desequilibrio</div>
   <li><strong>Diagnóstico Inicial:</strong> scorecard base, IH base y su banda, lectura por rol, hallazgos de calidad de datos y brechas. Distingue síntomas de causas.</li>
   <li><strong>Impacto de las disrupciones:</strong> tabla de impacto por escenario y combinado, en KPIs, $ e IH; incluye los eventos cualitativos de la matriz.</li>
   <li><strong>Dashboard Integrado:</strong> 4 a 6 gráficos exportados en PNG, cada uno con una frase de lectura (radar, IH por estado, cascada de costo, stock diario, KPIs vs. meta).</li>
-  <li><strong>Matriz de Decisiones Estratégicas:</strong> la del dashboard, con una justificación por fila: qué dato del SIG la respalda y qué KPI mueve. Defiende la combinación con el optimizador.</li>
+  <li><strong>Matriz de Decisiones Estratégicas:</strong> la del dashboard, con la justificación de la bitácora en cada fila: qué dato del SIG la respalda y qué KPI mueve. Defiende la combinación con el optimizador y usa las predicciones fallidas para explicar los efectos sistémicos que descubriste.</li>
   <li><strong>Evaluación de Sinergia y Homeostasis:</strong> IH de los tres estados, recuperación, costo de la homeostasis, sinergias entre áreas y contingencia vs. estructural.</li>
   <li><strong>Conclusiones y recomendaciones</strong>, separando corto plazo (contingencia) y mediano plazo (estructural).</li>
   <li><strong>Anexos:</strong> supuestos (con la sensibilidad), hallazgos, brechas, definición del IH y fórmulas (“ver cálculo”).</li>
 </ol>
-<div class="note ok"><strong>Consistencia:</strong> escribe el informe a partir del XLSX o JSON exportado, no de memoria. Todas las cifras deben coincidir con el simulador.</div>
+<div class="note ok"><strong>Consistencia:</strong> escribe el informe a partir del XLSX o JSON exportado, no de memoria. Todas las cifras deben coincidir con el simulador. El <a href="#borrador">borrador automático</a> ya trae esta estructura con las cifras del análisis: úsalo como punto de partida y completa la interpretación.</div>
 <h4>Errores frecuentes</h4>
 <ul>
   <li>Presentar el IH como un indicador oficial o de la actividad: es una propuesta del comité.</li>
@@ -343,6 +482,12 @@ Bandas: ≥ 90 Equilibrio · 75 a 89,9 Tensión · < 75 Desequilibrio</div>
 <p>Lectura clave del caso: aun con todas las palancas de contingencia la cadena sigue en desequilibrio porque el problema de fondo es estructural (el lead time de compras), no la disrupción.</p>
 
 <h2 id="faq">9. Preguntas frecuentes y solución de problemas</h2>
+<h4>¿Por qué se abre una ventana al activar una estrategia?</h4>
+<p>Es la predicción antes de simular. Puedes “Activar sin predecir” o desactivarla en la bitácora (Estrategias).</p>
+<h4>El paso Estrategias no se marca como completo</h4>
+<p>Faltan justificaciones: en la bitácora, pulsa “Justificar …” en cada palanca activa pendiente.</p>
+<h4>Mi grupo y otro tienen los mismos datos</h4>
+<p>Generen la variante con su propio código de grupo; dos códigos distintos producen casos distintos.</p>
 <h4>El archivo no carga o aparecen “Falta la sección…”</h4>
 <p>Verifica que los títulos numerados (“1. RESUMEN…”) y los encabezados estén intactos, que cada sección termine con una fila vacía y que el CSV use punto y coma. Si viene de Excel en español con tildes extrañas, guárdalo como “CSV UTF-8”.</p>
 <h4>Un SKU no tiene lead time</h4>
@@ -353,6 +498,16 @@ Bandas: ≥ 90 Equilibrio · 75 a 89,9 Tensión · < 75 Desequilibrio</div>
 <p>El guardado es del navegador. Si usaste otro navegador, una ventana privada o borraste los datos del sitio, no estará. Descarga el JSON con frecuencia.</p>
 <h4>Abrí un link y dice “análisis compartido”</h4>
 <p>Estás viendo el análisis de otra persona: tus cambios no lo modifican ni se guardan. Pulsa “Conservar como mi análisis” para trabajar sobre él.</p>
+<h4>Hice un cambio por error</h4>
+<p>Pulsa ↶ (Deshacer) o Ctrl/Cmd+Z. ↷ o Ctrl/Cmd+Shift+Z lo rehace.</p>
+<h4>No encuentro el optimizador o la matriz</h4>
+<p>Están en subpestañas: Estrategias → Optimizador; Dashboard → Matriz y sinergias.</p>
+<h4>Un campo tiene un candado 🔒 y no puedo editarlo</h4>
+<p>Abriste el link de la clase y el docente fijó ese valor. Es intencional para que todos los grupos trabajen con los mismos supuestos.</p>
+<h4>El modo docente dice “declara …” en Integridad</h4>
+<p>El IH guardado en el JSON no coincide con el que recalcula el motor: el archivo se editó a mano o proviene de otra versión. Pide al grupo que lo exporte de nuevo.</p>
+<h4>El borrador .docx se ve distinto en Google Docs</h4>
+<p>Los estilos pueden variar ligeramente; el contenido y las cifras son los mismos. Para una vista fiel usa Word o LibreOffice, o descarga la versión HTML.</p>
 <h4>Quiero empezar de cero</h4>
 <p>Datos → <strong>Reiniciar</strong> borra lo guardado y carga el caso demo.</p>
 <h4>¿Puedo extender el horizonte a 60 o 90 días?</h4>
@@ -395,7 +550,7 @@ Bandas: ≥ 90 Equilibrio · 75 a 89,9 Tensión · < 75 Desequilibrio</div>
   <li>LogiTech Solutions S.A. es un caso ficticio. Los resultados del simulador son ilustrativos y dependen de los datos y supuestos ingresados; no constituyen asesoría profesional.</li>
   <li>Cita sugerida: <em>AI HYPERPLANE S.A.S. (2026). Simulador SIG-Logístico LogiTech Solutions S.A. (versión del pie de página) [Aplicación web].</em></li>
 </ul>
-<p class="pi">© 2026 AI HYPERPLANE S.A.S. Todos los derechos reservados, salvo el uso académico autorizado en estos términos. Manual del simulador SIG-Logístico v1.2.0.</p>
+<p class="pi">© 2026 AI HYPERPLANE S.A.S. Todos los derechos reservados, salvo el uso académico autorizado en estos términos. Manual del simulador SIG-Logístico v1.4.0.</p>
 </main>
 </div>
 </body>

@@ -155,6 +155,27 @@ dialog{border:1px solid var(--border);border-radius:14px;background:var(--surfac
 dialog::backdrop{background:rgba(10,15,20,.45)}
 .toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--text);color:var(--bg);padding:.6rem 1rem;border-radius:10px;font-size:.9rem;z-index:50;max-width:calc(100vw - 32px);box-shadow:0 6px 20px rgba(0,0,0,.25)}
 .hidden{display:none!important}
+[hidden]{display:none!important}
+.subnav{display:flex;flex-wrap:wrap;gap:.35rem;margin:1rem 0 .2rem;padding:.3rem;background:var(--surface-2);border-radius:10px}
+.subnav button{border:0;background:transparent;padding:.4rem .75rem;border-radius:8px;cursor:pointer;color:var(--muted);font-weight:500}
+.subnav button[aria-selected="true"]{background:var(--surface);color:var(--text);box-shadow:var(--shadow)}
+#dlgQuiz{max-width:min(760px,calc(100vw - 32px));max-height:88vh;overflow:auto}
+ol.quiz{padding-left:1.2rem} ol.quiz li{margin:.6rem 0} ol.quiz fieldset{border:0;padding:0;margin:0} ol.quiz legend{font-weight:600;margin-bottom:.3rem}
+.qopt{display:block;padding:.3rem .5rem;border-radius:6px;cursor:pointer} .qopt:hover{background:var(--surface-2)}
+.qopt.bien{background:var(--ok-bg)} .qopt.mal{background:var(--bad-bg)}
+.locked{background:var(--surface-2)!important;cursor:not-allowed}
+details.datos{margin-top:.4rem} details.datos summary{cursor:pointer;color:var(--accent)}
+.reflex textarea{border:1px solid var(--border);border-radius:8px;padding:.45rem .55rem;width:100%;background:var(--surface)}
+body.acc{font-size:17px} body.acc .muted,body.acc .tiny{color:var(--text)} body.acc a{text-decoration:underline} body.acc .card{border-width:2px} body.acc :focus-visible{outline-width:4px}
+.avance{margin:0 0 1rem;padding:.55rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:10px}
+.avance-bar{height:6px;border-radius:99px;background:var(--surface-2);margin-top:.4rem;overflow:hidden}
+.avance-bar span{display:block;height:100%;background:var(--accent);border-radius:99px;transition:width .3s}
+.modnav{margin-top:2rem;padding-top:1rem;border-top:1px solid var(--border)}
+nav.tabs button.hecho .n{background:var(--ok-bg);color:var(--ok)}
+nav.tabs button.hecho[aria-selected="true"] .n{background:var(--accent);color:var(--accent-ink)}
+nav.tabs .ts{display:none}
+#justif{position:fixed;right:16px;bottom:16px;width:min(420px,calc(100vw - 32px));z-index:45;background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:12px;padding:.8rem;box-shadow:0 12px 32px rgba(0,0,0,.2)}
+#btnMenu{display:none}
 .pop{position:fixed;z-index:60;max-width:min(340px,calc(100vw - 24px));background:var(--text);color:var(--bg);padding:.55rem .7rem;border-radius:8px;font-size:.82rem;line-height:1.45;box-shadow:0 8px 24px rgba(0,0,0,.25);pointer-events:none}
 .tip{border:0}
 .tip:hover,.tip:focus-visible{background:var(--accent);color:var(--accent-ink)}
@@ -163,7 +184,28 @@ aside.acad ul{margin-top:.3rem}
 #dlgGuia{max-width:min(760px,calc(100vw - 32px));max-height:85vh;overflow:auto}
 .print-only{display:none}
 @media (max-width:640px){
+  #btnMenu{display:inline-flex}
+  .top-inner{flex-wrap:nowrap}
+  .tools{display:none}
+  header.top.menu-open .top-inner{flex-wrap:wrap}
+  header.top.menu-open .tools{display:flex;width:100%}
+  .tools select{max-width:100%;flex:1 1 100%}
+  nav.tabs{position:fixed;bottom:0;left:0;right:0;z-index:30;background:var(--surface);border-top:1px solid var(--border);padding:0 2px env(safe-area-inset-bottom);gap:0;max-width:none;overflow-x:hidden}
+  nav.tabs button{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;padding:.35rem 0 .4rem;font-size:.64rem;border-bottom:0;border-top:3px solid transparent}
+  nav.tabs button[aria-selected="true"]{border-top-color:var(--accent)}
+  nav.tabs .n{margin:0 0 .15rem}
+  nav.tabs .tl{display:none} nav.tabs .ts{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+  main{padding-bottom:5.5rem} footer{padding-bottom:5.5rem}
+  .toast{bottom:80px}
+  #justif{right:8px;left:8px;width:auto;bottom:72px}
   .tile .val{font-size:1.6rem}
+  table.rt thead{display:none}
+  table.rt,table.rt tbody,table.rt tr{display:block;width:100%}
+  table.rt tr{border-bottom:1px solid var(--border);padding:.35rem 0}
+  table.rt td,table.rt tbody th{display:flex;justify-content:space-between;align-items:center;gap:.6rem;border:0;padding:.2rem .5rem;text-align:right;width:100%}
+  table.rt td[data-label]::before,table.rt tbody th[data-label]::before{content:attr(data-label);font-weight:600;color:var(--muted);text-align:left;flex:0 0 42%;font-size:.8rem}
+  table.rt td input,table.rt td select,table.rt td .affix{max-width:58%;flex:1 1 58%}
+  table.edit td.w-l input,table.edit td.w-xl input{min-width:0}
   .brand p{display:none}
   .tools .lbl-hide{display:none}
   header.top{position:static}
@@ -192,13 +234,19 @@ aside.acad ul{margin-top:.3rem}
       <div class="logo" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 32 32"><path d="M5 23h7v-7h7V9h8" stroke="#fff" stroke-width="3.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
       <div><h1>SIG-Logístico · LogiTech Solutions S.A.</h1><p>Comité de Decisiones Logísticas — homeostasis de la cadena de suministro</p></div>
     </div>
+    <button class="btn sm" id="btnMenu" type="button" data-act="menu" aria-label="Abrir menú">☰ Menú</button>
     <div class="tools">
       <label class="small muted lbl-hide" for="selRol">Vista</label>
       <select id="selRol" aria-label="Rol del comité"></select>
+      <button class="btn sm" id="btnUndo" type="button" data-act="undo" title="Deshacer (Ctrl/Cmd+Z)" aria-label="Deshacer" disabled>↶</button>
+      <button class="btn sm" id="btnRedo" type="button" data-act="redo" title="Rehacer (Ctrl/Cmd+Shift+Z)" aria-label="Rehacer" disabled>↷</button>
       <button class="btn sm" id="btnTour" type="button">Recorrido guiado</button>
+      <button class="btn sm" type="button" data-act="quiz">Autoevaluación</button>
+      <button class="btn sm" type="button" data-act="docente">Modo docente</button>
       <button class="btn sm" type="button" data-act="guia">Guía académica</button>
       <a class="btn sm" href="manual.html" target="_blank" rel="noopener">Manual</a>
       <button class="btn sm" id="btnShare" type="button" title="Copiar un link que reproduce este análisis">Copiar link</button>
+      <label class="btn sm" title="Patrones en gráficos, letra más grande y mayor contraste"><input type="checkbox" data-act-chk="accesible" id="chkAcc" style="margin:0"> Accesible</label>
       <button class="btn sm" id="btnTheme" type="button" aria-label="Cambiar tema claro/oscuro"><svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.5a6.5 6.5 0 0 1 0 13z" fill="currentColor"/></svg> Tema</button>
     </div>
   </div>
@@ -213,6 +261,10 @@ aside.acad ul{margin-top:.3rem}
 </footer>
 <dialog id="dlg" aria-labelledby="dlgT"><h3 id="dlgT"></h3><div id="dlgB"></div><div class="row" style="margin-top:1rem"><span class="tiny muted" id="dlgN"></span><span class="spacer"></span><button class="btn sm" id="dlgPrev" type="button">Anterior</button><button class="btn sm primary" id="dlgNext" type="button">Siguiente</button><button class="btn sm" id="dlgClose" type="button">Cerrar</button></div></dialog>
 <dialog id="dlgGuia" aria-labelledby="guiaT"><div class="row"><h3 id="guiaT" style="margin:0">Guía académica del aplicativo</h3><span class="spacer"></span><button class="btn sm" type="button" onclick="this.closest('dialog').close()">Cerrar</button></div><div id="guiaB" style="margin-top:.6rem"></div></dialog>
+<div id="justif" class="hidden" role="dialog" aria-label="Justificación de la decisión"></div>
+<dialog id="dlgPred" aria-labelledby="predT"><h3 id="predT"></h3><div id="predB"></div></dialog>
+<dialog id="dlgQuiz" aria-labelledby="quizT"><h3 id="quizT">Autoevaluación de conceptos</h3><div id="quizB"></div></dialog>
+<input type="file" id="fileGrupos" accept=".json,application/json" multiple class="hidden">
 <input type="file" id="fileData" accept=".csv,.xlsx,.xls,text/csv" class="hidden">
 <input type="file" id="fileJSON" accept=".json,application/json" class="hidden">
 <script>
@@ -679,7 +731,7 @@ const TEMPLATE_XLSX_B64 = "UEsDBBQAAAAIAA2JR11Gx01IlQAAAM0AAAAQAAAAZG9jUHJvcHMvY
  * SIG-Logístico — interfaz. El motor (SIGMotor) es la única fuente de
  * cálculos; este archivo solo lee/escribe el estado y lo presenta.
  * ==================================================================== */
-const VERSION = 'v1.2.0', FECHA = '2026-10-07', ESQUEMA = 1, LS_KEY = 'sig-logistico-estado-v1';
+const VERSION = 'v1.4.0', FECHA = '2026-10-07', ESQUEMA = 1, LS_KEY = 'sig-logistico-estado-v1';
 const M = window.SIGMotor;
 const clone = o => JSON.parse(JSON.stringify(o));
 const $ = s => document.querySelector(s);
@@ -776,7 +828,7 @@ function estadoInicial() {
   return { esquema: ESQUEMA, origen: 'Caso demo LogiTech', data, params: clone(M.PARAMS_DEFAULT),
     pesosBorrador: pesosAPct(M.PARAMS_DEFAULT.pesosIH), justificacionPesos: '',
     escenarios: todosActivos(M.ESCENARIOS_DEFAULT, true), estrategias: soloContingencia(),
-    catalogos: {}, rol: 'comite', tab: 'datos', skuSim: null, estadoCascada: 'estrategia', notas: '', verGuia: true, sensPct: 20 };
+    catalogos: {}, reflexiones: { diagnostico: {}, escenarios: {}, estrategias: {}, dashboard: {}, supuestos: {} }, quiz: { resp: {} }, rubrica: {}, planes: {}, sub: {}, accesible: false, bitacora: [], modoPrediccion: true, visitados: { datos: true }, exportado: false, variante: null, rol: 'comite', tab: 'datos', skuSim: null, estadoCascada: 'estrategia', notas: '', verGuia: true, sensPct: 20 };
 }
 function pesosAPct(p) { const o = {}; for (const k of KPIS) o[k] = Math.round(p[k] * 1000) / 10; return o; }
 function normalizarEstado(s) {
@@ -788,6 +840,8 @@ function normalizarEstado(s) {
   for (const k in M.ESCENARIOS_DEFAULT) o.escenarios[k] = Object.assign(clone(M.ESCENARIOS_DEFAULT[k]), o.escenarios[k]);
   for (const k in M.ESTRATEGIAS_DEFAULT) o.estrategias[k] = Object.assign(clone(M.ESTRATEGIAS_DEFAULT[k]), o.estrategias[k]);
   if (!o.pesosBorrador) o.pesosBorrador = pesosAPct(o.params.pesosIH);
+  o.reflexiones = Object.assign({ diagnostico: {}, escenarios: {}, estrategias: {}, dashboard: {}, supuestos: {} }, o.reflexiones || {}); if (!o.quiz) o.quiz = { resp: {} }; if (!o.rubrica) o.rubrica = {}; if (!o.planes) o.planes = {}; if (!o.sub) o.sub = {};
+  if (!o.bitacora) o.bitacora = []; if (!o.visitados) o.visitados = {}; if (o.modoPrediccion === undefined) o.modoPrediccion = true;
   if (!o.data.kpisExtra) o.data.kpisExtra = []; if (!o.catalogos) o.catalogos = {};
   (o.data.escenarios || []).forEach(e => { if (!e.modelo) { const m = /^ESC-?0?([123])$/i.exec(String(e.id).trim()); e.modelo = m ? 'esc0' + m[1] : 'cualitativo'; } });
   if (!o.data.costos) o.data.costos = {}; if (!o.data.costosFuente) o.data.costosFuente = {};
@@ -807,7 +861,7 @@ function reiniciar() {
   if (!confirmar('¿Reiniciar el aplicativo? Se borra tu análisis guardado en este navegador y se carga el caso demo.')) return;
   try { localStorage.removeItem(LS_KEY); } catch (e) { }
   compartido = false; history.replaceState(null, '', location.pathname + location.search);
-  state = estadoInicial(); recalc(); toast('Aplicativo reiniciado con el caso demo.');
+  const cl = state.clase; state = estadoInicial(); if (cl && cl.payload) aplicarClase(cl.payload); recalc(); toast('Aplicativo reiniciado con el caso demo.');
 }
 function confirmar(msg) { try { return window.confirm(msg); } catch (e) { return true; } }
 
@@ -993,9 +1047,10 @@ const TABS = [
   ['dashboard', 'Dashboard'], ['supuestos', 'Supuestos'], ['exportar', 'Exportar']
 ];
 function renderTabs() {
-  $('#tabs').innerHTML = TABS.map(([k, n], i) => `<button role="tab" type="button" id="tab-${k}" aria-controls="main" aria-selected="${state.tab === k}" tabindex="${state.tab === k ? 0 : -1}" data-tab="${k}"><span class="n">${i + 1}</span>${n}</button>`).join('');
+  const av = Object.fromEntries(avance().map(x => [x[0], x[1]])), corto = { datos: 'Datos', diagnostico: 'Diagnós.', escenarios: 'Escen.', estrategias: 'Estrat.', dashboard: 'Tablero', supuestos: 'Supuest.', exportar: 'Exportar' };
+  $('#tabs').innerHTML = TABS.map(([k, n], i) => `<button role="tab" type="button" id="tab-${k}" aria-controls="main" aria-selected="${state.tab === k}" tabindex="${state.tab === k ? 0 : -1}" data-tab="${k}" class="${av[k] ? 'hecho' : ''}" aria-label="${i + 1}. ${n}${av[k] ? ' (completo)' : ''}"><span class="n">${av[k] ? '✓' : i + 1}</span><span class="tl">${n}</span><span class="ts">${corto[k]}</span></button>`).join('');
 }
-function ir(tab) { state.tab = tab; guardar(); render(); window.scrollTo({ top: 0 }); }
+function ir(tab) { state.tab = tab; state.visitados = Object.assign(state.visitados || {}, { [tab]: true }); $('header.top').classList.remove('menu-open'); guardar(); render(); window.scrollTo({ top: 0 }); }
 
 function render() {
   const act = document.activeElement, foco = act && act.dataset ? (act.dataset.path || act.id) : null;
@@ -1003,10 +1058,12 @@ function render() {
   renderTabs();
   $('#selRol').value = state.rol;
   const main = $('#main');
-  let html = bannerGlobal();
+  const doc = state.tab === 'docente';
+  let html = bannerGlobal() + bannerClase() + (doc ? '' : barraAvance());
   const f = VISTAS[state.tab] || VISTAS.datos;
-  html += `<section class="mod" aria-labelledby="tab-${state.tab}">${f()}</section>`;
+  html += `<section class="mod" aria-labelledby="tab-${state.tab}">${f()}</section>` + (doc ? '' : vistaReflexion(state.tab) + navModulo());
   main.innerHTML = html;
+  aplicarAccesible(); aplicarBloqueos(); etiquetarTablas(); actualizarUndo();
   dibujar(state.tab);
   if (foco) { const el = main.querySelector(`[data-path="${CSS.escape(foco)}"]`) || document.getElementById(foco); if (el && el !== document.activeElement) try { el.focus({ preventScroll: true }); } catch (e) { } }
 }
@@ -1090,12 +1147,15 @@ VISTAS.datos = () => {
   <div class="grid g2" style="margin-top:1rem">
     <div class="card">
       <h3>Fuente de datos</h3>
-      <dl class="kv"><dt>Origen</dt><dd>${esc(state.origen || '—')}</dd><dt>Contenido</dt><dd>${d.skus.length} SKU · ${d.rutas.length} rutas · ${d.proveedores.length} proveedores · ${d.canales.length} canales · ${d.escenarios.length} escenarios</dd></dl>
+      <dl class="kv"><dt>Origen</dt><dd>${esc(state.origen || '—')}${state.variante ? ` <span class="tag">variante ${esc(state.variante.codigo)}</span>` : ''}</dd><dt>Contenido</dt><dd>${d.skus.length} SKU · ${d.rutas.length} rutas · ${d.proveedores.length} proveedores · ${d.canales.length} canales · ${d.escenarios.length} escenarios</dd></dl>
       <div class="row" style="margin-top:.8rem">
         <button class="btn primary" type="button" data-act="cargarArchivo">Cargar CSV / XLSX</button>
         <button class="btn" type="button" data-act="demo">Cargar caso demo</button>
         <button class="btn" type="button" data-act="reiniciar">Reiniciar</button>
       </div>
+      <div class="row small" style="margin-top:.8rem;padding:.6rem;border:1px dashed var(--border);border-radius:8px"><label for="fVar"><strong>Variante del caso por grupo</strong>${tip('Genera un LogiTech distinto a partir de un código (por ejemplo G07): otras demandas, lead times, ruta bloqueada y SKU del pico, con dificultad equivalente. El mismo código produce siempre los mismos datos, así el docente puede reproducirlos.')}</label>
+        <input id="fVar" placeholder="Código de grupo, ej. G07" value="${esc(state.variante ? state.variante.codigo : '')}" style="border:1px solid var(--border);border-radius:6px;padding:.3rem .5rem;width:12rem;background:var(--surface)" maxlength="20">
+        <button class="btn sm" type="button" data-act="variante">Generar variante</button></div>
       <div class="row small" style="margin-top:.6rem"><span class="muted">Template de referencia para la carga:</span><button class="btn sm" type="button" data-act="tplXlsx">XLSX con listas e instrucciones</button><button class="btn sm" type="button" data-act="tplCsv">CSV</button><a class="small" href="manual.html#carga" target="_blank" rel="noopener">¿Cómo llenarlo?</a></div>
       ${d.avisos && d.avisos.length ? `<div class="banner warn" style="margin-top:.8rem"><strong>Avisos de lectura</strong><ul class="clean">${d.avisos.map(a => `<li>${esc(a)}</li>`).join('')}</ul></div>` : ''}
       <hr style="border:0;border-top:1px solid var(--border);margin:1rem 0">
@@ -1346,12 +1406,15 @@ VISTAS.estrategias = () => {
     <div class="card tile"><span class="lbl">Costo neto de las estrategias</span><span class="val">${money(cmp.costoEstrategias)}</span><span class="sub">por mes${cmp.costoEstrategias < 0 ? ' (ahorro)' : ''}</span></div>
   </div>
   ${guiaModulo('estrategias')}
+  ${subnav('estrategias')}
+  <div ${subAttr('estrategias', 'palancas')}>
+  ${vistaBitacora()}
   <h3 style="margin-top:1rem">Palancas de contingencia</h3>
   <div class="grid g2">${orden.map(tarjetaEst).join('')}</div>
   <h3 style="margin-top:1.4rem">Palanca estructural (mediano plazo)</h3>
-  <div class="grid g2">${tarjetaEst('e8_estructural')}</div>
-  ${vistaEstructural()}
-  ${vistaOptimizador()}`;
+  <div class="grid g2">${tarjetaEst('e8_estructural')}</div></div>
+  <div ${subAttr('estrategias', 'estructural')}>${vistaEstructural()}</div>
+  <div ${subAttr('estrategias', 'optimizador')}>${vistaOptimizador()}</div>`;
 };
 const tarjetaEst = k => { const m = EST_META[k], S = state.estrategias[k], rk = rolDeTexto(S.rol), d = X.dIH(k), c = costoEst(k);
     return `<div class="card lever ${S.activo ? 'on' : ''} ${state.rol === rk ? 'hl' : ''}"><div class="row"><h3 style="margin:0">${esc(m.n)}</h3><span class="spacer"></span>${campo(`estrategias.${k}.activo`, S.activo ? 'Activa' : 'Inactiva', 'bool')}</div>
@@ -1384,7 +1447,7 @@ function matrizFilas() {
   return estActivas().map(k => { const m = EST_META[k], S = state.estrategias[k];
     return { rol: S.rol, rolKey: rolDeTexto(S.rol), decision: decisionTxt(k), dato: datoSIG(k), kpi: KPI_CORTO[m.kpi], kpiKey: m.kpi,
       base: cmp.base.kpis[m.kpi].actual, disr: cmp.disrupcion.kpis[m.kpi].actual, estr: X.porEst[k].kpis[m.kpi].actual, estrTot: cmp.estrategia.kpis[m.kpi].actual,
-      costo: costoEst(k), dIH: X.dIH(k), k };
+      costo: costoEst(k), dIH: X.dIH(k), k, justificacion: justificacionDe(k) };
   });
 }
 function sinergias() {
@@ -1414,13 +1477,18 @@ VISTAS.dashboard = () => {
     <div class="card tile"><span class="lbl">Costo de la homeostasis${glos('costoH')}</span><span class="val">${cmp.costoHomeostasis === null ? 'n/a' : money(cmp.costoHomeostasis)}</span><span class="sub">por punto de IH recuperado · costo neto ${money(cmp.costoEstrategias)}/mes</span>${verCalc(explicarCostoH())}</div>
   </div>
   ${E.banda !== 'Equilibrio' ? `<div class="banner ${E.banda === 'Desequilibrio' ? 'bad' : 'warn'}" style="margin-top:1rem"><strong>Lectura del comité:</strong> aun con las estrategias activas la cadena queda en <strong>${E.banda.toLowerCase()}</strong>. El KPI más débil es ${KPI_CORTO[E.kpiMasDebil].toLowerCase()} (${pct(E.porKPI[E.kpiMasDebil] * 100, 0)} de cumplimiento): ${B.kpiMasDebil === E.kpiMasDebil ? 'es un problema estructural previo a la disrupción, que las palancas de contingencia no resuelven.' : 'conviene priorizar una palanca sobre ese indicador.'}</div>` : '<div class="banner ok" style="margin-top:1rem">La cadena alcanza la banda de equilibrio con las estrategias activas.</div>'}
+  ${subnav('dashboard')}
+  <div ${subAttr('dashboard', 'resumen')}>
   <div class="card" style="margin-top:1rem"><h3>Scorecard de los cinco KPIs</h3>
   <div class="tw"><table><thead><tr><th>KPI</th><th class="num">Meta</th><th class="num">Base</th><th class="num">Disrupción</th><th class="num">Con estrategia</th><th class="num">Δ vs. disrupción</th><th>Cálculo</th></tr></thead><tbody>
   ${KPIS.map(k => `<tr><td>${KPI_CORTO[k]}${glos(k)} <span class="tiny muted">(${M.KPI_DEF[k].mejor} es mejor)</span></td><td class="num">${fmtKPI(k, B.kpis[k].meta)}</td>
   ${[B, D, E].map(st => `<td class="num">${semDot(st.kpis[k].semaforo)}${fmtKPI(k, st.kpis[k].actual)}</td>`).join('')}<td class="num">${signed(E.kpis[k].actual - D.kpis[k].actual)}</td>
   <td style="min-width:9rem">${verCalc('BASE\n' + explicarKPI(B, k) + '\n\nDISRUPCIÓN\n' + explicarKPI(D, k) + '\n\nCON ESTRATEGIA\n' + explicarKPI(E, k))}</td></tr>`).join('')}
   </tbody></table></div><p class="tiny muted">Semáforo: verde si cumple la meta; amarillo si alcanza al menos el 90%; rojo por debajo.</p></div>
-  <div class="grid g2" style="margin-top:1rem">
+  ${vistaEstructural()}
+  <div class="banner info" style="margin-top:1rem">Optimizador: ${(() => { const o = optimizar(); return `tu selección ${o.actual.frontera ? '<strong>está</strong>' : '<strong>no está</strong>'} en la frontera eficiente. Máximo IH alcanzable con las ${o.ks.length} palancas: <strong>${nf(o.maxIH.ih)}</strong> (${esc(nombresCombo(o.maxIH))}, ${money(o.maxIH.costo)}/mes).`; })()} <a href="#" data-tab="estrategias">Ver optimizador →</a></div>
+  </div>
+  <div ${subAttr('dashboard', 'graficos')} class="grid g2" style="margin-top:1rem">
     ${chartCard('db_radar', 'Radar de cumplimiento', 'Cumplimiento por KPI (0-100%, con tope en la meta) en los tres estados.', 320)}
     ${chartCard('db_ih', 'Índice de Homeostasis por estado', 'Líneas: umbrales de las bandas (Tensión 75, Equilibrio 90).', 320)}
     ${chartCard('db_kpi', 'KPIs actual vs. meta', '% de la meta alcanzado (100 = meta). Para costo y lead time: meta / actual.')}
@@ -1432,23 +1500,23 @@ VISTAS.dashboard = () => {
     ${chartCard('db_prov', 'Lead time vs. fill rate por proveedor', 'Burbuja = índice de riesgo; el rombo es el proveedor alterno (si está activo).')}
     ${chartCard('db_canal', 'Perfect Order y devoluciones por canal', 'Barras: Perfect Order (%); línea: devoluciones por daño (%); con control de calidad, devoluciones proyectadas.')}
   </div>
-  ${vistaEstructural()}
-  <div class="banner info" style="margin-top:1rem">Optimizador: ${(() => { const o = optimizar(); return `tu selección ${o.actual.frontera ? '<strong>está</strong>' : '<strong>no está</strong>'} en la frontera eficiente. Máximo IH alcanzable con las ${o.ks.length} palancas: <strong>${nf(o.maxIH.ih)}</strong> (${esc(nombresCombo(o.maxIH))}, ${money(o.maxIH.costo)}/mes).`; })()} <a href="#" data-tab="estrategias">Ver optimizador →</a></div>
-  <div class="card" style="margin-top:1rem"><h3>Vista por rol: contribución al IH</h3>
+  <div ${subAttr('dashboard', 'roles')} class="card" style="margin-top:1rem"><h3>Vista por rol: contribución al IH</h3>
   <p class="tiny muted">Contribución = 100 × peso × cumplimiento del KPI a cargo del rol. El máximo de cada rol es 100 × su peso.</p>
   <div class="tw"><table><thead><tr><th>Rol</th><th>KPI</th><th class="num">Peso</th><th class="num">Máximo</th><th class="num">Base</th><th class="num">Disrupción</th><th class="num">Con estrategia</th><th class="num">Brecha al máximo</th></tr></thead><tbody>
   ${KPIS.map(k => { const r = KPI_ROL[k], c = st => 100 * P[k] * st.porKPI[k]; return `<tr class="${state.rol === r ? 'hl' : ''}"><td>${esc(ROLES[r].n)}</td><td>${KPI_CORTO[k]}</td><td class="num">${pct(P[k] * 100, 0)}</td><td class="num">${nf(100 * P[k])}</td><td class="num">${nf(c(B))}</td><td class="num">${nf(c(D))}</td><td class="num"><strong>${nf(c(E))}</strong></td><td class="num">${nf(100 * P[k] - c(E))}</td></tr>`; }).join('')}
   <tr><td colspan="4"><strong>Índice de Homeostasis</strong></td><td class="num"><strong>${nf(B.ih)}</strong></td><td class="num"><strong>${nf(D.ih)}</strong></td><td class="num"><strong>${nf(E.ih)}</strong></td><td class="num">${nf(100 - E.ih)}</td></tr>
   </tbody></table></div><p class="tiny muted">El OTIF global lo comparten Director/a y Transporte; aquí se asigna a Transporte para que cada rol tenga un KPI. El Director/a responde por el IH completo.</p></div>
+  <div ${subAttr('dashboard', 'matriz')}>
   <div class="card" style="margin-top:1rem"><h3>Matriz de decisiones estratégicas</h3>
-  ${mat.length ? `<div class="tw"><table><thead><tr><th>Rol</th><th>Decisión</th><th>Dato del SIG</th><th>KPI impactado</th><th class="num">Base → Disrupción → Con estrategia${tip('Valor del KPI en la base, con la disrupción y con esta estrategia aplicada sola')}</th><th class="num">Costo $/mes</th><th class="num">Δ IH</th></tr></thead><tbody>
-  ${mat.map(r => `<tr class="${state.rol === r.rolKey ? 'hl' : ''}"><td class="small">${esc(r.rol)}</td><td class="small">${esc(r.decision)}</td><td class="small">${esc(r.dato)}</td><td class="small">${esc(r.kpi)}</td><td class="num small">${fmtKPI(r.kpiKey, r.base)} → ${fmtKPI(r.kpiKey, r.disr)} → <strong>${fmtKPI(r.kpiKey, r.estr)}</strong></td><td class="num">${money(r.costo)}</td><td class="num"><strong>${signed(r.dIH)}</strong></td></tr>`).join('')}
-  <tr><td colspan="5"><strong>Conjunto de estrategias</strong> <span class="tiny muted">(Δ IH conjunto incluye la sinergia)</span></td><td class="num"><strong>${money(cmp.costoEstrategias)}</strong></td><td class="num"><strong>${signed(X.conjunto)}</strong></td></tr>
+  ${mat.length ? `<div class="tw"><table><thead><tr><th>Rol</th><th>Decisión</th><th>Dato del SIG</th><th>KPI impactado</th><th class="num">Base → Disrupción → Con estrategia${tip('Valor del KPI en la base, con la disrupción y con esta estrategia aplicada sola')}</th><th class="num">Costo $/mes</th><th class="num">Δ IH</th><th>Justificación (bitácora)</th></tr></thead><tbody>
+  ${mat.map(r => `<tr class="${state.rol === r.rolKey ? 'hl' : ''}"><td class="small">${esc(r.rol)}</td><td class="small">${esc(r.decision)}</td><td class="small">${esc(r.dato)}</td><td class="small">${esc(r.kpi)}</td><td class="num small">${fmtKPI(r.kpiKey, r.base)} → ${fmtKPI(r.kpiKey, r.disr)} → <strong>${fmtKPI(r.kpiKey, r.estr)}</strong></td><td class="num">${money(r.costo)}</td><td class="num"><strong>${signed(r.dIH)}</strong></td><td class="small">${r.justificacion ? esc(r.justificacion) : '<span class="tag warn">sin justificar</span>'}</td></tr>`).join('')}
+  <tr><td colspan="5"><strong>Conjunto de estrategias</strong> <span class="tiny muted">(Δ IH conjunto incluye la sinergia)</span></td><td class="num"><strong>${money(cmp.costoEstrategias)}</strong></td><td class="num"><strong>${signed(X.conjunto)}</strong></td><td></td></tr>
   </tbody></table></div>` : '<div class="banner warn">No hay estrategias activas. Actívalas en el módulo Estrategias para construir la matriz.</div>'}</div>
   <div class="grid g2" style="margin-top:1rem">
     <div class="card"><h3>Sinergias entre áreas${glos('sinergia')}</h3>${sinergias().length ? `<ul class="clean small">${sinergias().map(s => `<li>${s}</li>`).join('')}</ul>` : '<p class="small muted">Activa dos o más estrategias para ver sinergias.</p>'}</div>
     <div class="card"><h3>Supuestos en uso</h3><ul class="clean small">${E.supuestos.map(s => `<li>${esc(s.supuesto)}: <strong>${esc(s.valor)}</strong></li>`).join('')}</ul><a href="#" class="small" data-tab="supuestos">Editar supuestos →</a></div>
-  </div>`;
+  </div></div>
+  <div ${subAttr('dashboard', 'planes')} style="margin-top:1rem">${vistaPlanes()}</div>`;
 };
 
 
@@ -1877,6 +1945,559 @@ function descargarTemplate(tipo) {
 
 
 /* ====================================================================
+ * v1.3 — Bitácora de decisiones, predecir antes de simular,
+ *        variantes del caso por grupo y barra de avance
+ * ==================================================================== */
+const KPI_ESC = { esc01: 'otif', esc02: 'perfectOrder', esc03: 'leadTime' };
+const DIR_LBL = { sube: 'Sube', baja: 'Baja', igual: 'Sin cambio' };
+let pendientePred = null, justifId = null;
+
+/* ------------------------------------------------------------ utilidades */
+function etiquetaCambio(path) {
+  const [g, k, f] = path.split('.');
+  if (g === 'estrategias') { const m = EST_META[k], p = m.params.find(x => x[0] === f); return `${m.n}${f === 'activo' ? '' : ' · ' + (p ? p[1] : f)}`; }
+  const ev = eventoDe(k), p = ESC_META[k].params.find(x => x[0] === f);
+  return `${ev ? ev.id + ' ' + ev.nombre : ESC_META[k].id + ' ' + ESC_META[k].n}${f === 'activo' ? '' : ' · ' + (p ? p[1] : f)}`;
+}
+const fmtVal = v => v === true ? 'activa' : v === false ? 'inactiva' : v === null || v === undefined || v === '' ? 'base' : String(v);
+function foto() { return cmp ? { e: cmp.estrategia.ih, d: cmp.disrupcion.ih, ke: Object.fromEntries(KPIS.map(k => [k, cmp.estrategia.kpis[k].actual])), kd: Object.fromEntries(KPIS.map(k => [k, cmp.disrupcion.kpis[k].actual])) } : null; }
+function registrar(o) {
+  state.bitacora = state.bitacora || [];
+  const e = Object.assign({ id: Date.now() + '-' + Math.random().toString(36).slice(2, 6), ts: new Date().toISOString(), justificacion: '', prediccion: null }, o);
+  state.bitacora.push(e); return e;
+}
+const justificacionDe = k => { const l = (state.bitacora || []).filter(e => e.k === k && (e.justificacion || '').trim()); return l.length ? l[l.length - 1].justificacion : ''; };
+const sinJustificar = () => estActivas().filter(k => !justificacionDe(k));
+
+/* ------------------------------------------------------------ intercepción de cambios */
+function interceptarCambio(el, path, v) {
+  const [g, k, f] = path.split('.');
+  if (g !== 'estrategias' && g !== 'escenarios') return false;
+  const viejo = getPath(state, path);
+  if (f === 'activo' && v === true && state.modoPrediccion !== false) { el.checked = false; abrirPrediccion(path); return true; }
+  const antes = foto();
+  setPath(state, path, v); recalc();
+  const desp = foto(), esEst = g === 'estrategias';
+  const e = registrar({ tipo: esEst ? 'Estrategia' : 'Escenario', k: esEst ? k : null, esc: esEst ? null : k, path, item: etiquetaCambio(path), cambio: `${fmtVal(viejo)} → ${fmtVal(v)}`,
+    rol: esEst ? state.estrategias[k].rol : '—', dato: esEst ? datoSIG(k) : (eventoDe(k) || {}).desc || '', ihAntes: antes && antes.e, ihDespues: desp && desp.e, ihDispAntes: antes && antes.d, ihDispDespues: desp && desp.d });
+  mostrarJustif(e); guardar(); return true;
+}
+function registrarMasivo(desc) {
+  const antes = foto();
+  return () => { const d = foto(); const e = registrar({ tipo: 'Combinación', k: null, item: desc, cambio: 'Palancas activas: ' + (estActivas().map(k => EST_CORTO[k]).join(', ') || 'ninguna'), rol: 'Comité', dato: '', ihAntes: antes && antes.e, ihDespues: d && d.e }); mostrarJustif(e); guardar(); };
+}
+
+/* ------------------------------------------------------------ panel de justificación */
+function mostrarJustif(e) {
+  justifId = e.id; const p = $('#justif');
+  p.innerHTML = `<div class="row"><strong>Bitácora del comité</strong><span class="spacer"></span><button class="btn sm ghost" type="button" data-act="cerrarJustif" aria-label="Cerrar">✕</button></div>
+  <p class="small" style="margin:.3rem 0">Registraste: <strong>${esc(e.item)}</strong> (${esc(e.cambio)}). IH con estrategia ${nf(e.ihAntes)} → <strong>${nf(e.ihDespues)}</strong>.</p>
+  <label class="small" for="justifTxt">¿Por qué el comité toma esta decisión? ¿Qué dato del SIG la respalda?</label>
+  <textarea id="justifTxt" rows="3" style="width:100%;border:1px solid var(--border);border-radius:8px;padding:.4rem;background:var(--surface)" placeholder="Ej.: el SKU-102 tiene 9 días de cobertura y el pico de +80% lo agota el día 6…">${esc(e.justificacion)}</textarea>
+  <div class="row" style="margin-top:.4rem"><span class="tiny muted">Puedes editarla después en la bitácora (Estrategias).</span><span class="spacer"></span><button class="btn sm" type="button" data-act="cerrarJustif">Omitir</button><button class="btn sm primary" type="button" data-act="guardarJustif">Guardar</button></div>`;
+  p.classList.remove('hidden'); setTimeout(() => { const t = $('#justifTxt'); if (t) t.focus({ preventScroll: true }); }, 50);
+}
+function guardarJustif() {
+  const t = $('#justifTxt'), e = (state.bitacora || []).find(x => x.id === justifId);
+  if (e && t) e.justificacion = t.value.trim();
+  $('#justif').classList.add('hidden'); justifId = null; guardar(); render(); toast('Justificación guardada en la bitácora.');
+}
+
+/* ------------------------------------------------------------ predecir antes de simular */
+function abrirPrediccion(path) {
+  const [g, k] = path.split('.'), esEst = g === 'estrategias', kpi = esEst ? EST_META[k].kpi : KPI_ESC[k];
+  pendientePred = { path, g, k, kpi };
+  const est = esEst ? cmp.estrategia : cmp.disrupcion, v0 = est.kpis[kpi].actual;
+  $('#predT').textContent = 'Antes de simular: ¿qué esperas que pase?';
+  $('#predB').innerHTML = `<p class="small">Vas a activar <strong>${esc(etiquetaCambio(path))}</strong>. Predice el efecto ${esEst ? 'sobre el estado "Con estrategia"' : 'sobre el estado "Disrupción"'} y luego compara con el resultado del simulador.</p>
+  <div class="fields">
+    <div class="field"><label for="pKpi">KPI que observarás</label><select id="pKpi">${KPIS.map(x => `<option value="${x}" ${x === kpi ? 'selected' : ''}>${KPI_CORTO[x]} (hoy ${fmtKPI(x, est.kpis[x].actual)})</option>`).join('')}</select></div>
+    <div class="field"><label for="pDir">El KPI…</label><select id="pDir"><option value="sube">Sube</option><option value="baja">Baja</option><option value="igual">No cambia</option></select></div>
+    <div class="field"><label for="pMag">¿Cuánto cambiará? (opcional)</label><input id="pMag" inputmode="decimal" placeholder="en unidades del KPI, p. ej. 2.5"></div>
+    <div class="field"><label for="pIH">El Índice de Homeostasis…</label><select id="pIH"><option value="sube">Sube</option><option value="baja">Baja</option><option value="igual">No cambia</option></select></div>
+  </div>
+  <div class="field" style="margin-top:.6rem"><label for="pRaz">Razonamiento (quedará en la bitácora)</label><textarea id="pRaz" rows="3" style="width:100%" placeholder="¿Qué mecanismo esperas? ¿Qué dato del SIG lo sugiere?"></textarea></div>
+  <label class="small" style="display:block;margin-top:.5rem"><input type="checkbox" id="pNoMas"> No pedir predicciones en este análisis (se reactiva en la bitácora)</label>
+  <div class="row" style="margin-top:.8rem"><button class="btn sm ghost" type="button" data-act="predCancelar">Cancelar</button><span class="spacer"></span><button class="btn sm" type="button" data-act="predSin">Activar sin predecir</button><button class="btn sm primary" type="button" data-act="predSimular">Simular y comparar</button></div>`;
+  const d = $('#dlgPred'); if (d.showModal) d.showModal(); else d.setAttribute('open', '');
+  void v0;
+}
+function dirDe(dlt) { return Math.abs(dlt) < 0.05 ? 'igual' : dlt > 0 ? 'sube' : 'baja'; }
+function ejecutarPrediccion(conPred) {
+  const P = pendientePred; if (!P) return;
+  const pred = conPred ? { kpi: $('#pKpi').value, dir: $('#pDir').value, mag: fin(Number(limpiarNum($('#pMag').value))) && $('#pMag').value.trim() !== '' ? Number(limpiarNum($('#pMag').value)) : null, ih: $('#pIH').value, razon: $('#pRaz').value.trim() } : null;
+  if ($('#pNoMas') && $('#pNoMas').checked) state.modoPrediccion = false;
+  const esEst = P.g === 'estrategias', antes = foto();
+  setPath(state, P.path, true); recalc(true);
+  const desp = foto(), kk = esEst ? 'ke' : 'kd', ik = esEst ? 'e' : 'd';
+  const e = registrar({ tipo: esEst ? 'Estrategia' : 'Escenario', k: esEst ? P.k : null, esc: esEst ? null : P.k, path: P.path, item: etiquetaCambio(P.path), cambio: 'inactiva → activa',
+    rol: esEst ? state.estrategias[P.k].rol : '—', dato: esEst ? datoSIG(P.k) : (eventoDe(P.k) || {}).desc || '', ihAntes: antes.e, ihDespues: desp.e, ihDispAntes: antes.d, ihDispDespues: desp.d, justificacion: pred ? pred.razon : '' });
+  if (pred) {
+    const dK = desp[kk][pred.kpi] - antes[kk][pred.kpi], dI = desp[ik] - antes[ik];
+    pred.real = { dir: dirDe(dK), delta: Math.round(dK * 10) / 10, ih: dirDe(dI), deltaIH: Math.round(dI * 10) / 10, antes: antes[kk][pred.kpi], despues: desp[kk][pred.kpi] };
+    pred.aciertoDir = pred.dir === pred.real.dir; pred.aciertoIH = pred.ih === pred.real.ih;
+    pred.errorMag = pred.mag == null ? null : Math.round(Math.abs(Math.abs(pred.mag) - Math.abs(dK)) * 10) / 10;
+    e.prediccion = pred;
+    const ok = b => b ? '<span class="tag ok">✓ acertaste</span>' : '<span class="tag bad">✗ no coincide</span>';
+    $('#predT').textContent = 'Resultado vs. tu predicción';
+    $('#predB').innerHTML = `<div class="tw"><table><thead><tr><th></th><th>Tu predicción</th><th>Simulador</th><th></th></tr></thead><tbody>
+      <tr><td>${KPI_CORTO[pred.kpi]}</td><td>${DIR_LBL[pred.dir]}${pred.mag != null ? ' ' + nf(pred.mag) : ''}</td><td>${DIR_LBL[pred.real.dir]} (${fmtKPI(pred.kpi, pred.real.antes)} → ${fmtKPI(pred.kpi, pred.real.despues)}, ${signed(pred.real.delta)})</td><td>${ok(pred.aciertoDir)}</td></tr>
+      <tr><td>Índice de Homeostasis</td><td>${DIR_LBL[pred.ih]}</td><td>${DIR_LBL[pred.real.ih]} (${nf(antes[ik])} → ${nf(desp[ik])}, ${signed(pred.real.deltaIH)})</td><td>${ok(pred.aciertoIH)}</td></tr>
+      ${pred.errorMag != null ? `<tr><td>Magnitud</td><td>${nf(Math.abs(pred.mag))}</td><td>${nf(Math.abs(pred.real.delta))}</td><td><span class="tag">error ${nf(pred.errorMag)}</span></td></tr>` : ''}</tbody></table></div>
+      <p class="small">${pred.aciertoDir && pred.aciertoIH ? 'Tu modelo mental coincide con el simulador. Escribe en el informe qué mecanismo lo explica.' : 'La diferencia es una oportunidad de aprendizaje: abre "ƒ ver cálculo" de la palanca o del KPI para entender qué mecanismo no anticipaste (efectos sistémicos, regla conservadora, costos que se trasladan a otro KPI…).'}</p>
+      <div class="row"><span class="spacer"></span><button class="btn sm primary" type="button" data-act="predCerrar">Continuar</button></div>`;
+  } else { $('#dlgPred').close(); if (!e.justificacion) mostrarJustif(e); }
+  pendientePred = null; guardar(); render();
+}
+
+/* ------------------------------------------------------------ vista de bitácora */
+function vistaBitacora() {
+  const B = state.bitacora || [], preds = B.filter(e => e.prediccion), ac = preds.filter(e => e.prediccion.aciertoDir).length, acIH = preds.filter(e => e.prediccion.aciertoIH).length, pend = sinJustificar();
+  return `<details class="card" style="margin-top:1rem" ${pend.length || B.length ? 'open' : ''}><summary style="cursor:pointer"><strong>Bitácora de decisiones del comité</strong> <span class="tag">${B.length} registro(s)</span> ${preds.length ? `<span class="tag">${ac}/${preds.length} predicciones de KPI acertadas</span>` : ''} ${pend.length ? `<span class="tag warn">${pend.length} palanca(s) activa(s) sin justificar</span>` : '<span class="tag ok">palancas activas justificadas</span>'}</summary>
+  <p class="small muted" style="margin-top:.5rem">Cada cambio en escenarios y estrategias queda registrado con el IH antes y después. La justificación alimenta la Matriz de Decisiones del informe.${tip('Las predicciones se piden al activar un escenario o una estrategia. Comparar lo que esperabas con lo que pasa es la forma más directa de entrenar el pensamiento sistémico.')}</p>
+  <div class="row small"><label class="switch"><input type="checkbox" data-act-chk="modoPred" ${state.modoPrediccion !== false ? 'checked' : ''}> Pedir predicción al activar escenarios o estrategias</label>${preds.length ? `<span class="muted">· Aciertos: KPI ${ac}/${preds.length}, IH ${acIH}/${preds.length}</span>` : ''}</div>
+  ${pend.length ? `<div class="banner warn small" style="margin-top:.6rem"><strong>Palancas activas sin justificación:</strong> ${pend.map(k => `<button class="btn sm" type="button" data-act="justificarK" data-k="${k}">Justificar ${esc(EST_CORTO[k])}</button>`).join(' ')}</div>` : ''}
+  ${B.length ? `<div class="tw" style="margin-top:.6rem"><table class="edit"><thead><tr><th>Hora</th><th>Tipo</th><th>Decisión</th><th class="num">IH antes → después</th><th>Predicción</th><th>Justificación</th><th class="no-print"></th></tr></thead><tbody>
+  ${B.map((e, i) => ({ e, i })).reverse().map(({ e, i }) => `<tr><td class="small">${new Date(e.ts).toLocaleString('es-CO', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}</td><td class="small">${esc(e.tipo)}</td><td class="small"><strong>${esc(e.item)}</strong><br><span class="muted">${esc(e.cambio)}</span></td>
+    <td class="num small">${nf(e.ihAntes)} → <strong>${nf(e.ihDespues)}</strong></td>
+    <td class="small">${e.prediccion ? `${e.prediccion.aciertoDir ? '✓' : '✗'} KPI · ${e.prediccion.aciertoIH ? '✓' : '✗'} IH` : '—'}</td>
+    <td class="w-xl"><input aria-label="Justificación ${i + 1}" data-path="bitacora.${i}.justificacion" data-type="text" value="${esc(e.justificacion)}" placeholder="Escribe la justificación…"></td>
+    <td class="no-print"><button class="btn sm ghost" type="button" aria-label="Eliminar registro" data-act="delBit" data-i="${i}">✕</button></td></tr>`).join('')}</tbody></table></div>` : '<p class="small muted">Aún no hay registros: activa o ajusta un escenario o una estrategia.</p>'}</details>`;
+}
+
+/* ------------------------------------------------------------ variantes por grupo */
+function semilla(str) { let h = 1779033703 ^ str.length; for (let i = 0; i < str.length; i++) { h = Math.imul(h ^ str.charCodeAt(i), 3432918353); h = h << 13 | h >>> 19; } h = Math.imul(h ^ h >>> 16, 2246822507); h = Math.imul(h ^ h >>> 13, 3266489909); return (h ^= h >>> 16) >>> 0; }
+function mulberry32(a) { return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+function construirVariante(codigo, intento) {
+  const R = mulberry32(semilla(codigo.toUpperCase() + '#' + intento)), U = (a, b) => a + (b - a) * R(), cl = (v, a, b) => Math.min(b, Math.max(a, v)), r1 = v => Math.round(v * 10) / 10;
+  const d = clone(demo()); d.avisos = [];
+  d.skus.forEach(s => { s.dem = Math.round(s.dem * U(.75, 1.25)); s.stock = Math.round(s.stock * U(.7, 1.3)); s.ss = Math.round(s.ss * U(.85, 1.15)); s.rop = Math.max(s.ss, Math.round(s.rop * U(.85, 1.15))); s.costo = Math.round(s.costo * U(.9, 1.1)); s.dio = Math.round(s.stock / s.dem * 30 + U(-1.5, 1.5)); s.rot = r1(s.rot * U(.9, 1.1)); });
+  d.rutas.forEach(r => { r.km = Math.round(r.km * U(.95, 1.05)); r.flete = Math.round(r.flete * U(.9, 1.1) / 10) * 10; r.otif = Math.round(cl(r.otif + U(-5, 5), 60, 97)); r.ocupacion = Math.round(cl(r.ocupacion + U(-8, 8), 55, 98)); });
+  d.proveedores.forEach(p => { p.lt = Math.max(3, Math.round(p.lt * U(.75, 1.3))); p.fill = Math.round(cl(p.fill + U(-6, 6), 55, 99)); p.aTiempo = Math.round(cl(p.aTiempo + U(-6, 6), 50, 99)); p.calidad = r1(cl(p.calidad + U(-.8, .8), 1, 10)); });
+  d.canales.forEach(c => { const rc = c.conformes / c.total, rr = c.reclamos / c.total; c.total = Math.round(c.total * U(.8, 1.2)); c.conformes = Math.round(c.total * cl(rc + U(-.04, .04), .5, .99)); c.reclamos = Math.round(c.total * cl(rr + U(-.03, .03), 0, .4)); c.devPct = r1(cl(c.devPct + U(-1.5, 1.5), .5, 15)); c.costoInv = Math.round(c.costoInv * U(.85, 1.15) / 100) * 100; });
+  const k = d.kpis; k.costo.actual = r1(k.costo.actual + U(-1.5, 1.5)); k.otif.actual = r1(k.otif.actual + U(-3, 3)); k.rotacion.actual = r1(k.rotacion.actual * U(.85, 1.15)); k.leadTime.actual = Math.round(k.leadTime.actual * U(.85, 1.2));
+  const po = sum(d.canales, c => c.conformes) / sum(d.canales, c => c.total) * 100; k.perfectOrder.actual = r1(po + U(-2, 1));
+  d.ventas = { valor: M.estimarVentas(d), fuente: 'Estimado' };
+  const troncales = d.rutas.filter(r => /CD/i.test(r.origen)), ruta = troncales[Math.floor(R() * troncales.length)];
+  const sku = d.skus[Math.floor(R() * d.skus.length)];
+  const valCat = {}; d.skus.forEach(s => valCat[s.cat] = (valCat[s.cat] || 0) + s.dem * s.costo);
+  const catTop = Object.keys(valCat).sort((a, b) => valCat[b] - valCat[a])[0], prov = d.proveedores.find(p => p.cat === catTop) || d.proveedores[0];
+  const dest = (ruta.destino.match(/\(([^)]+)\)/) || [, ruta.destino])[1];
+  d.escenarios = [
+    { id: 'ESC-01', nombre: `Bloqueo Vial Ruta ${ruta.id}`, desc: `Cierre de vía Bogotá-${dest} por 5 días`, impacto: '+35% en tiempo de tránsito; +20% costo flete desviación', kpi: `OTIF Ruta ${ruta.id} / Costo Transporte`, modelo: 'esc01' },
+    { id: 'ESC-02', nombre: 'Efecto Látigo en Demanda', desc: `Campaña de marketing dispara demanda ${sku.sku} un +80%`, impacto: 'Quiebre de stock e incapacidad de atención', kpi: 'Rotación / Pedidos Perfectos', modelo: 'esc02' },
+    { id: 'ESC-03', nombre: `Quiebra de Proveedor ${prov.id}`, desc: `Suspensión inmediata de entregas de ${prov.cat} por 3 semanas`, impacto: `Desabastecimiento de la línea ${prov.cat}`, kpi: 'Ventas Totales / Lead Time Compras', modelo: 'esc03' }];
+  return { d, ruta: ruta.id, sku: sku.sku, prov: prov.id };
+}
+function generarVariante(codigo) {
+  codigo = (codigo || '').trim().toUpperCase().replace(/[^A-Z0-9-]/g, '').slice(0, 20);
+  if (!codigo) { toast('Escribe un código de grupo (por ejemplo, G07 o el código que asignó el docente).'); return; }
+  if ((state.bitacora || []).length && !confirmar('Generar una variante reemplaza los datos y vacía la bitácora actual. ¿Continuar?')) return;
+  const E = clone(M.ESCENARIOS_DEFAULT); Object.keys(E).forEach(k => E[k].activo = true);
+  for (let i = 0; i < 40; i++) {
+    const v = construirVariante(codigo, i); E.esc01.ruta = v.ruta; E.esc02.sku = v.sku; E.esc03.proveedor = v.prov;
+    const c = M.compararEstados(v.d, { params: state.params, escenarios: E, estrategias: soloContingencia() });
+    if (c.base.ih >= 58 && c.base.ih < 75 && c.base.ih - c.disrupcion.ih >= 8 && validar(v.d).filter(x => x.n === 'error').length === 0) {
+      state.data = v.d; state.escenarios = E; state.estrategias = soloContingencia(); state.bitacora = []; state.variante = { codigo, intento: i };
+      state.origen = `Variante del grupo ${codigo}`; state.data.costos = {}; state.data.costosFuente = {}; state.data.kpisExtra = [];
+      compartido = false; recalc(); toast(`Variante ${codigo} generada: IH base ${nf(c.base.ih)}, con disrupción ${nf(c.disrupcion.ih)}. El docente puede reproducirla con el mismo código.`); return;
+    }
+  }
+  toast('No se pudo generar una variante equilibrada con ese código; prueba otro.');
+}
+
+/* ------------------------------------------------------------ barra de avance */
+function avance() {
+  const v = state.visitados || {}, errs = validar(state.data).filter(x => x.n === 'error').length;
+  return [
+    ['datos', errs === 0, errs ? `Corrige ${errs} error(es) de datos` : ''],
+    ['diagnostico', !!v.diagnostico, 'Revisa el diagnóstico por rol'],
+    ['escenarios', escActivos().length > 0, 'Activa al menos un escenario'],
+    ['estrategias', estActivas().length > 0 && sinJustificar().length === 0, estActivas().length ? `Justifica ${sinJustificar().length} palanca(s) en la bitácora` : 'Activa al menos una estrategia'],
+    ['dashboard', !!v.dashboard, 'Revisa el dashboard'],
+    ['supuestos', !!v.supuestos, 'Revisa supuestos y sensibilidad'],
+    ['exportar', !!state.exportado, 'Exporta XLSX o JSON para el informe']
+  ];
+}
+function barraAvance() {
+  const a = avance(), n = a.filter(x => x[1]).length, sig = a.find(x => !x[1]);
+  return `<div class="avance no-print" role="status" aria-label="Avance del ejercicio: ${n} de ${a.length}"><div class="row small"><strong>Avance del ejercicio: ${n}/${a.length}</strong><span class="spacer"></span>${sig ? `<span class="muted">Siguiente: <a href="#" data-tab="${sig[0]}">${esc(sig[2])}</a></span>` : '<span class="tag ok">Listo para el informe</span>'}</div>
+  <div class="avance-bar"><span style="width:${n / a.length * 100}%"></span></div></div>`;
+}
+function navModulo() {
+  const i = TABS.findIndex(t => t[0] === state.tab), prev = TABS[i - 1], next = TABS[i + 1];
+  return `<div class="row no-print modnav">${prev ? `<button class="btn" type="button" data-tab="${prev[0]}">← ${prev[1]}</button>` : ''}<span class="spacer"></span>${next ? `<button class="btn primary" type="button" data-tab="${next[0]}">Continuar: ${next[1]} →</button>` : ''}</div>`;
+}
+
+
+/* ====================================================================
+ * v1.4 — Reflexiones, quiz, rúbrica, borrador del informe, modo docente,
+ *        parámetros fijos, subpestañas, planes A/B, deshacer/rehacer,
+ *        tablas como tarjetas, accesibilidad y versión sin internet
+ * ==================================================================== */
+let PRINT_ALL = false;
+
+/* ------------------------------------------------------------ reflexiones */
+const REFLEX = {
+  diagnostico: ['¿Cuál es la causa raíz —no el síntoma— del desequilibrio inicial? Cita al menos dos cifras del SIG.', '¿Qué hallazgo de calidad de datos podría cambiar una decisión del comité y por qué?'],
+  escenarios: ['¿Por qué la disrupción combinada no es la suma de los escenarios aislados? Da un ejemplo con cifras.', '¿Qué rol absorbe la mayor parte del impacto en $ y por qué?'],
+  estrategias: ['¿Por qué el comité eligió esta combinación y no la de máximo IH? Usa el optimizador como evidencia.', '¿Qué resultado te sorprendió (una predicción fallida o un Δ IH inesperado) y qué mecanismo lo explica?'],
+  dashboard: ['Describe una cadena causal entre dos áreas: dato del SIG → decisión → KPI de otra área.', '¿Qué KPI impide llegar al equilibrio y qué decisión de mediano plazo propondrías?'],
+  supuestos: ['¿Qué supuesto es el más crítico según la sensibilidad y cómo lo validarías en una empresa real?']
+};
+const REFLEX_TABS = Object.keys(REFLEX);
+function vistaReflexion(tab) {
+  const q = REFLEX[tab]; if (!q) return '';
+  const r = (state.reflexiones || {})[tab] || {};
+  return `<div class="card reflex no-print" style="margin-top:1.5rem"><h3>Preguntas de reflexión ${tip('Respóndelas con cifras del simulador. Se exportan con el análisis y sirven de base para la interpretación del informe. El docente las ve en el modo docente.')}</h3>
+  ${q.map((t, i) => `<div class="field" style="margin-top:.6rem"><label for="rf_${tab}_${i}"><strong>${i + 1}.</strong> ${esc(t)}</label><textarea id="rf_${tab}_${i}" rows="3" data-path="reflexiones.${tab}.${i}" data-type="text" placeholder="Tu respuesta…">${esc(r[i] || '')}</textarea><span class="tiny muted">${(r[i] || '').length} caracteres${(r[i] || '').length >= 80 ? ' · ✓' : ' · se recomiendan al menos 80'}</span></div>`).join('')}</div>`;
+}
+const reflexRespondidas = st => REFLEX_TABS.reduce((n, t) => n + REFLEX[t].filter((_, i) => (((st.reflexiones || {})[t] || {})[i] || '').trim().length >= 80).length, 0);
+const reflexTotal = REFLEX_TABS.reduce((n, t) => n + REFLEX[t].length, 0);
+
+/* ------------------------------------------------------------ quiz de conceptos */
+const QUIZ = [
+  ['¿Qué mide el OTIF?', ['El costo de transporte por unidad', 'El % de pedidos entregados a tiempo y completos', 'La ocupación de la flota', 'Los días de inventario'], 1, 'OTIF (On-Time In-Full) es el % de pedidos que llegan a tiempo y completos.'],
+  ['Un SKU tiene 250 unidades en stock y una demanda de 800 unidades al mes. ¿Cuál es su DIO?', ['3,2 días', '9,4 días', '32 días', '94 días'], 1, 'DIO = stock / demanda mensual × 30 = 250 / 800 × 30 ≈ 9,4 días.'],
+  ['Demanda diaria 10 u, lead time 5 días y stock de seguridad 20 u. ¿Cuál es el punto de reorden?', ['30 u', '50 u', '70 u', '200 u'], 2, 'ROP = demanda diaria × lead time + SS = 10 × 5 + 20 = 70 unidades.'],
+  ['El efecto látigo (bullwhip) es…', ['El alza del combustible', 'La amplificación de la variabilidad de la demanda aguas arriba por falta de información compartida', 'La quiebra de un proveedor', 'El aumento de devoluciones por daño'], 1, 'Lee, Padmanabhan y Whang (1997): la variabilidad crece al subir por la cadena cuando la información no se comparte.'],
+  ['Un pedido es "perfecto" cuando…', ['Llega a tiempo', 'Llega completo', 'Llega a tiempo, completo, sin daño y con la documentación correcta', 'Se factura sin errores'], 2, 'Perfect Order exige cumplir todas las condiciones a la vez; por eso es el KPI de servicio más exigente.'],
+  ['Con las mismas ventas, si la rotación de inventarios sube, el inventario promedio…', ['Sube', 'Baja', 'No cambia', 'Depende del OTIF'], 1, 'Rotación ≈ ventas / inventario promedio: más rotación con las mismas ventas implica menos inventario.'],
+  ['¿Por qué el cumplimiento de cada KPI en el Índice de Homeostasis tiene tope en 1?', ['Para simplificar el cálculo', 'Para que sobrecumplir un KPI no compense el deterioro de otro', 'Porque las metas son siempre 100', 'Para que el IH no supere 90'], 1, 'Es la idea de equilibrio: un sobrecumplimiento no tapa un deterioro.'],
+  ['Una tasa de recuperación de 119% significa que…', ['Se recuperó el 19% del daño', 'La organización quedó mejor que antes del choque', 'Hubo un error de cálculo', 'El costo subió 19%'], 1, 'Más de 100% indica que las estrategias dejan el IH por encima del nivel base.'],
+  ['El cross-docking consiste en…', ['Almacenar más tiempo en el CD', 'Transferir la mercancía del muelle de recibo al de despacho sin almacenarla', 'Contratar un operador 3PL', 'Devolver mercancía al proveedor'], 1, 'Reduce tiempos de almacenamiento y permite consolidar cargas.'],
+  ['Si el lead time del proveedor aumenta, para mantener el servicio el punto de reorden debe…', ['Bajar', 'Subir', 'No cambiar', 'Eliminarse'], 1, 'ROP = d × LT + SS: más lead time exige reordenar antes.'],
+  ['Una combinación de estrategias está en la frontera eficiente cuando…', ['Es la más barata', 'Tiene el IH más alto', 'No existe otra más barata con un IH igual o mayor', 'Incluye todas las palancas'], 2, 'Elegir fuera de la frontera es pagar de más por el mismo resultado.'],
+  ['La regla conservadora del simulador establece que…', ['Las estrategias no tienen costo', 'Ninguna estrategia reclama ventas por encima de la base', 'Los escenarios se aplican de a uno', 'El IH nunca baja'], 1, 'Una estrategia puede, como máximo, borrar el daño de la disrupción; así los resultados son defendibles.']
+];
+function quizHTML() {
+  const Q = state.quiz || { resp: {} }, cal = Q.calificado;
+  return `<p class="small">${QUIZ.length} preguntas sobre los conceptos del ejercicio. ${cal ? `<strong>Resultado: ${Q.puntaje}/${QUIZ.length} (${Math.round(Q.puntaje / QUIZ.length * 100)}%).</strong>` : 'Responde y pulsa "Calificar".'}</p>
+  <ol class="quiz">${QUIZ.map(([q, ops, ok, exp], i) => { const r = Q.resp[i];
+    return `<li><fieldset><legend>${esc(q)}</legend>${ops.map((o, j) => `<label class="qopt ${cal ? (j === ok ? 'bien' : r === j ? 'mal' : '') : ''}"><input type="radio" name="q${i}" data-quiz="${i}" value="${j}" ${r === j ? 'checked' : ''} ${cal ? 'disabled' : ''}> ${esc(o)}</label>`).join('')}
+    ${cal ? `<p class="small ${r === ok ? 'state-e' : 'state-d'}">${r === ok ? '✓ Correcto.' : '✗ Incorrecto.'} ${esc(exp)}</p>` : ''}</fieldset></li>`; }).join('')}</ol>
+  <div class="row"><span class="tiny muted">El resultado queda en el análisis exportado.</span><span class="spacer"></span>${cal ? '<button class="btn sm" type="button" data-act="quizReset">Intentar de nuevo</button>' : '<button class="btn sm primary" type="button" data-act="quizCalificar">Calificar</button>'}<button class="btn sm" type="button" data-act="quizCerrar">Cerrar</button></div>`;
+}
+function abrirQuiz() { $('#quizB').innerHTML = quizHTML(); const d = $('#dlgQuiz'); if (!d.open) { if (d.showModal) d.showModal(); else d.setAttribute('open', ''); } }
+
+/* ------------------------------------------------------------ rúbrica */
+const NIVELES = ['', 'Insuficiente', 'Básico', 'Competente', 'Destacado'];
+const CRITERIOS = [
+  ['diag', 'Diagnóstico inicial', 'Estado previo por rol con cifras, metas y brechas; hallazgos de calidad de datos y brechas de información.', st => { const v = st.visitados || {}; const n = REFLEX.diagnostico.filter((_, i) => ((st.reflexiones.diagnostico || {})[i] || '').length >= 80).length; return [1 + (v.diagnostico ? 1 : 0) + n, `${v.diagnostico ? 'Diagnóstico revisado' : 'Diagnóstico sin revisar'}; ${n}/2 reflexiones`]; }],
+  ['impacto', 'Impacto sistémico de las disrupciones', 'Cada disrupción aislada y combinada, en KPIs, $ e IH; interacción entre áreas.', st => { const a = Object.values(st.escenarios).filter(e => e.activo).length, n = REFLEX.escenarios.filter((_, i) => ((st.reflexiones.escenarios || {})[i] || '').length >= 80).length; return [Math.min(4, 1 + (a >= 1 ? 1 : 0) + n), `${a} escenario(s) activo(s); ${n}/2 reflexiones`]; }],
+  ['matriz', 'Matriz de decisiones sustentada en datos', 'Cada decisión con su dato del SIG, KPI, costo, Δ IH y justificación.', st => { const act = Object.keys(st.estrategias).filter(k => st.estrategias[k].activo), just = act.map(k => { const l = (st.bitacora || []).filter(e => e.k === k && (e.justificacion || '').trim()); return l.length ? l[l.length - 1].justificacion : ''; }); const ok = just.filter(Boolean).length, prom = ok ? just.filter(Boolean).reduce((s, j) => s + j.length, 0) / ok : 0; return [!act.length ? 1 : 1 + (ok === act.length ? 2 : ok >= act.length / 2 ? 1 : 0) + (prom >= 60 ? 1 : 0), `${ok}/${act.length} palancas justificadas; longitud media ${Math.round(prom)} caracteres`]; }],
+  ['evidencia', 'Uso de evidencia cuantitativa', 'Optimizador, sensibilidad y predicciones para defender las decisiones.', (st, extra) => { const p = (st.bitacora || []).filter(e => e.prediccion).length, v = st.visitados || {}; return [1 + (extra.enFrontera ? 1 : 0) + (v.supuestos ? 1 : 0) + (p >= 3 ? 1 : 0), `${extra.enFrontera ? 'Selección en la frontera eficiente' : 'Selección fuera de la frontera'}; ${p} predicción(es); sensibilidad ${v.supuestos ? 'revisada' : 'sin revisar'}`]; }],
+  ['homeo', 'Sinergia y homeostasis', 'IH en tres estados, recuperación, costo de la homeostasis, cadenas causales entre áreas, contingencia vs. estructural.', st => { const v = st.visitados || {}, n = REFLEX.dashboard.filter((_, i) => ((st.reflexiones.dashboard || {})[i] || '').length >= 80).length; return [1 + (v.dashboard ? 1 : 0) + n, `Dashboard ${v.dashboard ? 'revisado' : 'sin revisar'}; ${n}/2 reflexiones`]; }],
+  ['supuestos', 'Supuestos y limitaciones', 'Supuestos declarados y justificados; limitación del IH; robustez.', st => { const v = st.visitados || {}, n = ((st.reflexiones.supuestos || {})[0] || '').length >= 80 ? 1 : 0, pes = Object.values(st.params.pesosIH).every(x => Math.abs(x - .2) < 1e-6) || (st.justificacionPesos || '').trim(); return [1 + (v.supuestos ? 1 : 0) + n + (pes && (v.supuestos || n) ? 1 : 0), `Supuestos ${v.supuestos ? 'revisados' : 'sin revisar'}; reflexión ${n ? 'respondida' : 'pendiente'}; pesos ${pes ? 'justificados o por defecto' : 'cambiados sin justificar'}`]; }],
+  ['conceptos', 'Dominio de conceptos', 'Autoevaluación de conceptos (quiz).', st => { const q = st.quiz; if (!q || !q.calificado) return [1, 'Quiz no realizado']; const r = q.puntaje / QUIZ.length; return [r >= .9 ? 4 : r >= .7 ? 3 : r >= .5 ? 2 : 1, `Quiz ${q.puntaje}/${QUIZ.length}`]; }]
+];
+function evaluarRubrica(st, extra) { return CRITERIOS.map(([id, n, d, f]) => { const [lv, ev] = f(st, extra); return { id, n, d, sugerido: Math.max(1, Math.min(4, lv)), evidencia: ev, auto: (st.rubrica || {})[id] || '' }; }); }
+function vistaRubrica() {
+  const R = evaluarRubrica(state, { enFrontera: !!optimizar().actual.frontera });
+  return `<div class="card" style="margin-top:1rem"><h3>Rúbrica y autoevaluación ${tip('El nivel sugerido mide evidencia del proceso en el simulador, no la calidad del texto del informe: la calificación final es del docente.')}</h3>
+  <div class="tw"><table class="edit"><thead><tr><th>Criterio</th><th>Qué se evalúa</th><th>Evidencia en el simulador</th><th>Nivel sugerido</th><th>Tu autoevaluación</th></tr></thead><tbody>
+  ${R.map(r => `<tr><td><strong>${esc(r.n)}</strong></td><td class="small">${esc(r.d)}</td><td class="small">${esc(r.evidencia)}</td><td><span class="tag ${r.sugerido >= 3 ? 'ok' : r.sugerido === 2 ? 'warn' : 'bad'}">${r.sugerido} · ${NIVELES[r.sugerido]}</span></td>
+    <td><select aria-label="Autoevaluación ${esc(r.n)}" data-path="rubrica.${r.id}" data-type="sel"><option value="">—</option>${[1, 2, 3, 4].map(n => `<option value="${n}" ${String(r.auto) === String(n) ? 'selected' : ''}>${n} · ${NIVELES[n]}</option>`).join('')}</select></td></tr>`).join('')}
+  </tbody></table></div><p class="tiny muted">Niveles: 1 Insuficiente · 2 Básico · 3 Competente · 4 Destacado.</p></div>`;
+}
+
+/* ------------------------------------------------------------ borrador del informe */
+// Representación intermedia: el mismo contenido se escribe como DOCX (Word, LibreOffice, Google Docs) o como página.
+async function capturarGraficos() {
+  const prev = { tab: state.tab, sub: clone(state.sub || {}) };
+  PRINT_ALL = true; state.tab = 'dashboard'; render(); await new Promise(r => setTimeout(r, 350));
+  const ids = [['db_kpi', 'KPIs frente a la meta en los tres estados'], ['db_radar', 'Radar de cumplimiento: Base, Disrupción y Con estrategia'], ['db_stock', 'Stock vs. SS vs. ROP por SKU'], ['db_dio', 'DIO por SKU en cada estado'], ['db_rutas', 'OTIF y costo por km por ruta'], ['db_prov', 'Lead time vs. fill rate por proveedor'], ['db_canal', 'Perfect Order y devoluciones por canal'], ['db_sim', 'Evolución diaria del stock del SKU afectado'], ['db_cascada', 'Cascada del costo logístico mensual'], ['db_ih', 'Índice de Homeostasis por estado']];
+  const out = ids.filter(([id]) => charts[id]).map(([id, t]) => ({ id, t, src: charts[id].toBase64Image('image/png', 1), w: charts[id].canvas.width, h: charts[id].canvas.height }));
+  PRINT_ALL = false; state.tab = prev.tab; state.sub = prev.sub; render(); return out;
+}
+function bloquesInforme(imgs) {
+  const B = cmp.base, D = cmp.disrupcion, E = cmp.estrategia, d = state.data, mat = matrizFilas(), escs = escActivos().map(k => (eventoDe(k) || {}).nombre || ESC_META[k].n);
+  const roles = state.rol === 'comite' ? 'Comité completo' : ROLES[state.rol].n, Bk = [];
+  const h = (n, t) => Bk.push({ t: 'h', n, x: t }), p = x => Bk.push({ t: 'p', x }), pend = x => Bk.push({ t: 'pend', x: `✍ [Escribe aquí: ${x}]` }), tab = (c, f) => Bk.push({ t: 'tabla', c, f }), nota = x => Bk.push({ t: 'nota', x });
+  nota(`BORRADOR generado por el simulador SIG-Logístico ${VERSION} el ${new Date().toLocaleString('es-CO')}. Las cifras provienen del análisis; los recuadros amarillos son para la interpretación del comité. Elimina esta nota antes de entregar.`);
+  Bk.push({ t: 'titulo', x: 'Estrategas de la Cadena de Suministro: Decisiones Inteligentes con un SIG-Logístico' });
+  p(`**LogiTech Solutions S.A. — Informe Ejecutivo Gerencial**`);
+  p(`Comité de Decisiones Logísticas y Cadena de Suministro · Vista: ${roles}${state.variante ? ` · Variante del caso: ${state.variante.codigo}` : ''}`);
+  p('Integrantes: [nombres]'); p(`Fecha: ${new Date().toLocaleDateString('es-CO')}`);
+  h(1, 'Resumen ejecutivo');
+  p(`LogiTech opera con un Índice de Homeostasis (IH) de **${nf(B.ih)}** (${B.banda}), limitado principalmente por ${KPI_CORTO[B.kpiMasDebil].toLowerCase()} (${fmtKPI(B.kpiMasDebil, B.kpis[B.kpiMasDebil].actual)} frente a una meta de ${fmtKPI(B.kpiMasDebil, B.kpis[B.kpiMasDebil].meta)}). Las disrupciones simuladas (${escs.join('; ') || 'ninguna'}) lo llevan a **${nf(D.ih)}**. Con ${mat.length} decisiones coordinadas, el índice llega a **${nf(E.ih)}** (${E.banda}), una recuperación de ${cmp.recuperacion == null ? 'n/a' : nf(cmp.recuperacion, 0) + '%'} a un costo neto de ${money(cmp.costoEstrategias)} al mes${cmp.costoHomeostasis == null ? '' : ` (${money(cmp.costoHomeostasis)} por punto de IH)`}.`);
+  pend('la lectura principal del comité en una o dos frases');
+  h(1, '1. Diagnóstico Inicial');
+  tab(['KPI', 'Actual', 'Meta', 'Cumplimiento', 'Semáforo'], KPIS.map(k => [KPI_CORTO[k], fmtKPI(k, B.kpis[k].actual), fmtKPI(k, B.kpis[k].meta), pct(B.kpis[k].cumplimiento * 100, 0), B.kpis[k].semaforo]));
+  p(`El costo logístico mensual es de ${money(d.ventas.valor * d.kpis.costo.actual / 100)} (${pct(d.kpis.costo.actual)} de ventas de ${money(d.ventas.valor)}${d.ventas.fuente === 'Estimado' ? ', estimadas: ver Anexo A' : ''}). El IH base es ${nf(B.ih)} (${B.banda}) y el KPI más débil es ${KPI_CORTO[B.kpiMasDebil].toLowerCase()}.`);
+  h(2, 'Inventarios y proveedores');
+  tab(['SKU', 'Estado', 'Stock', 'SS', 'ROP rec.', 'DIO'], X.skusDiag.map(s => [s.sku + ' ' + s.desc, s.estado, nf(s.stock, 0), nf(s.ss, 0), nf(s.ropRecomendado, 0), nf(s.dioCalc)]));
+  tab(['Proveedor', 'Lead time', 'Fill rate', 'Calidad', 'Índice de riesgo'], X.proveedores.map(q => [q.id + ' ' + q.nombre, q.lt + ' d', pct(q.fill, 0), nf(q.calidad), nf(q.riesgo, 2)]));
+  pend('un párrafo por rol (Director/a, Inventarios, Transporte, Compras, Servicio) con sus KPIs, la brecha contra la meta y la causa que muestran los datos');
+  REFLEX.diagnostico.forEach((q, i) => { const r = (state.reflexiones.diagnostico || {})[i]; if (r) nota(`Tu reflexión — ${q} ${r}`); });
+  h(2, 'Hallazgos de calidad de datos'); tab(['Área', 'Elemento', 'Hallazgo'], X.hall.map(x => [x.area, x.item, x.h]));
+  h(1, '2. Impacto de las disrupciones');
+  tab(['Estado', ...KPIS.map(k => KPI_MIN[k]), 'Impacto $/mes', 'IH'], [['Base', ...KPIS.map(k => fmtKPI(k, B.kpis[k].actual)), '—', nf(B.ih)], ...Object.keys(ESC_META).map(k => [ESC_META[k].id + ' aislado', ...KPIS.map(x => fmtKPI(x, X.porEsc[k].kpis[x].actual)), money(impacto$(X.porEsc[k])), nf(X.porEsc[k].ih)]), ['Disrupción combinada', ...KPIS.map(k => fmtKPI(k, D.kpis[k].actual)), money(impacto$(D)), nf(D.ih)]]);
+  const cual = d.escenarios.filter(e => e.modelo === 'cualitativo'); if (cual.length) p(`Eventos cualitativos registrados en la matriz del SIG: ${cual.map(e => `${e.id} ${e.nombre}`).join('; ')}.`);
+  pend('por qué la combinación no es la suma de los escenarios y qué área absorbe el impacto');
+  h(1, '3. Dashboard Integrado');
+  imgs.forEach((im, i) => { Bk.push({ t: 'img', i, im, cap: `Figura ${i + 1}. ${im.t}` }); pend('qué evidencia esta figura (el problema o la solución) en 2 o 3 líneas, no qué dibuja'); });
+  h(1, '4. Matriz de Decisiones Estratégicas');
+  if (mat.length) tab(['Rol', 'Decisión', 'Dato del SIG', 'KPI', 'Base → Disrupción → Con estrategia', 'Costo $/mes', 'Δ IH'], mat.map(r => [r.rol, r.decision, r.dato, r.kpi, `${fmtKPI(r.kpiKey, r.base)} → ${fmtKPI(r.kpiKey, r.disr)} → ${fmtKPI(r.kpiKey, r.estr)}`, money(r.costo), signed(r.dIH)])); else p('No hay estrategias activas.');
+  mat.forEach(r => { h(3, `${EST_META[r.k].n} (${r.rol})`); if (r.justificacion) p(r.justificacion); pend('por qué esta opción y no otra, qué dato la sostiene y qué riesgo queda'); });
+  h(1, '5. Evaluación de Sinergia y Homeostasis');
+  p(`El Índice de Homeostasis es un indicador propuesto por el comité, inspirado en el concepto de homeostasis (Cannon, 1932): IH = 100 × Σ peso × cumplimiento, con cumplimiento por KPI entre 0 y 1 y tope en 1 para que sobrecumplir un KPI no compense el deterioro de otro; los pesos son ${KPIS.every(k => Math.abs(state.params.pesosIH[k] - .2) < 1e-6) ? 'iguales (20%) para mantener la neutralidad entre roles' : 'los definidos por el comité (ver Anexo A)'}. Sirve para comparar estados del mismo caso, no empresas entre sí.`);
+  tab(['Estado', 'IH', 'Banda', 'KPI más débil'], [['Base', nf(B.ih), B.banda, KPI_CORTO[B.kpiMasDebil]], ['Disrupción', nf(D.ih), D.banda, KPI_CORTO[D.kpiMasDebil]], ['Con estrategia', nf(E.ih), E.banda, KPI_CORTO[E.kpiMasDebil]]]);
+  p(`Tasa de recuperación: ${cmp.recuperacion == null ? 'no aplica' : nf(cmp.recuperacion, 0) + '%'}. Costo de la homeostasis: ${cmp.costoHomeostasis == null ? 'no aplica' : money(cmp.costoHomeostasis) + ' por punto de IH'}. Sinergia neta: ${signed(X.sinergia)} puntos.`);
+  if (sinergias().length) p('Relaciones identificadas por el simulador: ' + sinergias().map(x => x.replace(/<[^>]+>/g, '')).join(' '));
+  tab(['Indicador', 'Solo contingencia', '+ Plan estructural'], [['IH', nf(X.cont.estrategia.ih), nf(X.estr.estrategia.ih)], ['Banda', X.cont.estrategia.banda, X.estr.estrategia.banda], ['Lead time', fmtKPI('leadTime', X.cont.estrategia.kpis.leadTime.actual), fmtKPI('leadTime', X.estr.estrategia.kpis.leadTime.actual)], ['Costo neto $/mes', money(X.cont.costoEstrategias), money(X.estr.costoEstrategias)]]);
+  pend('dos a cuatro cadenas causales entre áreas, cada una con sus cifras, y qué KPI sigue fuera de meta y por qué es estructural');
+  h(1, '6. Conclusiones y recomendaciones');
+  pend('tres a cinco recomendaciones, cada una con responsable, cifra esperada y horizonte (corto plazo: contingencia; mediano plazo: estructural)');
+  h(1, 'Anexos');
+  h(2, 'A. Supuestos'); tab(['Supuesto', 'Valor'], E.supuestos.map(x => [x.supuesto, x.valor]));
+  h(2, 'B. Hallazgos de calidad de datos'); tab(['Área', 'Elemento', 'Hallazgo'], X.hall.map(x => [x.area, x.item, x.h]));
+  h(2, 'C. Brechas de información del SIG'); tab(['Brecha', 'Tratamiento'], brechas());
+  h(2, `D. Sensibilidad (±${state.sensPct}%)`); tab(['Supuesto', 'IH −', 'IH +'], sensibilidad().filas.map(r => [r.lbl, nf(r.bajo.ih), nf(r.alto.ih)]));
+  h(2, 'E. Bitácora de decisiones'); tab(['Decisión', 'Cambio', 'IH antes → después', 'Justificación'], (state.bitacora || []).map(e => [e.item, e.cambio, `${nf(e.ihAntes)} → ${nf(e.ihDespues)}`, e.justificacion || '—']));
+  h(2, 'F. Fórmulas'); p('IH = 100 × Σ (peso × cumplimiento); cumplimiento = mín(actual/meta, 1) si mayor es mejor y mín(meta/actual, 1) si menor es mejor. Recuperación = (IH estrategia − IH disrupción) / (IH base − IH disrupción) × 100. Costo de la homeostasis = costo neto de las estrategias / puntos de IH recuperados. ROP = demanda diaria × lead time + SS. DIO = stock / demanda mensual × 30.');
+  nota(PI_AVISO);
+  return Bk;
+}
+const negritasHTML = x => esc(x).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+function htmlDeBloques(Bk) {
+  const body = Bk.map(b => b.t === 'titulo' ? `<h1>${esc(b.x)}</h1>` : b.t === 'h' ? `<h${b.n + 1}>${esc(b.x)}</h${b.n + 1}>` : b.t === 'p' ? `<p>${negritasHTML(b.x)}</p>` : b.t === 'pend' ? `<p class="pend">${esc(b.x)}</p>` : b.t === 'nota' ? `<p class="nota">${esc(b.x)}</p>`
+    : b.t === 'tabla' ? `<table class="t"><tr>${b.c.map(c => `<th>${esc(c)}</th>`).join('')}</tr>${b.f.map(f => `<tr>${f.map(c => `<td>${esc(c)}</td>`).join('')}</tr>`).join('')}</table>` : b.t === 'img' ? `<p class="fig">${esc(b.cap)}</p><img src="${b.im.src}" alt="${esc(b.im.t)}">` : '').join('\n');
+  return `<!doctype html><html lang="es"><head><meta charset="utf-8"><title>Borrador — Informe Ejecutivo Gerencial</title><style>body{font-family:Calibri,Arial,sans-serif;font-size:11pt;line-height:1.45;color:#16212b;max-width:820px;margin:auto;padding:24px}h1{font-size:20pt;color:#0f6e7a}h2{font-size:15pt;color:#0f6e7a;border-bottom:1px solid #d9e0e6;margin-top:24pt}h3{font-size:12.5pt}h4{font-size:11.5pt}
+table.t{border-collapse:collapse;width:100%;margin:6pt 0 10pt;font-size:9.5pt}table.t th,table.t td{border:1px solid #b9c3cc;padding:3pt 5pt;vertical-align:top;text-align:left}table.t th{background:#e1f1f2}.pend{background:#FFF2CC;color:#7F6000;padding:4pt 6pt;border-left:3pt solid #BF9000}.nota{font-size:9pt;color:#5b6b7a}img{max-width:100%}.fig{font-weight:bold;margin-bottom:2pt}</style></head><body>${body}</body></html>`;
+}
+const xe = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+function runsDOCX(x, base = '') { return String(x).split(/(\*\*.+?\*\*)/).filter(Boolean).map(seg => { const b = /^\*\*.+\*\*$/.test(seg); return `<w:r><w:rPr>${b ? '<w:b/>' : ''}${base}</w:rPr><w:t xml:space="preserve">${xe(b ? seg.slice(2, -2) : seg)}</w:t></w:r>`; }).join(''); }
+function docxDeBloques(Bk) {
+  const C = XLSX.CFB, enc = s => new TextEncoder().encode(s), cfb = C.utils.cfb_new(), rels = [], media = [];
+  const par = (inner, ppr = '') => `<w:p><w:pPr>${ppr}</w:pPr>${inner}</w:p>`;
+  const celda = (t, th) => `<w:tc><w:tcPr>${th ? '<w:shd w:val="clear" w:color="auto" w:fill="E1F1F2"/>' : ''}</w:tcPr>${par(runsDOCX(t, `<w:sz w:val="18"/>${th ? '<w:b/>' : ''}`), '<w:spacing w:before="20" w:after="20"/>')}</w:tc>`;
+  const body = Bk.map((b, k) => {
+    if (b.t === 'titulo') return par(runsDOCX(b.x), '<w:pStyle w:val="Title"/>');
+    if (b.t === 'h') return par(runsDOCX(b.x), `<w:pStyle w:val="Heading${b.n}"/>`);
+    if (b.t === 'p') return par(runsDOCX(b.x));
+    if (b.t === 'nota') return par(runsDOCX(b.x, '<w:color w:val="5B6B7A"/><w:sz w:val="18"/>'));
+    if (b.t === 'pend') return par(runsDOCX(b.x, '<w:color w:val="7F6000"/>'), '<w:shd w:val="clear" w:color="auto" w:fill="FFF2CC"/><w:pBdr><w:left w:val="single" w:sz="18" w:space="4" w:color="BF9000"/></w:pBdr>');
+    if (b.t === 'tabla') return `<w:tbl><w:tblPr><w:tblStyle w:val="TableGrid"/><w:tblW w:w="5000" w:type="pct"/></w:tblPr><w:tr>${b.c.map(c => celda(c, true)).join('')}</w:tr>${b.f.map(f => `<w:tr>${f.map(c => celda(c, false)).join('')}</w:tr>`).join('')}</w:tbl>${par('')}`;
+    if (b.t === 'img') {
+      const n = media.length + 1, rid = 'rIdImg' + n, cx = 5486400, cy = Math.round(cx * b.im.h / b.im.w);
+      media.push({ n, src: b.im.src }); rels.push(`<Relationship Id="${rid}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/image${n}.png"/>`);
+      return par(runsDOCX(b.cap), '<w:pStyle w:val="Caption"/><w:keepNext/>') + par(`<w:r><w:drawing><wp:inline distT="0" distB="0" distL="0" distR="0"><wp:extent cx="${cx}" cy="${cy}"/><wp:docPr id="${n}" name="Figura ${n}" descr="${xe(b.im.t)}"/><wp:cNvGraphicFramePr><a:graphicFrameLocks noChangeAspect="1"/></wp:cNvGraphicFramePr><a:graphic><a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:pic><pic:nvPicPr><pic:cNvPr id="${n}" name="image${n}.png"/><pic:cNvPicPr/></pic:nvPicPr><pic:blipFill><a:blip r:embed="${rid}"/><a:stretch><a:fillRect/></a:stretch></pic:blipFill><pic:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="${cx}" cy="${cy}"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></pic:spPr></pic:pic></a:graphicData></a:graphic></wp:inline></w:drawing></w:r>`);
+    }
+    return '';
+  }).join('');
+  const NS = 'xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture"';
+  const doc = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document ${NS}><w:body>${body}<w:sectPr><w:pgSz w:w="12240" w:h="15840"/><w:pgMar w:top="1300" w:right="1300" w:bottom="1300" w:left="1300" w:header="708" w:footer="708" w:gutter="0"/></w:sectPr></w:body></w:document>`;
+  const sty = (id, name, ppr, rpr, extra = '') => `<w:style w:type="paragraph" w:styleId="${id}"><w:name w:val="${name}"/><w:basedOn w:val="Normal"/><w:next w:val="Normal"/>${extra}<w:pPr>${ppr}</w:pPr><w:rPr>${rpr}</w:rPr></w:style>`;
+  const styles = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii="Calibri" w:hAnsi="Calibri" w:eastAsia="Calibri" w:cs="Calibri"/><w:sz w:val="22"/><w:lang w:val="es-CO"/></w:rPr></w:rPrDefault><w:pPrDefault><w:pPr><w:spacing w:after="120" w:line="276" w:lineRule="auto"/></w:pPr></w:pPrDefault></w:docDefaults>
+<w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/></w:style>
+${sty('Title', 'Title', '<w:spacing w:after="200"/>', '<w:b/><w:color w:val="0F6E7A"/><w:sz w:val="40"/>')}
+${sty('Heading1', 'heading 1', '<w:keepNext/><w:spacing w:before="360" w:after="120"/><w:outlineLvl w:val="0"/>', '<w:b/><w:color w:val="0F6E7A"/><w:sz w:val="32"/>', '<w:uiPriority w:val="9"/><w:qFormat/>')}
+${sty('Heading2', 'heading 2', '<w:keepNext/><w:spacing w:before="240" w:after="80"/><w:outlineLvl w:val="1"/>', '<w:b/><w:color w:val="0F6E7A"/><w:sz w:val="26"/>', '<w:uiPriority w:val="9"/><w:qFormat/>')}
+${sty('Heading3', 'heading 3', '<w:keepNext/><w:spacing w:before="200" w:after="60"/><w:outlineLvl w:val="2"/>', '<w:b/><w:sz w:val="23"/>', '<w:uiPriority w:val="9"/><w:qFormat/>')}
+${sty('Caption', 'caption', '<w:spacing w:before="120" w:after="60"/>', '<w:b/><w:sz w:val="20"/>')}
+<w:style w:type="table" w:styleId="TableGrid"><w:name w:val="Table Grid"/><w:tblPr><w:tblBorders><w:top w:val="single" w:sz="4" w:space="0" w:color="B9C3CC"/><w:left w:val="single" w:sz="4" w:space="0" w:color="B9C3CC"/><w:bottom w:val="single" w:sz="4" w:space="0" w:color="B9C3CC"/><w:right w:val="single" w:sz="4" w:space="0" w:color="B9C3CC"/><w:insideH w:val="single" w:sz="4" w:space="0" w:color="B9C3CC"/><w:insideV w:val="single" w:sz="4" w:space="0" w:color="B9C3CC"/></w:tblBorders><w:tblCellMar><w:left w:w="80" w:type="dxa"/><w:right w:w="80" w:type="dxa"/></w:tblCellMar></w:tblPr></w:style></w:styles>`;
+  const ct = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Default Extension="png" ContentType="image/png"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/><Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/></Types>`;
+  const relsRoot = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties" Target="docProps/core.xml"/></Relationships>`;
+  const relsDoc = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rIdStyles" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>${rels.join('')}</Relationships>`;
+  const core = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><dc:title>Borrador — Informe Ejecutivo Gerencial LogiTech</dc:title><dc:creator>Simulador SIG-Logístico (AI HYPERPLANE S.A.S.)</dc:creator><dcterms:created xsi:type="dcterms:W3CDTF">${new Date().toISOString().slice(0, 19)}Z</dcterms:created></cp:coreProperties>`;
+  const add = (pth, data) => C.utils.cfb_add(cfb, pth, data);
+  add('/[Content_Types].xml', enc(ct)); add('/_rels/.rels', enc(relsRoot)); add('/docProps/core.xml', enc(core));
+  add('/word/document.xml', enc(doc)); add('/word/styles.xml', enc(styles)); add('/word/_rels/document.xml.rels', enc(relsDoc));
+  media.forEach(m => { const bin = atob(m.src.split(',')[1]), u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); add(`/word/media/image${m.n}.png`, u); });
+  return C.write(cfb, { type: 'array', fileType: 'zip' });
+}
+async function generarBorrador(tipo) {
+  if (!cmp) return; toast('Generando el borrador del informe…');
+  const imgs = window.Chart ? await capturarGraficos() : [], Bk = bloquesInforme(imgs);
+  if (tipo === 'html') { const html = htmlDeBloques(Bk), w = window.open(); if (w) { w.document.write(html); w.document.close(); } else descargar(`Borrador_Informe_${sello()}.html`, html, 'text/html'); return; }
+  if (!window.XLSX || !XLSX.CFB) { toast('No se pudo cargar la librería para generar Word; usa el borrador en el navegador.'); return; }
+  descargar(`Borrador_Informe_LogiTech_${sello()}.docx`, new Blob([docxDeBloques(Bk)], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' }));
+  state.exportado = true; guardar(); render(); toast('Borrador descargado (.docx): ábrelo en Word, LibreOffice o Google Docs y completa los recuadros amarillos.');
+}
+
+/* ------------------------------------------------------------ parámetros fijos por el docente */
+function isLocked(path) {
+  const c = state.clase; if (!c || !c.bloqueos) return false; const b = c.bloqueos;
+  if (b.datos && path.startsWith('data.')) return true;
+  if (b.pesos && (path.startsWith('pesosBorrador.') || path.startsWith('params.bandasIH'))) return true;
+  if (b.motor && path.startsWith('params.') && !path.startsWith('params.bandasIH')) return true;
+  if (b.escenarios && /^escenarios\.\w+\.(?!activo$)/.test(path)) return true;
+  return false;
+}
+const ACC_BLOQ = { addRow: 'datos', delRow: 'datos', demo: 'datos', cargarArchivo: 'datos', usarEstimado: 'datos', costosIlustrativos: 'datos', limpiarCostos: 'datos', addKPI: 'datos', delKPI: 'datos', addEsc: 'datos', delEsc: 'datos', restaurarSupuestos: 'motor' };
+function accionBloqueada(act) { const c = state.clase; if (!c || !c.bloqueos) return false; const k = ACC_BLOQ[act]; if (act === 'variante') return !!c.bloqueos.datos && !c.exigirVariante; return !!(k && c.bloqueos[k]); }
+function aplicarBloqueos() {
+  if (!state.clase) return;
+  document.querySelectorAll('#main [data-path]').forEach(el => { if (isLocked(el.dataset.path)) { el.disabled = true; el.title = 'Fijado por el docente'; el.classList.add('locked'); } });
+  document.querySelectorAll('#main [data-act]').forEach(el => { if (accionBloqueada(el.dataset.act)) { el.disabled = true; el.title = 'Fijado por el docente'; } });
+}
+function payloadClase(opts) {
+  const p = { esquemaClase: 1, version: VERSION, fecha: new Date().toISOString(), mensaje: opts.mensaje || '', bloqueos: opts.bloqueos, exigirVariante: !!opts.exigirVariante,
+    params: state.params, pesosBorrador: state.pesosBorrador, escenarios: state.escenarios };
+  if (opts.bloqueos.datos) p.data = state.data;
+  return p;
+}
+function aplicarClase(p) {
+  state.clase = { mensaje: p.mensaje, bloqueos: p.bloqueos || {}, exigirVariante: !!p.exigirVariante, fecha: p.fecha, payload: p };
+  if (p.bloqueos.motor || p.bloqueos.pesos) state.params = Object.assign(state.params, p.bloqueos.motor ? p.params : { pesosIH: p.params.pesosIH, bandasIH: p.params.bandasIH });
+  if (p.bloqueos.pesos) { state.pesosBorrador = p.pesosBorrador; state.params.pesosIH = p.params.pesosIH; state.params.bandasIH = p.params.bandasIH; }
+  if (p.bloqueos.escenarios) for (const k in p.escenarios) state.escenarios[k] = Object.assign({}, p.escenarios[k], { activo: state.escenarios[k] ? state.escenarios[k].activo : p.escenarios[k].activo });
+  if (p.bloqueos.datos && p.data) { state.data = p.data; state.origen = 'Caso fijado por el docente'; }
+}
+function claseDesdeURL() {
+  const m = /#clase=([^&]+)/.exec(location.hash); if (!m || !window.LZString) return null;
+  try { const o = JSON.parse(LZString.decompressFromEncodedURIComponent(m[1])); return o && o.esquemaClase === 1 ? o : null; } catch (e) { return null; }
+}
+function bannerClase() {
+  const c = state.clase; if (!c) return '';
+  const b = c.bloqueos || {}, l = [b.datos && 'datos del caso', b.motor && 'supuestos del motor', b.pesos && 'pesos y bandas del IH', b.escenarios && 'parámetros de los escenarios'].filter(Boolean);
+  return `<div class="banner info small no-print">🔒 <strong>Configuración de la clase.</strong> ${l.length ? `El docente fijó: ${l.join(', ')}.` : ''} ${c.exigirVariante && !state.variante ? '<strong>Genera la variante de tu grupo en Datos con el código que te asignó el docente.</strong>' : ''} ${c.mensaje ? `<br><em>${esc(c.mensaje)}</em>` : ''}</div>`;
+}
+
+/* ------------------------------------------------------------ modo docente */
+let ENTREGAS = [];
+function fronteraDe(d, cfgE) {
+  const ks = Object.keys(M.ESTRATEGIAS_DEFAULT), res = [];
+  for (let mask = 0; mask < (1 << ks.length); mask++) { const est = {}; ks.forEach((k, i) => est[k] = Object.assign({}, cfgE.estrategias[k], { activo: !!(mask >> i & 1) })); const r = M.evaluar(d, { params: cfgE.params, escenarios: cfgE.escenarios, estrategias: est }); res.push({ mask, ih: r.ih, costo: sum(Object.values(r.costosEstrategia)) }); }
+  const act = ks.reduce((m, k, i) => m | (cfgE.estrategias[k].activo ? 1 << i : 0), 0), a = res[act];
+  return !res.some(r => r.ih >= a.ih - 1e-9 && r.costo < a.costo - 1);
+}
+async function cargarEntregas(files) {
+  for (const f of files) {
+    try {
+      const o = JSON.parse(await f.text()); if (!o || !o.data) throw new Error('no es un análisis del simulador');
+      const st = normalizarEstado(o), c = M.compararEstados(st.data, { params: st.params, escenarios: st.escenarios, estrategias: st.estrategias });
+      const decl = o.resultados && o.resultados.estrategia ? o.resultados.estrategia.ih : null;
+      const act = Object.keys(st.estrategias).filter(k => st.estrategias[k].activo);
+      const just = act.filter(k => (st.bitacora || []).some(e => e.k === k && (e.justificacion || '').trim())).length, preds = (st.bitacora || []).filter(e => e.prediccion);
+      const enF = fronteraDe(st.data, st), rub = evaluarRubrica(st, { enFrontera: enF });
+      ENTREGAS.push({ archivo: f.name, grupo: st.variante ? st.variante.codigo : (st.origen || '—'), version: o.version || '—', ih: [c.base.ih, c.disrupcion.ih, c.estrategia.ih], banda: c.estrategia.banda, recup: c.recuperacion, costo: c.costoEstrategias, cpp: c.costoHomeostasis,
+        palancas: act.map(k => EST_CORTO[k]).join(', '), just: `${just}/${act.length}`, preds: preds.length ? `${preds.filter(e => e.prediccion.aciertoDir).length}/${preds.length}` : '—', reflex: `${reflexRespondidas(st)}/${reflexTotal}`,
+        quiz: st.quiz && st.quiz.calificado ? `${st.quiz.puntaje}/${QUIZ.length}` : '—', frontera: enF, integridad: decl == null ? 'sin resultados' : Math.abs(decl - c.estrategia.ih) <= 0.05 ? 'ok' : `declara ${nf(decl)}`,
+        rubSug: rub.reduce((s, r) => s + r.sugerido, 0) / rub.length, rubAuto: rub.filter(r => r.auto).length ? rub.reduce((s, r) => s + Number(r.auto || 0), 0) / rub.filter(r => r.auto).length : null, estado: st });
+    } catch (e) { toast(`No se pudo leer ${f.name}: ${e.message}`); }
+  }
+  render();
+}
+VISTAS.docente = () => {
+  const E = ENTREGAS, c = state.clase;
+  return `<div class="section"><h2>Modo docente</h2><button class="btn sm" type="button" data-tab="datos">← Volver al simulador</button></div>
+  <p class="lead">Compara las entregas de los grupos y fija la configuración de la clase. Todo ocurre en este navegador: los archivos no se envían a ningún servidor.</p>
+  <div class="card"><div class="row"><h3 style="margin:0">Comparar entregas de los grupos</h3><span class="spacer"></span><button class="btn sm primary" type="button" data-act="cargarEntregas">Cargar JSON de los grupos</button>${E.length ? '<button class="btn sm" type="button" data-act="exportarEntregas">Exportar comparación (XLSX)</button><button class="btn sm" type="button" data-act="limpiarEntregas">Limpiar</button>' : ''}</div>
+  <p class="small muted">Cada grupo exporta su análisis en JSON (módulo Exportar). El simulador recalcula cada entrega con el motor y verifica que el IH declarado coincida (columna Integridad).</p>
+  ${E.length ? `<div class="tw"><table><thead><tr><th>Grupo / archivo</th><th class="num">IH base → disr. → estr.</th><th>Banda</th><th class="num">Recup.</th><th class="num">Costo $/mes</th><th class="num">$/punto</th><th>Palancas</th><th>Frontera</th><th class="num">Justif.</th><th class="num">Predic.</th><th class="num">Reflex.</th><th class="num">Quiz</th><th class="num">Rúbrica sug. / auto</th><th>Integridad</th><th class="no-print"></th></tr></thead><tbody>
+  ${E.map((g, i) => `<tr><td><strong>${esc(g.grupo)}</strong><br><span class="tiny muted">${esc(g.archivo)} · ${esc(g.version)}</span></td><td class="num">${nf(g.ih[0])} → ${nf(g.ih[1])} → <strong>${nf(g.ih[2])}</strong></td><td>${bandTag(g.banda)}</td><td class="num">${g.recup == null ? 'n/a' : nf(g.recup, 0) + '%'}</td><td class="num">${money(g.costo)}</td><td class="num">${g.cpp == null ? 'n/a' : money(g.cpp)}</td><td class="small">${esc(g.palancas)}</td><td>${g.frontera ? '<span class="tag ok">sí</span>' : '<span class="tag warn">no</span>'}</td><td class="num">${g.just}</td><td class="num">${g.preds}</td><td class="num">${g.reflex}</td><td class="num">${g.quiz}</td><td class="num">${nf(g.rubSug)} / ${g.rubAuto == null ? '—' : nf(g.rubAuto)}</td><td>${g.integridad === 'ok' ? '<span class="tag ok">ok</span>' : `<span class="tag warn">${esc(g.integridad)}</span>`}</td><td class="no-print"><button class="btn sm" type="button" data-act="abrirEntrega" data-i="${i}">Abrir</button></td></tr>`).join('')}
+  </tbody></table></div>${chartCard('dc_grupos', 'Costo vs. IH logrado por grupo', 'Cada punto es un grupo. Arriba a la izquierda: más homeostasis por menos dinero.', 300)}` : '<p class="small muted">Aún no hay entregas cargadas. Puedes seleccionar varios archivos a la vez.</p>'}</div>
+  <div class="card" style="margin-top:1rem"><h3>Configuración de la clase (fijar parámetros)</h3>
+  <p class="small">Fija los valores <strong>actuales</strong> de este simulador para todos los estudiantes y compártelos con un link. Al abrirlo, los campos fijados quedan bloqueados 🔒.</p>
+  <div class="fields">
+    <label class="switch small"><input type="checkbox" id="lkMotor" ${c && c.bloqueos.motor ? 'checked' : 'checked'}> Supuestos del motor</label>
+    <label class="switch small"><input type="checkbox" id="lkPesos" checked> Pesos y bandas del IH</label>
+    <label class="switch small"><input type="checkbox" id="lkEsc" checked> Parámetros de los escenarios</label>
+    <label class="switch small"><input type="checkbox" id="lkDatos"> Datos del caso (no editables)</label>
+    <label class="switch small"><input type="checkbox" id="lkVar"> Exigir variante por grupo</label>
+  </div>
+  <div class="field" style="margin-top:.6rem"><label for="lkMsg">Mensaje para los estudiantes (opcional)</label><input id="lkMsg" maxlength="240" placeholder="Ej.: Entrega el JSON el viernes; usen el código de grupo asignado."></div>
+  <div class="row" style="margin-top:.6rem"><button class="btn primary" type="button" data-act="linkClase">Copiar link de la clase</button><button class="btn" type="button" data-act="jsonClase">Descargar configuración (JSON)</button>${c ? '<button class="btn" type="button" data-act="quitarClase">Quitar la configuración de este navegador</button>' : ''}</div>
+  <p class="tiny muted">Los estudiantes conservan su trabajo en su navegador. "Exigir variante" les pide generar el caso de su grupo con el código que les asignes (los datos quedan fijados por el código).</p></div>`;
+};
+function chGrupos(id) {
+  if (!ENTREGAS.length) return;
+  mk(id, { type: 'scatter', data: { datasets: [{ label: 'Grupos', data: ENTREGAS.map(g => ({ x: g.costo, y: g.ih[2] })), backgroundColor: COL.b, pointRadius: 6 }] },
+    options: { plugins: { ptLabels: { labels: [ENTREGAS.map(g => g.grupo)] }, tooltip: { callbacks: { label: c => `${ENTREGAS[c.dataIndex].grupo}: IH ${nf(c.raw.y)}, ${money(c.raw.x)}` } } }, scales: { x: Object.assign({ ticks: { callback: v => money(v) } }, yT('Costo neto $/mes')), y: yT('IH con estrategia') } } });
+}
+function exportarEntregas() {
+  const wb = XLSX.utils.book_new(), cab = ['Grupo', 'Archivo', 'Versión', 'IH base', 'IH disrupción', 'IH estrategia', 'Banda', 'Recuperación %', 'Costo $/mes', '$/punto', 'Palancas', 'En frontera', 'Justificadas', 'Predicciones', 'Reflexiones', 'Quiz', 'Rúbrica sugerida', 'Rúbrica auto', 'Integridad'];
+  const ws = XLSX.utils.aoa_to_sheet([cab, ...ENTREGAS.map(g => [g.grupo, g.archivo, g.version, g.ih[0], g.ih[1], g.ih[2], g.banda, g.recup, Math.round(g.costo), g.cpp == null ? '' : Math.round(g.cpp), g.palancas, g.frontera ? 'Sí' : 'No', g.just, g.preds, g.reflex, g.quiz, Math.round(g.rubSug * 10) / 10, g.rubAuto == null ? '' : Math.round(g.rubAuto * 10) / 10, g.integridad])]);
+  XLSX.utils.book_append_sheet(wb, ws, 'Comparación');
+  const ws2 = XLSX.utils.aoa_to_sheet([['Grupo', 'Módulo', 'Pregunta', 'Respuesta'], ...ENTREGAS.flatMap(g => REFLEX_TABS.flatMap(t => REFLEX[t].map((q, i) => [g.grupo, t, q, ((g.estado.reflexiones || {})[t] || {})[i] || ''])))]);
+  XLSX.utils.book_append_sheet(wb, ws2, 'Reflexiones');
+  const out = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+  descargar(`Comparacion_grupos_${sello()}.xlsx`, new Blob([out], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }));
+}
+
+/* ------------------------------------------------------------ subpestañas */
+const SUBS = { dashboard: [['resumen', 'Resumen'], ['graficos', 'Gráficos'], ['matriz', 'Matriz y sinergias'], ['roles', 'Por rol'], ['planes', 'Planes A/B']], estrategias: [['palancas', 'Palancas y bitácora'], ['estructural', 'Contingencia vs. estructural'], ['optimizador', 'Optimizador']] };
+const subSel = tab => (state.sub && state.sub[tab]) || SUBS[tab][0][0];
+const subAttr = (tab, id) => `data-sub="${id}" ${PRINT_ALL || subSel(tab) === id ? '' : 'hidden'}`;
+function subnav(tab) {
+  if (PRINT_ALL) return '';
+  return `<div class="subnav no-print" role="tablist" aria-label="Secciones">${SUBS[tab].map(([id, l]) => `<button type="button" role="tab" aria-selected="${subSel(tab) === id}" data-act="sub" data-st="${tab}" data-sv="${id}">${esc(l)}</button>`).join('')}</div>`;
+}
+
+/* ------------------------------------------------------------ planes A/B */
+function guardarPlan(L) {
+  state.planes = state.planes || {};
+  state.planes[L] = { nombre: (state.planes[L] && state.planes[L].nombre) || `Plan ${L}`, fecha: new Date().toISOString(), escenarios: clone(state.escenarios), estrategias: clone(state.estrategias), params: clone(state.params), datos: semilla(JSON.stringify(state.data)) };
+  guardar(); render(); toast(`Configuración actual guardada como ${state.planes[L].nombre}.`);
+}
+function cargarPlan(L) { const p = (state.planes || {})[L]; if (!p) return; state.escenarios = clone(p.escenarios); state.estrategias = clone(p.estrategias); state.params = clone(p.params); state.pesosBorrador = pesosAPct(state.params.pesosIH); recalc(); toast(`${p.nombre} restaurado.`); }
+function vistaPlanes() {
+  const P = state.planes || {}, cols = [['A', P.A], ['B', P.B]].filter(x => x[1]).map(([L, p]) => ({ L, p, c: M.compararEstados(state.data, { params: p.params, escenarios: p.escenarios, estrategias: p.estrategias }) }));
+  cols.push({ L: 'actual', p: { nombre: 'Configuración actual', estrategias: state.estrategias, escenarios: state.escenarios }, c: cmp });
+  const dh = semilla(JSON.stringify(state.data)), f = (lbl, fn) => `<tr><td class="small">${lbl}</td>${cols.map(x => `<td class="num">${fn(x)}</td>`).join('')}</tr>`;
+  return `<div class="card"><div class="row"><h3 style="margin:0">Comparar planes A/B ${tip('Guarda la configuración de escenarios, estrategias y supuestos como Plan A o Plan B y compárala con la actual, con los mismos datos.')}</h3><span class="spacer"></span>
+  <button class="btn sm" type="button" data-act="guardarPlan" data-l="A">Guardar actual como Plan A</button><button class="btn sm" type="button" data-act="guardarPlan" data-l="B">Guardar actual como Plan B</button></div>
+  ${cols.length > 1 ? `<div class="tw" style="margin-top:.6rem"><table><thead><tr><th></th>${cols.map(x => `<th class="num">${x.L === 'actual' ? 'Actual' : `<input aria-label="Nombre del plan ${x.L}" data-path="planes.${x.L}.nombre" data-type="text" value="${esc(x.p.nombre)}" style="width:9rem;border:1px solid var(--border);border-radius:6px;padding:.2rem;background:var(--surface)">`}</th>`).join('')}</tr></thead><tbody>
+  ${f('Escenarios activos', x => Object.keys(x.p.escenarios).filter(k => x.p.escenarios[k].activo).map(k => ESC_META[k].id).join(', ') || '—')}
+  ${f('Palancas activas', x => `<span class="small">${Object.keys(x.p.estrategias).filter(k => x.p.estrategias[k].activo).map(k => EST_CORTO[k]).join(', ') || '—'}</span>`)}
+  ${f('IH base → disrupción', x => `${nf(x.c.base.ih)} → ${nf(x.c.disrupcion.ih)}`)}${f('<strong>IH con estrategia</strong>', x => `<strong>${nf(x.c.estrategia.ih)}</strong> ${bandTag(x.c.estrategia.banda)}`)}
+  ${f('Recuperación', x => x.c.recuperacion == null ? 'n/a' : nf(x.c.recuperacion, 0) + '%')}${f('Costo neto $/mes', x => money(x.c.costoEstrategias))}${f('$ por punto de IH', x => x.c.costoHomeostasis == null ? 'n/a' : money(x.c.costoHomeostasis))}
+  ${KPIS.map(k => f(KPI_CORTO[k], x => fmtKPI(k, x.c.estrategia.kpis[k].actual))).join('')}
+  <tr class="no-print"><td></td>${cols.map(x => `<td class="num">${x.L === 'actual' ? '' : `<button class="btn sm" type="button" data-act="cargarPlan" data-l="${x.L}">Restaurar</button>`}</td>`).join('')}</tr>
+  </tbody></table></div>${cols.some(x => x.p.datos && x.p.datos !== dh) ? '<p class="tiny muted">⚠ Los datos cambiaron desde que se guardó algún plan: se recalcula con los datos actuales.</p>' : ''}` : '<p class="small muted" style="margin-top:.6rem">Guarda la configuración actual como Plan A, cambia escenarios o estrategias, guárdala como Plan B y compáralas aquí.</p>'}</div>`;
+}
+
+/* ------------------------------------------------------------ deshacer / rehacer */
+const HIST = [], REDO = [], UI_KEYS = ['tab', 'visitados', 'sub', 'rol', 'verGuia', 'skuSim', 'estadoCascada', 'sensPct', 'exportado'];
+function instantanea() { const o = Object.assign({}, state); UI_KEYS.forEach(k => delete o[k]); return JSON.stringify(o); }
+function pushHist() { HIST.push(instantanea()); if (HIST.length > 60) HIST.shift(); REDO.length = 0; actualizarUndo(); }
+function restaurarInst(json) { const ui = {}; UI_KEYS.forEach(k => ui[k] = state[k]); state = Object.assign(normalizarEstado(JSON.parse(json)), ui); recalc(); actualizarUndo(); }
+function deshacer() { if (!HIST.length) return toast('No hay cambios para deshacer.'); REDO.push(instantanea()); restaurarInst(HIST.pop()); toast('Cambio deshecho.'); }
+function rehacer() { if (!REDO.length) return toast('No hay cambios para rehacer.'); HIST.push(instantanea()); restaurarInst(REDO.pop()); toast('Cambio rehecho.'); }
+function actualizarUndo() { const u = $('#btnUndo'), r = $('#btnRedo'); if (u) u.disabled = !HIST.length; if (r) r.disabled = !REDO.length; }
+const MUTA = new Set(['addRow', 'delRow', 'demo', 'usarEstimado', 'todas', 'ninguna', 'restaurarSupuestos', 'costosIlustrativos', 'limpiarCostos', 'aplicarCombo', 'activarE8', 'addKPI', 'delKPI', 'addEsc', 'delEsc', 'variante', 'delBit', 'justificarK', 'guardarJustif', 'predSimular', 'predSin', 'cargarPlan', 'guardarPlan', 'quizCalificar', 'quizReset']);
+document.addEventListener('keydown', e => {
+  if (!(e.ctrlKey || e.metaKey) || e.key.toLowerCase() !== 'z') return;
+  const t = e.target; if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT' || t.isContentEditable)) return;
+  e.preventDefault(); e.shiftKey ? rehacer() : deshacer();
+});
+
+/* ------------------------------------------------------------ tablas como tarjetas en celular */
+function etiquetarTablas() {
+  document.querySelectorAll('#main table').forEach(t => {
+    const ths = [...t.querySelectorAll('thead th')].map(th => th.textContent.replace(/\?/g, '').trim());
+    if (!ths.length) return; t.classList.add('rt');
+    t.querySelectorAll('tbody tr').forEach(tr => { let col = 0; [...tr.children].forEach(td => { if (ths[col] && !td.dataset.label) td.dataset.label = ths[col]; col += td.colSpan || 1; }); });
+  });
+}
+
+/* ------------------------------------------------------------ accesibilidad */
+const PAT = {};
+function patron(color, tipo) {
+  if (!state.accesible) return color;
+  const key = color + tipo; if (PAT[key]) return PAT[key];
+  const c = document.createElement('canvas'); c.width = c.height = 8; const x = c.getContext('2d');
+  x.fillStyle = color; x.fillRect(0, 0, 8, 8); x.strokeStyle = 'rgba(255,255,255,.85)'; x.fillStyle = 'rgba(255,255,255,.85)'; x.lineWidth = 1.6;
+  if (tipo === 'diag') { x.beginPath(); x.moveTo(-1, 9); x.lineTo(9, -1); x.stroke(); }
+  else if (tipo === 'dots') { x.beginPath(); x.arc(4, 4, 1.6, 0, 7); x.fill(); }
+  return PAT[key] = x.createPattern(c, 'repeat');
+}
+function tablaDatosGrafico(id) {
+  const ch = charts[id]; if (!ch) return; const fig = document.getElementById(id).closest('figure'); if (!fig) return;
+  let det = fig.querySelector('details.datos'); if (!det) { det = document.createElement('details'); det.className = 'datos small no-print'; fig.appendChild(det); }
+  const L = ch.data.labels, DS = ch.data.datasets.filter(d => d.data && d.data.length);
+  const val = v => v == null ? '—' : Array.isArray(v) ? nf(v[1] - v[0]) : typeof v === 'object' ? `(${nf(v.x)}; ${nf(v.y)})` : nf(v);
+  let h;
+  if (L && L.length) h = `<table><thead><tr><th></th>${DS.map(d => `<th>${esc(d.label || '')}</th>`).join('')}</tr></thead><tbody>${L.map((l, i) => `<tr><th scope="row">${esc(Array.isArray(l) ? l.join(' ') : l)}</th>${DS.map(d => `<td class="num">${val(d.data[i])}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
+  else h = `<table><thead><tr><th>Serie</th><th>Punto</th></tr></thead><tbody>${DS.flatMap(d => d.data.map(p => `<tr><td>${esc(d.label || '')}</td><td class="num">${val(p)}</td></tr>`)).join('')}</tbody></table>`;
+  det.innerHTML = `<summary>Ver datos del gráfico</summary><div class="tw" style="margin-top:.4rem">${h}</div>`;
+}
+function aplicarAccesible() { document.body.classList.toggle('acc', !!state.accesible); const c = $('#chkAcc'); if (c) c.checked = !!state.accesible; }
+
+
+/* ====================================================================
  * Gráficos (Chart.js)
  * ==================================================================== */
 const cssv = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
@@ -1906,6 +2527,7 @@ function mk(id, config) {
   if (!window.Chart) return; const el = document.getElementById(id); if (!el) return;
   if (charts[id]) charts[id].destroy();
   charts[id] = new Chart(el, config);
+  try { tablaDatosGrafico(id); } catch (e) { }
 }
 const linea = (label, data, color, extra = {}) => Object.assign({ type: 'line', label, data, borderColor: color, backgroundColor: color, borderWidth: 2, pointRadius: 0, borderDash: [6, 4] }, extra);
 const yT = t => ({ title: { display: true, text: t } });
@@ -1929,16 +2551,16 @@ function chDIOEstados(id) {
   const dio = (s, sim) => sim.stockPromedio / s.dem * 30, u = state.params.umbralSobrestockDIO;
   mk(id, { type: 'bar', data: { labels: cmp.base.skus.map(s => s.sku), datasets: [
     { label: 'Base', data: cmp.base.skus.map(s => dio(s, s.sim)), backgroundColor: COL.b },
-    { label: 'Disrupción', data: cmp.disrupcion.skus.map(s => dio(s, s.sim)), backgroundColor: COL.d },
-    { label: 'Con estrategia', data: cmp.estrategia.skus.map(s => dio(s, s.sim)), backgroundColor: COL.e },
+    { label: 'Disrupción', data: cmp.disrupcion.skus.map(s => dio(s, s.sim)), backgroundColor: patron(COL.d, 'diag') },
+    { label: 'Con estrategia', data: cmp.estrategia.skus.map(s => dio(s, s.sim)), backgroundColor: patron(COL.e, 'dots') },
     linea(`Umbral (${u} d)`, cmp.base.skus.map(() => u), COL.meta)] },
     options: { scales: { y: yT('Días (promedio del mes)') }, plugins: { tooltip: { callbacks: { label: c => `${c.dataset.label}: ${nf(c.raw)} días` } } } } });
 }
 function chRutas(id, estados) {
   const rs = cmp.base.rutas, ds = estados ? [
     { label: 'OTIF base', data: rs.map(r => r.otifMes), backgroundColor: COL.b },
-    { label: 'OTIF disrupción', data: cmp.disrupcion.rutas.map(r => r.otifMes), backgroundColor: COL.d },
-    { label: 'OTIF con estrategia', data: cmp.estrategia.rutas.map(r => r.otifMes), backgroundColor: COL.e }] :
+    { label: 'OTIF disrupción', data: cmp.disrupcion.rutas.map(r => r.otifMes), backgroundColor: patron(COL.d, 'diag') },
+    { label: 'OTIF con estrategia', data: cmp.estrategia.rutas.map(r => r.otifMes), backgroundColor: patron(COL.e, 'dots') }] :
     [{ label: 'OTIF ruta (%)', data: rs.map(r => r.otif), backgroundColor: COL.b }];
   ds.push({ type: 'line', label: 'Costo por km ($)', data: X.rutas.map(r => r.costoKm), yAxisID: 'y1', borderColor: COL.warn, backgroundColor: COL.warn, pointRadius: 4, borderWidth: 2 });
   mk(id, { type: 'bar', data: { labels: rs.map(r => r.id), datasets: ds }, options: { scales: { y: Object.assign({ min: 50, max: 100 }, yT('OTIF (%)')), y1: Object.assign({ position: 'right', grid: { drawOnChartArea: false } }, yT('$ por km')) } } });
@@ -1961,20 +2583,21 @@ function chCanal(id, est) {
   mk(id, { type: 'bar', data: { labels: f.map(c => c.canal.replace(/\s*\(.*\)/, '')), datasets: ds }, options: { scales: { y: Object.assign({ min: 0, max: 100 }, yT('Perfect Order (%)')), y1: Object.assign({ position: 'right', min: 0, grid: { drawOnChartArea: false } }, yT('Devoluciones (%)')) } } });
 }
 function chRadar(id) {
-  const d = (st, lbl, c) => ({ label: lbl, data: KPIS.map(k => st.porKPI[k] * 100), borderColor: c, backgroundColor: rgba(c, .1), pointBackgroundColor: c, borderWidth: 2 });
+  const ps = { Base: 'circle', 'Disrupción': 'triangle', 'Con estrategia': 'rect' }, dash = { Base: [], 'Disrupción': [8, 4], 'Con estrategia': [2, 3] };
+  const d = (st, lbl, c) => ({ label: lbl, data: KPIS.map(k => st.porKPI[k] * 100), borderColor: c, backgroundColor: rgba(c, .1), pointBackgroundColor: c, borderWidth: 2, pointStyle: ps[lbl], pointRadius: 4, borderDash: state.accesible ? dash[lbl] : [] });
   mk(id, { type: 'radar', data: { labels: KPIS.map(k => KPI_MIN[k]), datasets: [d(cmp.base, 'Base', COL.b), d(cmp.disrupcion, 'Disrupción', COL.d), d(cmp.estrategia, 'Con estrategia', COL.e)] },
     options: { scales: { r: { min: 0, max: 100, ticks: { stepSize: 20, backdropColor: 'transparent' }, grid: { color: COL.grid }, angleLines: { color: COL.grid }, pointLabels: { color: COL.text } } }, plugins: { tooltip: { callbacks: { label: c => `${c.dataset.label}: ${nf(c.raw, 0)}%` } } } } });
 }
 function chIH(id, labels, vals, colors) {
   const B = state.params.bandasIH;
-  mk(id, { type: 'bar', data: { labels, datasets: [{ label: 'Índice de Homeostasis', data: vals, backgroundColor: colors },
+  mk(id, { type: 'bar', data: { labels, datasets: [{ label: 'Índice de Homeostasis', data: vals, backgroundColor: colors.map(c => c === COL.d ? patron(COL.d, 'diag') : c === COL.e ? patron(COL.e, 'dots') : c) },
     linea(`Equilibrio (${B.equilibrio})`, labels.map(() => B.equilibrio), COL.ok), linea(`Tensión (${B.tension})`, labels.map(() => B.tension), COL.warn)] },
     options: { scales: { y: { min: 0, max: 100 } }, plugins: { tooltip: { callbacks: { label: c => `${c.dataset.label}: ${nf(c.raw)}` } } } } });
 }
 function chKPI(id) {
   const idx = (st, k) => { const a = st.kpis[k].actual, m = st.kpis[k].meta; return M.KPI_DEF[k].mejor === 'mayor' ? a / m * 100 : m / a * 100; };
   const sts = [[cmp.base, 'Base', COL.b], [cmp.disrupcion, 'Disrupción', COL.d], [cmp.estrategia, 'Con estrategia', COL.e]];
-  mk(id, { type: 'bar', data: { labels: KPIS.map(k => KPI_MIN[k]), datasets: sts.map(([st, l, c]) => ({ label: l, data: KPIS.map(k => idx(st, k)), backgroundColor: c })).concat([linea('Meta (100)', KPIS.map(() => 100), COL.text)]) },
+  mk(id, { type: 'bar', data: { labels: KPIS.map(k => KPI_MIN[k]), datasets: sts.map(([st, l, c]) => ({ label: l, data: KPIS.map(k => idx(st, k)), backgroundColor: c === COL.d ? patron(c, 'diag') : c === COL.e ? patron(c, 'dots') : c })).concat([linea('Meta (100)', KPIS.map(() => 100), COL.text)]) },
     options: { scales: { y: Object.assign({ min: 0, suggestedMax: 110 }, yT('% de la meta alcanzado')) }, plugins: { tooltip: { callbacks: { label: c => { const st = sts[c.datasetIndex]; if (!st) return 'Meta'; const k = KPIS[c.dataIndex]; return `${st[1]}: ${fmtKPI(k, st[0].kpis[k].actual)} (meta ${fmtKPI(k, st[0].kpis[k].meta)}) → ${nf(c.raw, 0)}%`; } } } } } });
 }
 function chCascada(id) {
@@ -1991,8 +2614,8 @@ function chSim(id, conEstr) {
   const sku = skuSimSel(), i = cmp.base.skus.findIndex(s => s.sku === sku); if (i < 0) return;
   const s0 = cmp.base.skus[i], ser = x => x.serie.map(p => p.stock);
   const ds = [{ label: 'Base', data: ser(s0.simBase), borderColor: COL.b, backgroundColor: COL.b, borderWidth: 2, pointRadius: 0, tension: .15 },
-    { label: 'Disrupción', data: ser(cmp.disrupcion.skus[i].sim), borderColor: COL.d, backgroundColor: COL.d, borderWidth: 2, pointRadius: 0, tension: .15 }];
-  if (conEstr) ds.push({ label: 'Con estrategia', data: ser(cmp.estrategia.skus[i].sim), borderColor: COL.e, backgroundColor: COL.e, borderWidth: 2.5, pointRadius: 0, tension: .15 });
+    { label: 'Disrupción', data: ser(cmp.disrupcion.skus[i].sim), borderColor: COL.d, backgroundColor: COL.d, borderWidth: 2, pointRadius: state.accesible ? 3 : 0, pointStyle: 'triangle', borderDash: state.accesible ? [8, 4] : [], tension: .15 }];
+  if (conEstr) ds.push({ label: 'Con estrategia', data: ser(cmp.estrategia.skus[i].sim), borderColor: COL.e, backgroundColor: COL.e, borderWidth: 2.5, pointRadius: state.accesible ? 3 : 0, pointStyle: 'rect', borderDash: state.accesible ? [2, 3] : [], tension: .15 });
   ds.push(linea(`Stock de seguridad (${s0.ss})`, s0.simBase.serie.map(() => s0.ss), COL.warn, { borderWidth: 1.5 }));
   mk(id, { type: 'line', data: { labels: s0.simBase.serie.map(p => p.dia), datasets: ds }, options: { interaction: { mode: 'index', intersect: false }, scales: { x: yT(`Día del mes — ${sku} ${s0.desc}`), y: Object.assign({ min: 0 }, yT('Unidades en stock')) } } });
 }
@@ -2002,13 +2625,13 @@ const DRAW = {
   d_prov: id => chProv(id, false), db_prov: id => chProv(id, true),
   d_canal: id => chCanal(id, false), db_canal: id => chCanal(id, true),
   db_radar: chRadar, db_kpi: chKPI, db_cascada: chCascada, db_sim: id => chSim(id, true), e_sim: id => chSim(id, false),
-  o_front: chFront, s_tornado: chTornado, d_costos: chCostos,
+  o_front: chFront, dc_grupos: chGrupos, s_tornado: chTornado, d_costos: chCostos,
   db_ih: id => chIH(id, ['Base', 'Disrupción', 'Con estrategia'], [cmp.base.ih, cmp.disrupcion.ih, cmp.estrategia.ih], [COL.b, COL.d, COL.e]),
   e_ih: id => { const ks = Object.keys(ESC_META); chIH(id, ['Base', ...ks.map(k => ESC_META[k].id), 'Combinada'], [cmp.base.ih, ...ks.map(k => X.porEsc[k].ih), cmp.disrupcion.ih], [COL.b, ...ks.map(() => rgba(COL.d, .55)), COL.d]); }
 };
 function dibujar() {
   if (!cmp || !window.Chart) return; prepararCharts();
-  for (const id of Object.keys(DRAW)) if (document.getElementById(id)) { try { DRAW[id](id); } catch (e) { console.error(id, e); } }
+  for (const id of Object.keys(DRAW)) { const el = document.getElementById(id); if (el && !el.closest('[hidden]')) { try { DRAW[id](id); } catch (e) { console.error(id, e); } } }
 }
 
 /* ====================================================================
@@ -2065,7 +2688,8 @@ function checklist() {
     ['Dashboard integrado (tres estados calculados)', !!(cmp && !calcError), ''],
     ['Matriz de decisiones estratégicas (≥ 1 estrategia)', estActivas().length > 0, 'Activa al menos una estrategia'],
     ['Evaluación de sinergia y homeostasis (IH y recuperación)', !!(cmp && cmp.recuperacion !== null), 'Requiere una disrupción que reduzca el IH'],
-    ['Justificación de pesos del IH (si se cambiaron)', !cambiados || !!state.justificacionPesos.trim(), 'Escribe la justificación en Supuestos']
+    ['Justificación de pesos del IH (si se cambiaron)', !cambiados || !!state.justificacionPesos.trim(), 'Escribe la justificación en Supuestos'],
+    ['Decisiones justificadas en la bitácora (palancas activas)', estActivas().length > 0 && sinJustificar().length === 0, sinJustificar().length ? `Faltan: ${sinJustificar().map(k => EST_CORTO[k]).join(', ')}` : '']
   ];
 }
 VISTAS.exportar = () => {
@@ -2076,7 +2700,8 @@ VISTAS.exportar = () => {
     <div class="card"><h3>Checklist de la actividad</h3>
       <ul class="clean check">${cl.map(([t, b, h]) => `<li>${b ? '<span class="tag ok">✓</span>' : '<span class="tag bad">✕</span>'} ${esc(t)}${!b && h ? ` <span class="tiny muted">— ${esc(h)}</span>` : ''}</li>`).join('')}</ul>
       <div class="banner ${ok ? 'ok' : 'warn'}">${ok ? 'Listo: el análisis tiene los cuatro componentes del informe (diagnóstico, dashboard, matriz y homeostasis).' : 'Completa los puntos pendientes antes de exportar el informe.'}</div>
-      <p class="small muted">El Informe Ejecutivo Gerencial se genera a partir del JSON o XLSX exportado, para que todas sus cifras coincidan con el aplicativo.</p></div>
+      <p class="small muted">El Informe Ejecutivo Gerencial se genera a partir del JSON o XLSX exportado, para que todas sus cifras coincidan con el aplicativo. El <strong>borrador</strong> trae la estructura, las tablas y los gráficos; los recuadros amarillos son para la interpretación del comité.</p>
+      <div class="row small"><span>Autoevaluación de conceptos: ${state.quiz && state.quiz.calificado ? `<strong>${state.quiz.puntaje}/${QUIZ.length}</strong>` : 'pendiente'}</span><button class="btn sm" type="button" data-act="quiz">${state.quiz && state.quiz.calificado ? 'Ver o repetir el quiz' : 'Hacer el quiz'}</button><span class="muted">Reflexiones: ${reflexRespondidas(state)}/${reflexTotal}</span></div></div>
     <div class="card"><h3>Descargas</h3>
       <div class="grid" style="gap:.5rem">
         <button class="btn" type="button" data-act="csv">CSV en formato template (secciones 1 a 7)</button>
@@ -2084,13 +2709,17 @@ VISTAS.exportar = () => {
         <button class="btn" type="button" data-act="json">JSON del estado completo</button>
         <button class="btn" type="button" data-act="pngs" ${window.Chart ? '' : 'disabled'}>PNG de todos los gráficos del dashboard</button>
         <button class="btn" type="button" data-act="imprimir">Vista imprimible / PDF</button>
+        <button class="btn primary" type="button" data-act="borrador">Borrador del Informe Ejecutivo (Word)</button>
+        <button class="btn" type="button" data-act="borradorHtml">Borrador del informe en el navegador</button>
+        <button class="btn" type="button" data-act="offline">Descargar versión sin internet (1 archivo)</button>
       </div></div>
     <div class="card"><h3>Compartir</h3>
       <p class="small">El link guarda el análisis completo comprimido en la URL (después de #). No pasa por ningún servidor y no requiere cuenta ni login.</p>
       <div class="row"><button class="btn primary" type="button" data-act="link">Copiar link de este análisis</button><button class="btn" type="button" data-act="abrirJson">Abrir JSON</button></div>
       <p class="tiny muted" style="margin-top:.5rem">Si el link supera ~8.000 caracteres, descarga el JSON y compártelo como archivo. Tamaño actual: ${window.LZString ? nf(linkDelEstado().largo, 0) : '—'} caracteres.</p></div>
     <div class="card"><h3>Guardado</h3><p class="small">El análisis se guarda automáticamente en este navegador (si el almacenamiento está disponible). "Reiniciar" lo borra y carga el caso demo.</p><button class="btn" type="button" data-act="reiniciar">Reiniciar</button></div>
-  </div>`;
+  </div>
+  ${vistaRubrica()}`;
 };
 function descargar(nombre, contenido, tipo) {
   const blob = contenido instanceof Blob ? contenido : new Blob([contenido], { type: tipo });
@@ -2133,7 +2762,8 @@ function resultados() {
     hallazgos: X.hall, brechas: brechas().map(([a, b]) => ({ brecha: a, tratamiento: b })), supuestos: cmp.estrategia.supuestos, checklist: checklist().map(([t, b]) => ({ item: t, ok: b })) };
 }
 function exportarJSON() {
-  const obj = Object.assign({}, state, { propiedadIntelectual: PI_AVISO, version: VERSION, exportado: new Date().toISOString(), resultados: cmp ? resultados() : null });
+  const preds = (state.bitacora || []).filter(e => e.prediccion);
+  const obj = Object.assign({}, state, { propiedadIntelectual: PI_AVISO, version: VERSION, prediccionesResumen: { total: preds.length, aciertosKPI: preds.filter(e => e.prediccion.aciertoDir).length, aciertosIH: preds.filter(e => e.prediccion.aciertoIH).length }, exportado: new Date().toISOString(), resultados: cmp ? resultados() : null });
   descargar(`SIG_LogiTech_analisis_${sello()}.json`, JSON.stringify(obj, null, 2), 'application/json');
 }
 function exportarXLSX() {
@@ -2155,8 +2785,10 @@ function exportarXLSX() {
     ['Tasa de recuperación (%)', cmp.recuperacion ?? 'No aplica'], ['Costo neto de las estrategias ($/mes)', cmp.costoEstrategias], ['Costo de la homeostasis ($ por punto de IH)', cmp.costoHomeostasis ?? 'No aplica'], ['Sinergia neta (pts IH)', r1(X.sinergia)], [],
     ['Definición', 'IH = 100 × Σ peso × cumplimiento; cumplimiento con tope en 1. Indicador propuesto por el comité, no proviene del documento de la actividad.'], ['Bandas', `≥ ${state.params.bandasIH.equilibrio} Equilibrio; ${state.params.bandasIH.tension}-${state.params.bandasIH.equilibrio} Tensión; < ${state.params.bandasIH.tension} Desequilibrio`], ['Justificación de pesos', state.justificacionPesos || 'Pesos iguales: neutralidad entre roles'],
     [], ['Sinergias'], ...sinergias().map(s => [s.replace(/<[^>]+>/g, '')])], [48, 14, 14, 16]);
-  add('Matriz', [['Rol', 'Decisión', 'Dato del SIG', 'KPI impactado', 'Base', 'Disrupción', 'Con estrategia', 'Costo $/mes', 'Δ IH'],
-    ...matrizFilas().map(r => [r.rol, r.decision, r.dato, r.kpi, r.base, r.disr, r.estr, r1(r.costo), r1(r.dIH)]), ['Conjunto', '', '', '', '', '', '', r1(cmp.costoEstrategias), r1(X.conjunto)]], [32, 50, 60, 24, 8, 10, 14, 12, 8]);
+  add('Matriz', [['Rol', 'Decisión', 'Dato del SIG', 'KPI impactado', 'Base', 'Disrupción', 'Con estrategia', 'Costo $/mes', 'Δ IH', 'Justificación (bitácora)'],
+    ...matrizFilas().map(r => [r.rol, r.decision, r.dato, r.kpi, r.base, r.disr, r.estr, r1(r.costo), r1(r.dIH), r.justificacion]), ['Conjunto', '', '', '', '', '', '', r1(cmp.costoEstrategias), r1(X.conjunto)]], [32, 50, 60, 24, 8, 10, 14, 12, 8, 60]);
+  add('Bitácora', [['Fecha', 'Tipo', 'Decisión', 'Cambio', 'Rol', 'Dato del SIG', 'IH antes', 'IH después', 'Justificación', 'Predicción KPI', 'Predicción', 'Real', '¿Acierto KPI?', 'Predicción IH', 'Real IH', '¿Acierto IH?'],
+    ...(state.bitacora || []).map(e => { const p = e.prediccion; return [e.ts, e.tipo, e.item, e.cambio, e.rol, e.dato, e.ihAntes, e.ihDespues, e.justificacion, p ? KPI_CORTO[p.kpi] : '', p ? DIR_LBL[p.dir] + (p.mag != null ? ' ' + p.mag : '') : '', p ? DIR_LBL[p.real.dir] + ' ' + p.real.delta : '', p ? (p.aciertoDir ? 'Sí' : 'No') : '', p ? DIR_LBL[p.ih] : '', p ? DIR_LBL[p.real.ih] + ' ' + p.real.deltaIH : '', p ? (p.aciertoIH ? 'Sí' : 'No') : '']; })], [20, 12, 36, 24, 26, 40, 9, 10, 60, 18, 14, 14, 10, 12, 12, 10]);
   const o = optimizar();
   add('Optimizador', [['Criterio / combinación', 'Estrategias', 'Costo neto $/mes', 'IH', 'Banda', '$ por punto de IH', 'En frontera'],
     ...[['Selección actual', o.actual], ['Máximo IH', o.maxIH], ['Mejor costo por punto', o.eficiente], ['Mejora y ahorra', o.ahorran], ['Más barata en Tensión', o.tension], ['Más barata en Equilibrio', o.equilibrio]].map(([l, r]) => r ? [l, nombresCombo(r), Math.round(r.costo), r.ih, r.banda, r.cpp == null ? '' : Math.round(r.cpp), r.frontera ? 'Sí' : 'No'] : [l, 'No existe']), [],
@@ -2168,6 +2800,11 @@ function exportarXLSX() {
     ['Lead time (días)', X.cont.estrategia.kpis.leadTime.actual, X.estr.estrategia.kpis.leadTime.actual], ['Costo logístico %', X.cont.estrategia.kpis.costo.actual, X.estr.estrategia.kpis.costo.actual], ['Costo neto $/mes', X.cont.costoEstrategias, X.estr.costoEstrategias]], [30, 18, 18]);
   if (X.desg) add('Costos', [['Componente', '$/mes', '% del total'], ...X.desg.componentes.map(c => [c.lbl, c.valor, Math.round(c.valor / X.desg.total * 1000) / 10]), ['Total desglose', X.desg.total], ['Costo reportado (ventas × %)', X.desg.reportado], ['Diferencia %', X.desg.diferenciaPct], [],
     ['Costo de transporte por unidad', X.desg.costoTransportePorUnidad], ['Almacenamiento por unidad en stock', X.desg.costoAlmacenPorUnidad], ['Costo de mantener inventario % anual', X.desg.tasaMantenerAnualPct]], [40, 14, 12]);
+  add('Reflexiones', [['Módulo', 'Pregunta', 'Respuesta'], ...REFLEX_TABS.flatMap(t => REFLEX[t].map((q, i) => [t, q, ((state.reflexiones || {})[t] || {})[i] || '']))], [14, 70, 90]);
+  const rub = evaluarRubrica(state, { enFrontera: !!optimizar().actual.frontera });
+  add('Rúbrica', [['Criterio', 'Qué se evalúa', 'Evidencia', 'Nivel sugerido', 'Autoevaluación'], ...rub.map(r => [r.n, r.d, r.evidencia, `${r.sugerido} ${NIVELES[r.sugerido]}`, r.auto ? `${r.auto} ${NIVELES[r.auto]}` : ''])], [30, 60, 50, 16, 16]);
+  if (state.quiz && state.quiz.calificado) add('Quiz', [['Pregunta', 'Respuesta', 'Correcta', '¿Acierto?'], ...QUIZ.map((q, i) => [q[0], q[1][state.quiz.resp[i]] || '', q[1][q[2]], state.quiz.resp[i] === q[2] ? 'Sí' : 'No']), [], ['Puntaje', `${state.quiz.puntaje}/${QUIZ.length}`]], [60, 40, 40, 10]);
+  const PL = state.planes || {}; if (PL.A || PL.B) add('Planes', [['Plan', 'Palancas', 'IH con estrategia', 'Recuperación', 'Costo $/mes'], ...['A', 'B'].filter(L => PL[L]).map(L => { const c = M.compararEstados(state.data, { params: PL[L].params, escenarios: PL[L].escenarios, estrategias: PL[L].estrategias }); return [PL[L].nombre, Object.keys(PL[L].estrategias).filter(k => PL[L].estrategias[k].activo).map(k => EST_CORTO[k]).join(', '), c.estrategia.ih, c.recuperacion, Math.round(c.costoEstrategias)]; })], [20, 60, 16, 14, 14]);
   add('Supuestos', [['Tipo', 'Elemento', 'Valor / detalle'], ...cmp.estrategia.supuestos.map(s => ['Supuesto', s.supuesto, s.valor]),
     ...Object.keys(EST_META).flatMap(k => EST_META[k].params.map(p => ['Supuesto (estrategia)', `${EST_META[k].n} · ${p[1]}`, String(state.estrategias[k][p[0]] ?? 'base')])),
     ...X.hall.map(h => ['Hallazgo de calidad de datos', `${h.area} · ${h.item}`, h.h]), ...brechas().map(([a, b]) => ['Brecha de información', a, b])], [28, 50, 90]);
@@ -2177,11 +2814,11 @@ function exportarXLSX() {
 function descargarPNG(id) { const c = charts[id]; if (!c) return; const a = document.createElement('a'); a.href = c.toBase64Image('image/png', 1); a.download = `SIG_${id}.png`; document.body.appendChild(a); a.click(); a.remove(); }
 function exportarPNGs() { ir('dashboard'); setTimeout(() => Object.keys(charts).forEach((id, i) => setTimeout(() => descargarPNG(id), i * 350)), 400); toast('Descargando los PNG de los gráficos del dashboard…'); }
 function imprimir() {
-  Object.keys(charts).forEach(k => { charts[k].destroy(); delete charts[k]; });
+  Object.keys(charts).forEach(k => { charts[k].destroy(); delete charts[k]; }); PRINT_ALL = true;
   const mods = ['diagnostico', 'escenarios', 'estrategias', 'dashboard', 'supuestos'];
   $('#main').innerHTML = `<div class="print-only"><h1>SIG-Logístico · LogiTech Solutions S.A.</h1><p>Análisis del Comité de Decisiones Logísticas — ${esc(state.origen)} — ${sello()} — ${VERSION}</p></div>` + mods.map(m => `<section class="mod">${VISTAS[m]()}</section>`).join('');
   document.querySelectorAll('#main details').forEach(d => d.open = true);
-  dibujar();
+  dibujar(); PRINT_ALL = false;
   setTimeout(() => { try { window.print(); } catch (e) { } }, 400);
 }
 window.addEventListener('afterprint', () => render());
@@ -2196,11 +2833,17 @@ const ACC = {
   demo: () => { state.data = M.parseTemplateCSV(DEMO_CSV); state.origen = 'Caso demo LogiTech'; compartido = false; recalc(); toast('Caso demo LogiTech cargado.'); },
   reiniciar: reiniciar,
   usarEstimado: () => { state.data.ventas = { valor: M.estimarVentas(state.data, state.params.margen), fuente: 'Estimado' }; recalc(); toast('Ventas estimadas: se tratan como supuesto en todos los cálculos.'); },
-  todas: () => { for (const k in state.estrategias) state.estrategias[k].activo = true; recalc(); },
-  ninguna: () => { for (const k in state.estrategias) state.estrategias[k].activo = false; recalc(); },
+  todas: () => { const f = registrarMasivo('Activar todas las palancas'); for (const k in state.estrategias) state.estrategias[k].activo = true; recalc(); f(); },
+  ninguna: () => { const f = registrarMasivo('Desactivar todas las palancas'); for (const k in state.estrategias) state.estrategias[k].activo = false; recalc(); f(); },
   png: el => descargarPNG(el.dataset.id),
   conservar: () => { compartido = false; history.replaceState(null, '', location.pathname + location.search); guardar(); render(); toast('Ahora es tu análisis: se guarda en este navegador.'); },
-  csv: exportarCSV, xlsx: exportarXLSX, json: exportarJSON, pngs: exportarPNGs, imprimir: imprimir,
+  csv: () => { state.exportado = true; exportarCSV(); render(); }, xlsx: () => { state.exportado = true; exportarXLSX(); render(); }, json: () => { state.exportado = true; exportarJSON(); render(); },
+  guardarJustif: guardarJustif, cerrarJustif: () => { $('#justif').classList.add('hidden'); justifId = null; },
+  predCancelar: () => { pendientePred = null; $('#dlgPred').close(); }, predSin: () => ejecutarPrediccion(false), predSimular: () => ejecutarPrediccion(true), predCerrar: () => { $('#dlgPred').close(); render(); },
+  justificarK: el => { const k = el.dataset.k; const e = registrar({ tipo: 'Estrategia', k, item: EST_META[k].n, cambio: 'activa (justificación posterior)', rol: state.estrategias[k].rol, dato: datoSIG(k), ihAntes: cmp.disrupcion.ih, ihDespues: X.porEst[k].ih }); mostrarJustif(e); },
+  delBit: el => { if (!confirmar('¿Eliminar este registro de la bitácora?')) return; state.bitacora.splice(Number(el.dataset.i), 1); guardar(); render(); },
+  variante: () => generarVariante(($('#fVar') || {}).value),
+  menu: () => $('header.top').classList.toggle('menu-open'), pngs: exportarPNGs, imprimir: imprimir,
   link: copiarLink, abrirJson: () => $('#fileJSON').click(),
   addKPI: () => { state.data.kpisExtra.push({ ind: '', actual: null, meta: null, estado: '', responsable: '', unidad: '%', mejor: 'mayor' }); recalc(); },
   delKPI: el => { if (!confirmar('¿Eliminar este indicador adicional?')) return; state.data.kpisExtra.splice(Number(el.dataset.i), 1); recalc(); },
@@ -2209,21 +2852,45 @@ const ACC = {
   tplXlsx: () => descargarTemplate('xlsx'), tplCsv: () => descargarTemplate('csv'),
   costosIlustrativos: () => { for (const [k, v] of Object.entries(COSTOS_ILUSTRATIVOS)) { state.data.costos[k] = v; state.data.costosFuente[k] = 'Ilustrativo (supuesto)'; } recalc(); toast('Valores ilustrativos cargados y marcados como supuesto. Son coherentes con el caso (suman ≈ 14,2% de las ventas), pero no son datos del SIG.'); },
   limpiarCostos: () => { state.data.costos = {}; state.data.costosFuente = {}; recalc(); toast('Costos de la sección 8 eliminados: se vuelve a los supuestos por defecto.'); },
-  aplicarCombo: el => { const m = Number(el.dataset.mask); Object.keys(M.ESTRATEGIAS_DEFAULT).forEach((k, i) => state.estrategias[k].activo = !!(m >> i & 1)); recalc(); toast('Combinación aplicada.'); },
-  activarE8: () => { state.estrategias.e8_estructural.activo = true; recalc(); toast('Plan estructural de compras activado.'); },
+  aplicarCombo: el => { const f = registrarMasivo('Aplicar combinación del optimizador'); const m = Number(el.dataset.mask); Object.keys(M.ESTRATEGIAS_DEFAULT).forEach((k, i) => state.estrategias[k].activo = !!(m >> i & 1)); recalc(); f(); },
+  activarE8: () => { const f = registrarMasivo('Activar plan estructural de compras'); state.estrategias.e8_estructural.activo = true; recalc(); f(); },
   verGuia: () => { state.verGuia = true; render(); }, ocultarGuia: () => { state.verGuia = false; render(); },
   guia: () => { $('#guiaB').innerHTML = htmlGuia(); const d = $('#dlgGuia'); if (d.showModal) d.showModal(); else d.setAttribute('open', ''); },
+  quiz: abrirQuiz, quizCerrar: () => $('#dlgQuiz').close(),
+  quizCalificar: () => { const Q = state.quiz = state.quiz || { resp: {} }; Q.puntaje = QUIZ.filter((q, i) => Q.resp[i] === q[2]).length; Q.calificado = true; Q.fecha = new Date().toISOString(); guardar(); abrirQuiz(); renderTabs(); },
+  quizReset: () => { state.quiz = { resp: {} }; guardar(); abrirQuiz(); },
+  borrador: () => generarBorrador('doc'), borradorHtml: () => generarBorrador('html'),
+  sub: el => { state.sub = Object.assign(state.sub || {}, { [el.dataset.st]: el.dataset.sv }); guardar(); render(); },
+  guardarPlan: el => guardarPlan(el.dataset.l), cargarPlan: el => cargarPlan(el.dataset.l),
+  undo: deshacer, redo: rehacer,
+  docente: () => ir('docente'), cargarEntregas: () => $('#fileGrupos').click(), exportarEntregas: exportarEntregas, limpiarEntregas: () => { ENTREGAS = []; render(); },
+  abrirEntrega: el => { const g = ENTREGAS[Number(el.dataset.i)]; if (!confirmar(`¿Abrir el análisis de ${g.grupo}? Reemplaza el análisis de este navegador (puedes deshacer).`)) return; pushHist(); state = Object.assign(normalizarEstado(clone(g.estado)), { tab: 'dashboard' }); recalc(); },
+  linkClase: async () => { const p = payloadClase({ mensaje: $('#lkMsg').value, exigirVariante: $('#lkVar').checked, bloqueos: { motor: $('#lkMotor').checked, pesos: $('#lkPesos').checked, escenarios: $('#lkEsc').checked, datos: $('#lkDatos').checked } });
+    const url = location.origin + location.pathname + '#clase=' + LZString.compressToEncodedURIComponent(JSON.stringify(p));
+    try { await navigator.clipboard.writeText(url); toast(`Link de la clase copiado (${url.length} caracteres).`); } catch (e) { window.prompt('Copia este link:', url); } },
+  jsonClase: () => descargar(`Configuracion_clase_${sello()}.json`, JSON.stringify(payloadClase({ mensaje: $('#lkMsg').value, exigirVariante: $('#lkVar').checked, bloqueos: { motor: $('#lkMotor').checked, pesos: $('#lkPesos').checked, escenarios: $('#lkEsc').checked, datos: $('#lkDatos').checked } }), null, 2), 'application/json'),
+  quitarClase: () => { if (!confirmar('¿Quitar la configuración de la clase de este navegador?')) return; delete state.clase; guardar(); render(); },
+  offline: () => { const a = document.createElement('a'); a.href = 'SIG_Logistico_sin_internet.html'; a.download = 'SIG_Logistico_sin_internet.html'; document.body.appendChild(a); a.click(); a.remove(); },
   restaurarSupuestos: () => { state.params = clone(M.PARAMS_DEFAULT); state.pesosBorrador = pesosAPct(M.PARAMS_DEFAULT.pesosIH); const e = state.escenarios, s = state.estrategias; state.escenarios = clone(M.ESCENARIOS_DEFAULT); state.estrategias = clone(M.ESTRATEGIAS_DEFAULT); for (const k in e) state.escenarios[k].activo = e[k].activo; for (const k in s) state.estrategias[k].activo = s[k].activo; recalc(); toast('Supuestos restaurados a los valores por defecto.'); }
 };
 document.addEventListener('click', e => {
   const t = e.target.closest('[data-tab]'); if (t) { e.preventDefault(); ir(t.dataset.tab); return; }
-  const a = e.target.closest('[data-act]'); if (a && ACC[a.dataset.act]) { e.preventDefault(); ACC[a.dataset.act](a); }
+  const a = e.target.closest('[data-act]'); if (a && ACC[a.dataset.act]) { e.preventDefault(); const act = a.dataset.act;
+    if (accionBloqueada(act)) { toast('Esta acción la fijó el docente para la clase.'); return; }
+    if (MUTA.has(act)) pushHist(); ACC[act](a); }
 });
 document.addEventListener('input', e => { const el = e.target; if (el.dataset && el.dataset.type && el.tagName === 'INPUT' && el.type !== 'checkbox') mascara(el); });
 document.addEventListener('change', e => {
-  const el = e.target; if (!el.dataset || !el.dataset.path) return;
+  const el = e.target;
+  if (el.dataset && el.dataset.quiz !== undefined) { state.quiz = state.quiz || { resp: {} }; state.quiz.resp[el.dataset.quiz] = Number(el.value); guardar(); return; }
+  if (el.dataset && el.dataset.actChk === 'accesible') { state.accesible = el.checked; Object.keys(PAT).forEach(k => delete PAT[k]); guardar(); render(); return; }
+  if (el.dataset && el.dataset.actChk === 'modoPred') { state.modoPrediccion = el.checked; guardar(); toast(el.checked ? 'Se pedirá una predicción al activar escenarios y estrategias.' : 'Predicciones desactivadas.'); return; }
+  if (!el.dataset || !el.dataset.path) return;
+  if (isLocked(el.dataset.path)) { toast('Este valor lo fijó el docente para la clase.'); render(); return; }
+  if (!/^(skuSim|estadoCascada|sensPct|rubrica\.|reflexiones\.|planes\.)/.test(el.dataset.path)) pushHist();
   if (el.dataset.type === 'pick' && onPicklist(el)) return;
   const path = el.dataset.path, v = leerValor(el);
+  if (interceptarCambio(el, path, v)) return;
   if (path.startsWith('pesosBorrador.')) { setPath(state, path, v ?? 0); aplicarPesos(); }
   else setPath(state, path, v);
   setTimeout(() => recalc(), 0);
@@ -2237,6 +2904,7 @@ $('#tabs').addEventListener('keydown', e => {
 $('#selRol').addEventListener('change', e => { state.rol = e.target.value; guardar(); render(); });
 $('#btnShare').addEventListener('click', copiarLink);
 $('#fileData').addEventListener('change', e => { const f = e.target.files[0]; if (f) leerArchivoDatos(f); e.target.value = ''; });
+$('#fileGrupos').addEventListener('change', e => { const fs = [...e.target.files]; e.target.value = ''; if (fs.length) cargarEntregas(fs); });
 $('#fileJSON').addEventListener('change', async e => {
   const f = e.target.files[0]; e.target.value = ''; if (!f) return;
   try { const o = JSON.parse(await f.text()); if (!o || o.esquema !== ESQUEMA || !o.data) { toast('El JSON no corresponde a este aplicativo o es de otra versión.'); return; }
@@ -2274,10 +2942,12 @@ $('#dlgClose').addEventListener('click', () => $('#dlg').close());
   try { const t = localStorage.getItem('sig-tema'); if (t) document.documentElement.dataset.theme = t; } catch (e) { }
   $('#ver').textContent = `${VERSION} · ${FECHA}`;
   $('#selRol').innerHTML = Object.entries(ROLES).map(([k, r]) => `<option value="${k}">${esc(r.n)}</option>`).join('');
-  const sh = window.LZString ? estadoDesdeURL() : null;
+  const sh = window.LZString ? estadoDesdeURL() : null, cl = claseDesdeURL();
   if (sh) { state = normalizarEstado(sh); compartido = true; }
   else { const g = cargarGuardado(); state = g ? normalizarEstado(g) : estadoInicial(); }
+  if (cl) { aplicarClase(cl); history.replaceState(null, '', location.pathname + location.search); }
   recalc();
+  if (cl) toast('Configuración de la clase aplicada: algunos valores quedan fijados por el docente.');
   if (!window.Chart || !window.XLSX || !window.LZString) toast('Algunas librerías no cargaron (¿sin internet?): los gráficos o exportaciones pueden no estar disponibles; el cálculo funciona igual.');
   else if (compartido) toast('Estás viendo un análisis compartido.');
 })();
