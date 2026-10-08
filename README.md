@@ -1,6 +1,6 @@
 # Aplicativo SIG-Logístico — LogiTech Solutions S.A.
 
-Versión: v1.4.1 — Fecha: 2026-10-07
+Versión: v1.5.0 — Fecha: 2026-10-07
 
 Publicado en: https://aihyperplane.github.io/sig-logistico/
 
@@ -14,6 +14,14 @@ Aplicativo web para resolver la actividad "Estrategas de la Cadena de Suministro
 5. **Dashboard** — IH de Base / Disrupción / Con estrategia, recuperación, costo de la homeostasis, scorecard, 10 gráficos, vista por rol, matriz de decisiones y sinergias. Cada cifra tiene "ver cálculo".
 6. **Supuestos** — parámetros del motor, pesos y bandas del Índice de Homeostasis, y análisis de sensibilidad.
 7. **Exportar** — checklist de la actividad, CSV (template), XLSX, JSON, PNG, vista imprimible y link para compartir.
+
+### Novedades v1.5.0
+- **Página de inicio** (`index.html`) con propósito, cómo funciona, el caso, los roles, el Índice de Homeostasis animado y la sección para docentes. El simulador pasa a `simulador.html`; los links `#estado=` y `#clase=` que lleguen a `index.html` se redirigen solos al simulador.
+- **Nuevo logo** ("Ruta en S") y paleta azul petróleo / verde azulado / ámbar.
+- **Navegación por fases** (Preparar, Simular, Evaluar): barra lateral en computador, fila horizontal en tableta y barra inferior de fases en celular.
+- **Índice de Homeostasis siempre visible** en el encabezado y **menú Herramientas** con las funciones secundarias.
+- **Bienvenida** al primer ingreso (estudiante/docente, rol, modo y datos) y **modo guiado / experto**, que el docente puede fijar en el link de la clase.
+- **Datos en acordeón** con el estado de validación de cada sección.
 
 ### v1.4.1
 - Corrección: botones de descarga del módulo Exportar se ajustan al ancho del celular.
@@ -53,16 +61,16 @@ Valores de control del caso demo: IH base 67,0 (Desequilibrio, KPI más débil: 
 © 2026 AI HYPERPLANE S.A.S. Propiedad intelectual de AI HYPERPLANE S.A.S. El simulador puede usarse libremente con fines académicos y educativos, citando la fuente; cualquier otro uso requiere autorización escrita. Ver `TERMINOS_DE_USO.md`.
 
 ## Archivos del sitio
-`index.html` (simulador), `SIG_Logistico_sin_internet.html` (misma versión con librerías incluidas), `manual.html` + carpeta `manual/img/` (manual), `Manual_SIG_Logistico.pdf`, `SIG_Logistico_template_referencia.xlsx` y `.csv`, `staticwebapp.config.json`, `.nojekyll`.
+`index.html` (página de inicio) + carpeta `inicio/img/`, `simulador.html` (simulador), `SIG_Logistico_sin_internet.html` (simulador con librerías incluidas), `manual.html` + carpeta `manual/img/` (manual), `Manual_SIG_Logistico.pdf`, `SIG_Logistico_template_referencia.xlsx` y `.csv`, `staticwebapp.config.json`, `.nojekyll`.
 
 ## Uso
-1. Abrir el link. Para ver el caso de ejemplo: botón "Cargar caso demo" (se carga solo la primera vez).
+1. Abrir el link: la página de inicio explica el ejercicio; "Abrir el simulador" lleva a `simulador.html`. La primera vez aparece la bienvenida (perfil, rol, modo y datos).
 2. Cargar el CSV del SIG (formulario de captura o template) o capturar los datos.
 3. Activar escenarios y estrategias, revisar el dashboard y exportar.
 4. "Copiar link de este análisis" genera un link que reproduce el análisis exacto.
 
 ## Publicar en Azure Static Web Apps (plan Free)
-1. Crear un repositorio en GitHub y subir `index.html` y `staticwebapp.config.json` a la raíz.
+1. Crear un repositorio en GitHub y subir a la raíz `index.html`, `simulador.html`, las carpetas `inicio/` y `manual/` y `staticwebapp.config.json`.
 2. En portal.azure.com: Crear recurso → Static Web App → plan Free → Origen: GitHub → seleccionar repo y rama `main`.
 3. Detalles de compilación: Preset "Custom", App location `/`, Api location vacío, Output location vacío.
 4. Crear. Azure agrega un flujo de GitHub Actions; al terminar, la URL aparece en la página del recurso (`https://<nombre>.azurestaticapps.net`).
@@ -81,7 +89,7 @@ El token se obtiene en el recurso → "Administrar token de implementación". No
 3. URL: `https://<usuario>.github.io/<repositorio>/` (tarda uno o dos minutos la primera vez).
 
 ## Uso local
-Abrir `index.html` con doble clic. Necesita internet solo para descargar las librerías (Chart.js, SheetJS, PapaParse, lz-string) desde cdnjs; sin ellas el cálculo funciona, pero no los gráficos ni las exportaciones XLSX. Sin conexión, usar `SIG_Logistico_sin_internet.html`.
+Abrir `simulador.html` con doble clic. Necesita internet solo para descargar las librerías (Chart.js, SheetJS, PapaParse, lz-string) desde cdnjs; sin ellas el cálculo funciona, pero no los gráficos ni las exportaciones XLSX. Sin conexión, usar `SIG_Logistico_sin_internet.html`.
 
 ## Actualizar
-En el repositorio: Add file → Upload files → arrastrar los archivos nuevos (`index.html`, `SIG_Logistico_sin_internet.html`, `manual.html`, `manual/img/`, PDF) → Commit. Subir la versión en el pie (constante `VERSION`) y en este README, hacer push. Los links compartidos (`#estado=`) de versiones anteriores siguen abriendo mientras no cambie el esquema del estado.
+En el repositorio: Add file → Upload files → arrastrar los archivos nuevos (`index.html`, `simulador.html`, `SIG_Logistico_sin_internet.html`, `manual.html`, carpetas `inicio/` y `manual/`, PDF) → Commit. Subir la versión en el pie (constante `VERSION`) y en este README, hacer push. Los links compartidos (`#estado=`) de versiones anteriores siguen abriendo mientras no cambie el esquema del estado.

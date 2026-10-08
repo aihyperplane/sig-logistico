@@ -6,29 +6,32 @@
 <title>SIG-Logístico · LogiTech Solutions S.A. (sin internet)</title>
 <meta name="description" content="Simulador académico del Comité de Decisiones Logísticas: diagnóstico, disrupciones, estrategias e Índice de Homeostasis. Propiedad intelectual de AI HYPERPLANE S.A.S.">
 <meta name="author" content="AI HYPERPLANE S.A.S.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230f6e7a'/%3E%3Cpath d='M7 21h6v-6h6v-6h6' stroke='white' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='64' height='64' rx='15' fill='%230B3A53'/%3E%3Cpath d='M45 17 H25 a8.5 8.5 0 0 0 0 17 H39 a8.5 8.5 0 0 1 0 17 H21' fill='none' stroke='%2314B8A6' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='47' cy='17' r='5' fill='%23F59E0B'/%3E%3Ccircle cx='19' cy='51' r='5' fill='none' stroke='%2314B8A6' stroke-width='3.4'/%3E%3C/svg%3E">
 <style>
 :root{
-  --bg:#f4f6f8; --surface:#ffffff; --surface-2:#eef2f5; --text:#16212b; --muted:#5b6b7a; --border:#d9e0e6;
-  --accent:#0f6e7a; --accent-ink:#ffffff; --accent-soft:#e1f1f2;
+  --bg:#f3f6f8; --surface:#ffffff; --surface-2:#edf2f5; --text:#0f2533; --muted:#587080; --border:#d8e1e7;
+  --brand:#0B3A53; --brand-2:#14B8A6; --amber:#F59E0B;
+  --accent:#0E7C74; --accent-ink:#ffffff; --accent-soft:#dff4f1;
   --c-base:#2f64b0; --c-disr:#c2410c; --c-estr:#0f8a5f; --c-meta:#6b7280;
   --ok:#15803d; --warn:#b45309; --bad:#b91c1c; --ok-bg:#e7f6ec; --warn-bg:#fdf3e1; --bad-bg:#fde8e8;
-  --shadow:0 1px 2px rgba(16,24,40,.06),0 1px 3px rgba(16,24,40,.08);
-  --radius:12px; --font:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --shadow:0 1px 2px rgba(11,58,83,.05),0 2px 6px rgba(11,58,83,.06);
+  --radius:14px; --font:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
   color-scheme:light;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --bg:#0e1419; --surface:#161e25; --surface-2:#1d2730; --text:#e6edf3; --muted:#9aabba; --border:#2a3743;
-    --accent:#3fb6c2; --accent-ink:#06252a; --accent-soft:#163238;
+    --bg:#0a1620; --surface:#10212d; --surface-2:#172b38; --text:#e5eef3; --muted:#93a9b7; --border:#24394a;
+    --brand:#0B3A53; --brand-2:#2DD4BF; --amber:#FBBF24;
+    --accent:#2DD4BF; --accent-ink:#04221f; --accent-soft:#103a3a;
     --c-base:#6b9ce6; --c-disr:#f0804d; --c-estr:#3cc48e; --c-meta:#9ca3af;
     --ok:#4ade80; --warn:#fbbf24; --bad:#f87171; --ok-bg:#12301f; --warn-bg:#33270f; --bad-bg:#3a1717;
     --shadow:none; color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
-  --bg:#0e1419; --surface:#161e25; --surface-2:#1d2730; --text:#e6edf3; --muted:#9aabba; --border:#2a3743;
-  --accent:#3fb6c2; --accent-ink:#06252a; --accent-soft:#163238;
+  --bg:#0a1620; --surface:#10212d; --surface-2:#172b38; --text:#e5eef3; --muted:#93a9b7; --border:#24394a;
+  --brand:#0B3A53; --brand-2:#2DD4BF; --amber:#FBBF24;
+  --accent:#2DD4BF; --accent-ink:#04221f; --accent-soft:#103a3a;
   --c-base:#6b9ce6; --c-disr:#f0804d; --c-estr:#3cc48e; --c-meta:#9ca3af;
   --ok:#4ade80; --warn:#fbbf24; --bad:#f87171; --ok-bg:#12301f; --warn-bg:#33270f; --bad-bg:#3a1717;
   --shadow:none; color-scheme:dark;
@@ -51,21 +54,74 @@ button,select,input,textarea{font:inherit;color:inherit}
 .btn.sm{padding:.25rem .55rem;font-size:.82rem}
 .btn[disabled]{opacity:.5;cursor:not-allowed}
 /* header */
-header.top{background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:20}
-.top-inner{max-width:1280px;margin:0 auto;padding:.7rem 16px;display:flex;flex-wrap:wrap;gap:.6rem 1rem;align-items:center;justify-content:space-between}
-.brand{display:flex;gap:.7rem;align-items:center;min-width:0}
-.logo{width:34px;height:34px;border-radius:9px;background:var(--accent);display:grid;place-items:center;flex:none}
-.brand h1{font-size:1.05rem;margin:0}
-.brand p{margin:0;font-size:.8rem;color:var(--muted)}
-.tools{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center}
-.tools select{border:1px solid var(--border);background:var(--surface);border-radius:8px;padding:.4rem .5rem;max-width:230px}
-nav.tabs{max-width:1280px;margin:0 auto;padding:0 16px;display:flex;gap:.2rem;overflow-x:auto;scrollbar-width:thin}
-nav.tabs button{border:0;background:none;padding:.6rem .8rem;border-bottom:3px solid transparent;cursor:pointer;color:var(--muted);white-space:nowrap;font-weight:500}
-nav.tabs button[aria-selected="true"]{color:var(--text);border-bottom-color:var(--accent)}
-nav.tabs .n{display:inline-grid;place-items:center;width:1.3rem;height:1.3rem;border-radius:50%;background:var(--surface-2);font-size:.72rem;margin-right:.35rem}
-nav.tabs button[aria-selected="true"] .n{background:var(--accent);color:var(--accent-ink)}
-main{max-width:1280px;margin:0 auto;padding:1.1rem 16px 3rem}
-footer{max-width:1280px;margin:0 auto;padding:1rem 16px 2rem;color:var(--muted);font-size:.8rem;border-top:1px solid var(--border)}
+header.top{background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:46}
+.top-inner{max-width:1440px;margin:0 auto;padding:.55rem 16px;display:flex;gap:.8rem;align-items:center}
+.brand{display:flex;gap:.65rem;align-items:center;min-width:0;text-decoration:none;color:inherit;flex:none}
+.logo{width:38px;height:38px;flex:none;display:block} .logo svg{display:block;width:100%;height:100%}
+.brand h1{font-size:1.12rem;margin:0;letter-spacing:-.01em;line-height:1.15} .brand h1 b{font-weight:800;color:var(--text)} .brand h1 span{font-weight:650;color:var(--accent)}
+.brand p{margin:0;font-size:.74rem;color:var(--muted)}
+.acts{display:flex;gap:.35rem;align-items:center;margin-left:auto;flex:none}
+.ihmini{display:flex;align-items:center;gap:.35rem;flex-wrap:nowrap;margin-left:auto;padding:.3rem .55rem;border:1px solid var(--border);border-radius:99px;background:var(--surface-2);font-size:.8rem;cursor:pointer;min-width:0;white-space:nowrap;color:inherit}
+.ihmini:hover{border-color:var(--accent)}
+.ihmini .ihk{font-weight:700;color:var(--muted);letter-spacing:.04em;font-size:.72rem}
+.ihmini .v{font-variant-numeric:tabular-nums;font-weight:700} .ihmini .v.b{color:var(--c-base)} .ihmini .v.d{color:var(--c-disr)} .ihmini .v.e{color:var(--c-estr)}
+.ihmini .arr{color:var(--muted)} .ihmini .band{font-size:.7rem}
+.seg{display:inline-flex;border:1px solid var(--border);border-radius:9px;padding:2px;background:var(--surface-2)}
+.seg button{border:0;background:transparent;padding:.28rem .6rem;border-radius:7px;cursor:pointer;color:var(--muted);font-size:.8rem;font-weight:600}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--text);box-shadow:var(--shadow)}
+.seg button[disabled]{cursor:not-allowed;opacity:.7}
+.icon-btn{padding:.38rem .55rem}
+#menuTools{position:absolute;right:16px;top:calc(100% + 4px);width:min(320px,calc(100vw - 24px));background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:0 16px 40px rgba(11,58,83,.18);padding:.5rem;z-index:40}
+#menuTools .mi{display:flex;width:100%;align-items:center;gap:.6rem;border:0;background:none;text-align:left;padding:.5rem .6rem;border-radius:9px;cursor:pointer;color:var(--text);text-decoration:none;font-size:.9rem}
+#menuTools .mi:hover,#menuTools .mi:focus-visible{background:var(--surface-2)}
+#menuTools .mi svg{flex:none;color:var(--muted)}
+#menuTools .mh{font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:.55rem .6rem .2rem}
+#menuTools select{width:100%;border:1px solid var(--border);background:var(--surface);border-radius:8px;padding:.4rem .5rem;margin:.1rem 0 .3rem}
+#menuTools hr{border:0;border-top:1px solid var(--border);margin:.35rem 0}
+#menuTools .only-m{display:none}
+/* navegación por fases */
+.layout{max-width:1440px;margin:0 auto;display:grid;grid-template-columns:248px minmax(0,1fr);gap:0 1.5rem;padding:0 16px}
+nav.steps{position:sticky;top:64px;align-self:start;padding:1.1rem 0 1rem;max-height:calc(100vh - 64px);overflow:auto}
+.nav-av{padding:.2rem .4rem .8rem}
+.nav-av .row{font-size:.78rem} .nav-av .avance-bar{margin-top:.35rem}
+.fase{margin-bottom:.7rem}
+.fase-h{display:flex;align-items:center;gap:.45rem;font-size:.7rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);padding:.3rem .45rem}
+.fase-h .fc{margin-left:auto;font-weight:600;letter-spacing:0;text-transform:none}
+nav.steps button.st{display:grid;grid-template-columns:auto 1fr auto;gap:.1rem .6rem;align-items:center;width:100%;border:0;background:none;text-align:left;padding:.5rem .55rem;border-radius:10px;cursor:pointer;color:var(--text)}
+nav.steps button.st:hover{background:var(--surface-2)}
+nav.steps button.st[aria-selected="true"]{background:var(--accent-soft);box-shadow:inset 3px 0 0 var(--accent)}
+nav.steps .ico{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;background:var(--surface-2);color:var(--muted);grid-row:span 2}
+nav.steps button.st[aria-selected="true"] .ico{background:var(--accent);color:var(--accent-ink)}
+nav.steps .tl{font-weight:600;font-size:.9rem} nav.steps .ds{font-size:.74rem;color:var(--muted);grid-column:2}
+nav.steps .ok{grid-row:span 2;grid-column:3;width:1.2rem;height:1.2rem;border-radius:50%;display:grid;place-items:center;font-size:.7rem;color:var(--muted);border:1.5px solid var(--border)}
+nav.steps button.hecho .ok{background:var(--ok-bg);border-color:transparent;color:var(--ok)}
+nav.steps .ts{display:none}
+nav#fases{display:none}
+main{min-width:0;padding:1.1rem 0 3rem}
+footer{max-width:1440px;margin:0 auto;padding:1rem 16px 2rem;color:var(--muted);font-size:.8rem;border-top:1px solid var(--border)}
+.tarea{border:1px solid var(--border);border-left:4px solid var(--amber);background:var(--surface);border-radius:12px;padding:.75rem .95rem;margin:0 0 1rem}
+.tarea .tk{font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.tarea ul{margin:.3rem 0 .2rem;padding-left:1.1rem} .tarea li{margin:.15rem 0}
+body.guiado .adv{display:none!important}
+details.acc{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-top:.7rem;box-shadow:var(--shadow)}
+details.acc>summary{display:flex;align-items:center;gap:.7rem;padding:.75rem 1rem;cursor:pointer;list-style:none;font-weight:600}
+details.acc>summary::-webkit-details-marker{display:none}
+details.acc>summary::after{content:"";width:.55rem;height:.55rem;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(45deg);margin-left:.3rem;transition:transform .15s}
+details.acc[open]>summary::after{transform:rotate(225deg)}
+details.acc .acc-n{display:inline-grid;place-items:center;width:1.6rem;height:1.6rem;border-radius:8px;background:var(--surface-2);font-size:.8rem;color:var(--muted);flex:none}
+details.acc .acc-s{margin-left:auto;font-weight:500;font-size:.8rem}
+details.acc>.acc-b{padding:0 1rem 1rem}
+details.acc>.acc-b>.card{border:0;box-shadow:none;padding:0;margin-top:0!important;background:transparent}
+dialog#dlgBienv{max-width:min(640px,calc(100vw - 32px));padding:0;overflow:hidden}
+.bv-h{background:var(--brand);color:#fff;padding:1.1rem 1.3rem;display:flex;gap:.8rem;align-items:center}
+.bv-h .logo{width:44px;height:44px} .bv-h h3{margin:0;font-size:1.15rem} .bv-h p{margin:0;font-size:.82rem;opacity:.8}
+.bv-b{padding:1.1rem 1.3rem 1.2rem}
+.opts{display:grid;gap:.6rem;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr))}
+.opt{display:flex;gap:.7rem;align-items:flex-start;border:1.5px solid var(--border);border-radius:12px;padding:.75rem .85rem;cursor:pointer;background:var(--surface);text-align:left;color:inherit;font:inherit}
+.opt:hover{border-color:var(--accent)}
+.opt:has(input:checked),.opt[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.opt input{margin-top:.25rem;accent-color:var(--accent)}
+.opt strong{display:block} .opt span{font-size:.82rem;color:var(--muted)}
 /* layout */
 .grid{display:grid;gap:1rem}
 .g2{grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr))}
@@ -172,11 +228,7 @@ body.acc{font-size:17px} body.acc .muted,body.acc .tiny{color:var(--text)} body.
 .avance-bar{height:6px;border-radius:99px;background:var(--surface-2);margin-top:.4rem;overflow:hidden}
 .avance-bar span{display:block;height:100%;background:var(--accent);border-radius:99px;transition:width .3s}
 .modnav{margin-top:2rem;padding-top:1rem;border-top:1px solid var(--border)}
-nav.tabs button.hecho .n{background:var(--ok-bg);color:var(--ok)}
-nav.tabs button.hecho[aria-selected="true"] .n{background:var(--accent);color:var(--accent-ink)}
-nav.tabs .ts{display:none}
 #justif{position:fixed;right:16px;bottom:16px;width:min(420px,calc(100vw - 32px));z-index:45;background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:12px;padding:.8rem;box-shadow:0 12px 32px rgba(0,0,0,.2)}
-#btnMenu{display:none}
 .pop{position:fixed;z-index:60;max-width:min(340px,calc(100vw - 24px));background:var(--text);color:var(--bg);padding:.55rem .7rem;border-radius:8px;font-size:.82rem;line-height:1.45;box-shadow:0 8px 24px rgba(0,0,0,.25);pointer-events:none}
 .tip{border:0}
 .tip:hover,.tip:focus-visible{background:var(--accent);color:var(--accent-ink)}
@@ -184,18 +236,44 @@ aside.acad{border:1px solid var(--border);border-left:4px solid var(--warn);back
 aside.acad ul{margin-top:.3rem}
 #dlgGuia{max-width:min(760px,calc(100vw - 32px));max-height:85vh;overflow:auto}
 .print-only{display:none}
+@media (min-width:1101px){ main .avance{display:none} }
+@media (max-width:1100px){
+  .layout{display:block}
+  nav.steps{position:static;max-height:none;overflow-x:auto;display:flex;gap:.3rem;align-items:stretch;padding:.6rem 0 .2rem;border-bottom:1px solid var(--border)}
+  .nav-av{display:none}
+  .fase{display:flex;gap:.15rem;margin:0;align-items:center;padding-right:.4rem;border-right:1px solid var(--border)}
+  .fase:last-child{border-right:0}
+  .fase-h{writing-mode:horizontal-tb;padding:.2rem .35rem;font-size:.62rem}
+  .fase-h .fc,.fase-h svg{display:none}
+  nav.steps button.st{grid-template-columns:auto auto;padding:.4rem .5rem;white-space:nowrap;width:auto}
+  nav.steps .ds,nav.steps .ok{display:none}
+  nav.steps .ico{width:26px;height:26px;grid-row:auto}
+  nav.steps button.hecho .ico{background:var(--ok-bg);color:var(--ok)}
+  nav.steps button.hecho[aria-selected="true"] .ico{background:var(--accent);color:var(--accent-ink)}
+  .brand p{display:none}
+  .ihmini .lbl,.ihmini .band{display:none}
+}
+@media (max-width:760px){
+  .ihmini .lbl,.ihmini .band,.ihmini .v.b,.ihmini .arr.ab{display:none}
+  #modoSeg,#btnShare .lbl-hide,#btnMenu .lbl-hide{display:none}
+  #menuTools .only-m{display:flex}
+}
 @media (max-width:640px){
-  #btnMenu{display:inline-flex}
-  .top-inner{flex-wrap:nowrap}
-  .tools{display:none}
-  header.top.menu-open .top-inner{flex-wrap:wrap}
-  header.top.menu-open .tools{display:flex;width:100%}
-  .tools select{max-width:100%;flex:1 1 100%}
-  nav.tabs{position:fixed;bottom:0;left:0;right:0;z-index:30;background:var(--surface);border-top:1px solid var(--border);padding:0 2px env(safe-area-inset-bottom);gap:0;max-width:none;overflow-x:hidden}
-  nav.tabs button{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;padding:.35rem 0 .4rem;font-size:.64rem;border-bottom:0;border-top:3px solid transparent}
-  nav.tabs button[aria-selected="true"]{border-top-color:var(--accent)}
-  nav.tabs .n{margin:0 0 .15rem}
-  nav.tabs .tl{display:none} nav.tabs .ts{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+  .top-inner{gap:.45rem;padding:.45rem 10px}
+  .brand h1{display:none} .logo{width:34px;height:34px}
+  .ihmini{margin-left:.2rem;flex:1 1 auto;justify-content:center}
+  #btnShare{display:none}
+  .acts{gap:.25rem}
+  nav.steps{padding:.5rem 0 .3rem;gap:.25rem}
+  nav.steps .fase{display:none;border:0}
+  nav.steps .fase.cur{display:flex;flex:1}
+  nav.steps .fase.cur .fase-h{display:none}
+  nav.steps .fase.cur button.st{flex:1 1 0;justify-content:center}
+  nav.steps .tl{display:none} nav.steps .ts{display:inline;font-weight:600;font-size:.82rem}
+  nav#fases{display:flex;position:fixed;bottom:0;left:0;right:0;z-index:30;background:var(--surface);border-top:1px solid var(--border);padding:0 4px env(safe-area-inset-bottom)}
+  nav#fases button{flex:1 1 0;display:flex;flex-direction:column;align-items:center;gap:.1rem;border:0;background:none;padding:.4rem 0 .45rem;font-size:.7rem;color:var(--muted);border-top:3px solid transparent;cursor:pointer}
+  nav#fases button[aria-current="true"]{color:var(--text);border-top-color:var(--accent);font-weight:600}
+  nav#fases .fcn{font-size:.62rem;font-weight:500}
   main{padding-bottom:5.5rem} footer{padding-bottom:5.5rem}
   .toast{bottom:80px}
   #justif{right:8px;left:8px;width:auto;bottom:72px}
@@ -207,12 +285,13 @@ aside.acad ul{margin-top:.3rem}
   table.rt td[data-label]::before,table.rt tbody th[data-label]::before{content:attr(data-label);font-weight:600;color:var(--muted);text-align:left;flex:0 0 42%;font-size:.8rem}
   table.rt td input,table.rt td select,table.rt td .affix{max-width:58%;flex:1 1 58%}
   table.edit td.w-l input,table.edit td.w-xl input{min-width:0}
-  .brand p{display:none}
-  .tools .lbl-hide{display:none}
-  header.top{position:static}
+  header.top{position:sticky}
+  details.acc>summary{padding:.65rem .75rem} details.acc>.acc-b{padding:0 .6rem .8rem}
 }
 @media print{
-  header.top,nav.tabs,.no-print,details.calc summary{display:none!important}
+  header.top,nav.steps,nav#fases,.no-print,details.calc summary{display:none!important}
+  .layout{display:block;padding:0}
+  details.acc{border:0;box-shadow:none} details.acc>summary{display:none}
   .print-only{display:block}
   body{background:#fff;color:#000;font-size:11px}
   main{padding:0;max-width:none}
@@ -281,31 +360,47 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
 <a href="#main" class="btn sm" style="position:absolute;left:-999px" onfocus="this.style.left='8px'" onblur="this.style.left='-999px'">Saltar al contenido</a>
 <header class="top">
   <div class="top-inner">
-    <div class="brand">
-      <div class="logo" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 32 32"><path d="M5 23h7v-7h7V9h8" stroke="#fff" stroke-width="3.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-      <div><h1>SIG-Logístico · LogiTech Solutions S.A.</h1><p>Comité de Decisiones Logísticas — homeostasis de la cadena de suministro</p></div>
-    </div>
-    <button class="btn sm" id="btnMenu" type="button" data-act="menu" aria-label="Abrir menú">☰ Menú</button>
-    <div class="tools">
-      <label class="small muted lbl-hide" for="selRol">Vista</label>
-      <select id="selRol" aria-label="Rol del comité"></select>
-      <button class="btn sm" id="btnUndo" type="button" data-act="undo" title="Deshacer (Ctrl/Cmd+Z)" aria-label="Deshacer" disabled>↶</button>
-      <button class="btn sm" id="btnRedo" type="button" data-act="redo" title="Rehacer (Ctrl/Cmd+Shift+Z)" aria-label="Rehacer" disabled>↷</button>
-      <button class="btn sm" id="btnTour" type="button">Recorrido guiado</button>
-      <button class="btn sm" type="button" data-act="quiz">Autoevaluación</button>
-      <button class="btn sm" type="button" data-act="docente">Modo docente</button>
-      <button class="btn sm" type="button" data-act="guia">Guía académica</button>
-      <a class="btn sm" href="manual.html" target="_blank" rel="noopener">Manual</a>
-      <button class="btn sm" id="btnShare" type="button" title="Copiar un link que reproduce este análisis">Copiar link</button>
-      <label class="btn sm" title="Patrones en gráficos, letra más grande y mayor contraste"><input type="checkbox" data-act-chk="accesible" id="chkAcc" style="margin:0"> Accesible</label>
-      <button class="btn sm" id="btnTheme" type="button" aria-label="Cambiar tema claro/oscuro"><svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.5a6.5 6.5 0 0 1 0 13z" fill="currentColor"/></svg> Tema</button>
+    <a class="brand" href="index.html" title="Ir a la página de inicio"><span class="logo" aria-hidden="true"><svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><rect width="64" height="64" rx="15" fill="#0B3A53"/><path d="M45 17 H25 a8.5 8.5 0 0 0 0 17 H39 a8.5 8.5 0 0 1 0 17 H21" fill="none" stroke="#14B8A6" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="47" cy="17" r="5" fill="#F59E0B"/><circle cx="19" cy="51" r="5" fill="none" stroke="#14B8A6" stroke-width="3.4"/></svg></span>
+      <div><h1><b>SIG</b><span>-Logístico</span></h1><p>LogiTech Solutions S.A. · Comité de Decisiones Logísticas</p></div></a>
+    <button type="button" class="ihmini" id="ihMini" data-tab="dashboard" title="Índice de Homeostasis: Base → Disrupción → Con estrategia. Abre el Dashboard." aria-live="polite"></button>
+    <div class="acts">
+      <div class="seg" id="modoSeg" role="group" aria-label="Modo de trabajo"><button type="button" data-act="modo" data-m="guiado" aria-pressed="false" title="Muestra lo esencial y la tarea de cada paso">Guiado</button><button type="button" data-act="modo" data-m="experto" aria-pressed="true" title="Muestra todas las herramientas">Experto</button></div>
+      <button class="btn sm icon-btn" id="btnUndo" type="button" data-act="undo" title="Deshacer (Ctrl/Cmd+Z)" aria-label="Deshacer" disabled>↶</button>
+      <button class="btn sm icon-btn" id="btnRedo" type="button" data-act="redo" title="Rehacer (Ctrl/Cmd+Shift+Z)" aria-label="Rehacer" disabled>↷</button>
+      <button class="btn sm" id="btnShare" type="button" title="Copiar un link que reproduce este análisis"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg><span class="lbl-hide">Compartir</span></button>
+      <button class="btn sm" id="btnMenu" type="button" data-act="menu" aria-haspopup="true" aria-expanded="false" aria-controls="menuTools"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg><span class="lbl-hide">Herramientas</span></button>
     </div>
   </div>
-  <nav class="tabs" role="tablist" aria-label="Módulos" id="tabs"></nav>
+  <div id="menuTools" hidden role="menu" aria-label="Herramientas">
+    <div class="mh">Mi vista</div>
+    <label class="tiny muted" for="selRol" style="padding:0 .6rem">Rol del comité</label>
+    <div style="padding:0 .6rem"><select id="selRol" aria-label="Rol del comité"></select></div>
+    <div class="only-m" style="padding:.2rem .6rem .4rem;gap:.5rem;align-items:center"><span class="tiny muted">Modo</span><div class="seg"><button type="button" data-act="modo" data-m="guiado" aria-pressed="false">Guiado</button><button type="button" data-act="modo" data-m="experto" aria-pressed="true">Experto</button></div></div>
+    <hr>
+    <div class="mh">Aprender</div>
+    <button class="mi" id="btnTour" type="button" role="menuitem"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg>Recorrido guiado</button>
+    <button class="mi" type="button" data-act="quiz" role="menuitem"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11l3 3 8-8"/><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9"/></svg>Autoevaluación de conceptos</button>
+    <button class="mi" type="button" data-act="guia" role="menuitem"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/></svg>Guía académica</button>
+    <a class="mi" href="manual.html" target="_blank" rel="noopener" role="menuitem"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/></svg>Manual de usuario</a>
+    <a class="mi" href="index.html" role="menuitem"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>Página de inicio</a>
+    <button class="mi" type="button" data-act="bienvenida" role="menuitem"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>Cambiar perfil (bienvenida)</button>
+    <button class="mi only-m" type="button" data-act="compartirMenu" role="menuitem"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>Copiar link de este análisis</button>
+    <hr>
+    <div class="mh">Docente</div>
+    <button class="mi" type="button" data-act="docente" role="menuitem"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/></svg>Modo docente</button>
+    <hr>
+    <div class="mh">Preferencias</div>
+    <label class="mi"><input type="checkbox" data-act-chk="accesible" id="chkAcc" style="margin:0 .15rem"> Modo accesible (patrones y contraste)</label>
+    <button class="mi" id="btnTheme" type="button" role="menuitem"><svg width="17" height="17" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.5a6.5 6.5 0 0 1 0 13z" fill="currentColor"/></svg>Tema claro / oscuro</button>
+  </div>
 </header>
+<div class="layout">
+<nav class="steps" role="tablist" aria-label="Módulos del ejercicio" id="tabs"></nav>
 <main id="main" tabindex="-1"></main>
+</div>
+<nav id="fases" aria-label="Fases del ejercicio"></nav>
 <footer>
-  <div class="row"><span><strong>SIG-Logístico</strong> <span id="ver"></span></span><span class="spacer"></span>
+  <div class="row"><span><strong>SIG-Logístico</strong> <span id="ver"></span> · <a href="index.html">Inicio</a> · <a href="manual.html" target="_blank" rel="noopener">Manual</a></span><span class="spacer"></span>
   <span>Caso ficticio con fines académicos. Todo el cálculo ocurre en tu navegador: los datos no salen de tu equipo.</span></div>
   <div class="tiny" style="margin-top:.3rem">El Índice de Homeostasis es un indicador construido por el comité; no proviene del documento de la actividad.</div>
   <div class="tiny" style="margin-top:.5rem;padding-top:.5rem;border-top:1px solid var(--border)">© 2026 <strong>AI HYPERPLANE S.A.S.</strong> — Propiedad intelectual de AI HYPERPLANE S.A.S. Este simulador puede usarse libremente con fines académicos y educativos; cualquier otro uso requiere autorización escrita. <a href="manual.html#terminos" target="_blank" rel="noopener">Términos de uso</a></div>
@@ -314,6 +409,7 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
 <dialog id="dlgGuia" aria-labelledby="guiaT"><div class="row"><h3 id="guiaT" style="margin:0">Guía académica del aplicativo</h3><span class="spacer"></span><button class="btn sm" type="button" onclick="this.closest('dialog').close()">Cerrar</button></div><div id="guiaB" style="margin-top:.6rem"></div></dialog>
 <div id="justif" class="hidden" role="dialog" aria-label="Justificación de la decisión"></div>
 <dialog id="dlgPred" aria-labelledby="predT"><h3 id="predT"></h3><div id="predB"></div></dialog>
+<dialog id="dlgBienv" aria-labelledby="bvT"><div class="bv-h"><span class="logo" aria-hidden="true"><svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><rect width="64" height="64" rx="15" fill="#0B3A53"/><path d="M45 17 H25 a8.5 8.5 0 0 0 0 17 H39 a8.5 8.5 0 0 1 0 17 H21" fill="none" stroke="#14B8A6" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="47" cy="17" r="5" fill="#F59E0B"/><circle cx="19" cy="51" r="5" fill="none" stroke="#14B8A6" stroke-width="3.4"/></svg></span><div><h3 id="bvT">Bienvenido al SIG-Logístico</h3><p>Simulador académico del Comité de Decisiones Logísticas</p></div></div><div class="bv-b" id="bvB"></div></dialog>
 <dialog id="dlgQuiz" aria-labelledby="quizT"><h3 id="quizT">Autoevaluación de conceptos</h3><div id="quizB"></div></dialog>
 <input type="file" id="fileGrupos" accept=".json,application/json" multiple class="hidden">
 <input type="file" id="fileData" accept=".csv,.xlsx,.xls,text/csv" class="hidden">
@@ -782,7 +878,7 @@ const TEMPLATE_XLSX_B64 = "UEsDBBQAAAAIAA2JR11Gx01IlQAAAM0AAAAQAAAAZG9jUHJvcHMvY
  * SIG-Logístico — interfaz. El motor (SIGMotor) es la única fuente de
  * cálculos; este archivo solo lee/escribe el estado y lo presenta.
  * ==================================================================== */
-const VERSION = 'v1.4.1', FECHA = '2026-10-07', ESQUEMA = 1, LS_KEY = 'sig-logistico-estado-v1';
+const VERSION = 'v1.5.0', FECHA = '2026-10-07', ESQUEMA = 1, LS_KEY = 'sig-logistico-estado-v1';
 const M = window.SIGMotor;
 const clone = o => JSON.parse(JSON.stringify(o));
 const $ = s => document.querySelector(s);
@@ -879,7 +975,7 @@ function estadoInicial() {
   return { esquema: ESQUEMA, origen: 'Caso demo LogiTech', data, params: clone(M.PARAMS_DEFAULT),
     pesosBorrador: pesosAPct(M.PARAMS_DEFAULT.pesosIH), justificacionPesos: '',
     escenarios: todosActivos(M.ESCENARIOS_DEFAULT, true), estrategias: soloContingencia(),
-    catalogos: {}, reflexiones: { diagnostico: {}, escenarios: {}, estrategias: {}, dashboard: {}, supuestos: {} }, quiz: { resp: {} }, rubrica: {}, planes: {}, sub: {}, accesible: false, bitacora: [], modoPrediccion: true, visitados: { datos: true }, exportado: false, variante: null, rol: 'comite', tab: 'datos', skuSim: null, estadoCascada: 'estrategia', notas: '', verGuia: true, sensPct: 20 };
+    catalogos: {}, reflexiones: { diagnostico: {}, escenarios: {}, estrategias: {}, dashboard: {}, supuestos: {} }, quiz: { resp: {} }, rubrica: {}, planes: {}, sub: {}, accesible: false, modo: 'experto', bitacora: [], modoPrediccion: true, visitados: { datos: true }, exportado: false, variante: null, rol: 'comite', tab: 'datos', skuSim: null, estadoCascada: 'estrategia', notas: '', verGuia: true, sensPct: 20 };
 }
 function pesosAPct(p) { const o = {}; for (const k of KPIS) o[k] = Math.round(p[k] * 1000) / 10; return o; }
 function normalizarEstado(s) {
@@ -896,7 +992,7 @@ function normalizarEstado(s) {
   if (!o.data.kpisExtra) o.data.kpisExtra = []; if (!o.catalogos) o.catalogos = {};
   (o.data.escenarios || []).forEach(e => { if (!e.modelo) { const m = /^ESC-?0?([123])$/i.exec(String(e.id).trim()); e.modelo = m ? 'esc0' + m[1] : 'cualitativo'; } });
   if (!o.data.costos) o.data.costos = {}; if (!o.data.costosFuente) o.data.costosFuente = {};
-  if (o.verGuia === undefined) o.verGuia = true; if (!o.sensPct) o.sensPct = 20;
+  if (o.verGuia === undefined) o.verGuia = true; if (o.modo !== 'guiado' && o.modo !== 'experto') o.modo = 'experto'; if (!o.sensPct) o.sensPct = 20;
   delete o.resultados;
   return o;
 }
@@ -1097,11 +1193,7 @@ const TABS = [
   ['datos', 'Datos'], ['diagnostico', 'Diagnóstico'], ['escenarios', 'Escenarios'], ['estrategias', 'Estrategias'],
   ['dashboard', 'Dashboard'], ['supuestos', 'Supuestos'], ['exportar', 'Exportar']
 ];
-function renderTabs() {
-  const av = Object.fromEntries(avance().map(x => [x[0], x[1]])), corto = { datos: 'Datos', diagnostico: 'Diagnós.', escenarios: 'Escen.', estrategias: 'Estrat.', dashboard: 'Tablero', supuestos: 'Supuest.', exportar: 'Exportar' };
-  $('#tabs').innerHTML = TABS.map(([k, n], i) => `<button role="tab" type="button" id="tab-${k}" aria-controls="main" aria-selected="${state.tab === k}" tabindex="${state.tab === k ? 0 : -1}" data-tab="${k}" class="${av[k] ? 'hecho' : ''}" aria-label="${i + 1}. ${n}${av[k] ? ' (completo)' : ''}"><span class="n">${av[k] ? '✓' : i + 1}</span><span class="tl">${n}</span><span class="ts">${corto[k]}</span></button>`).join('');
-}
-function ir(tab) { state.tab = tab; state.visitados = Object.assign(state.visitados || {}, { [tab]: true }); $('header.top').classList.remove('menu-open'); guardar(); render(); window.scrollTo({ top: 0 }); }
+function ir(tab) { state.tab = tab; state.visitados = Object.assign(state.visitados || {}, { [tab]: true }); abrirMenu(false); guardar(); render(); window.scrollTo({ top: 0 }); }
 
 function render() {
   const act = document.activeElement, foco = act && act.dataset ? (act.dataset.path || act.id) : null;
@@ -1112,9 +1204,9 @@ function render() {
   const doc = state.tab === 'docente';
   let html = bannerGlobal() + bannerClase() + (doc ? '' : barraAvance());
   const f = VISTAS[state.tab] || VISTAS.datos;
-  html += `<section class="mod" aria-labelledby="tab-${state.tab}">${f()}</section>` + (doc ? '' : vistaReflexion(state.tab) + navModulo());
+  html += tareaActual(state.tab) + `<section class="mod" aria-labelledby="tab-${state.tab}">${f()}</section>` + (doc ? '' : vistaReflexion(state.tab) + navModulo());
   main.innerHTML = html;
-  aplicarAccesible(); aplicarBloqueos(); etiquetarTablas(); actualizarUndo();
+  aplicarModo(); actualizarIHMini(); aplicarAccesible(); aplicarBloqueos(); etiquetarTablas(); actualizarUndo();
   dibujar(state.tab);
   if (foco) { const el = main.querySelector(`[data-path="${CSS.escape(foco)}"]`) || document.getElementById(foco); if (el && el !== document.activeElement) try { el.focus({ preventScroll: true }); } catch (e) { } }
 }
@@ -1192,7 +1284,7 @@ VISTAS.datos = () => {
   const ref = demo();
   return `
   <div class="section"><h2>1 · Datos del SIG-Logístico</h2></div>
-  <p class="lead">Carga el CSV exportado por el formulario de captura (o el CSV/XLSX del template original) o captura los datos directamente en las tablas. Los campos tienen ayuda (?) y el valor del caso de referencia como guía.</p>
+  <p class="lead">Carga el CSV del SIG (formulario de captura o template) o captura los datos en las tablas. Cada campo tiene ayuda (?) y el valor del caso de referencia como guía.</p>
   ${guiaModulo('datos')}
   <div class="banner warn"><strong>Caso ficticio.</strong> No ingreses datos reales de empresas sin autorización. Los datos se procesan solo en tu navegador y nunca salen de tu equipo.</div>
   <div class="grid g2" style="margin-top:1rem">
@@ -1227,9 +1319,7 @@ VISTAS.datos = () => {
       <p class="tiny muted">Reglas: campos obligatorios, rangos (0-100 en porcentajes, 1-10 en calidad), pedidos conformes y reclamos ≤ totales, punto de reorden ≥ stock de seguridad (advertencia), categorías SKU ↔ proveedor coincidentes, códigos únicos.</p>
     </div>
   </div>
-  ${tablaKPIs()}
-  <div class="grid" style="margin-top:1rem">${['skus', 'rutas', 'proveedores', 'canales'].map(tablaEditable).join('')}${tablaCostos()}</div>
-  ${tablaEscenarios()}`;
+  ${acordeonDatos()}`;
 };
 
 async function leerArchivoDatos(file) {
@@ -1841,7 +1931,7 @@ function sensibilidad() {
 function vistaSensibilidad() {
   const s = sensibilidad(), E = cmp.estrategia;
   const fmtV = (path, v) => /margen|participacion|tasa/.test(path) ? pct(v * 100, path.includes('tasa') ? 2 : 0) : nf(v, Number.isInteger(v) ? 0 : 1);
-  return `<div class="card" style="margin-top:1rem"><div class="row"><h3 style="margin:0">¿Qué tan robustas son las conclusiones?${glos('sensibilidad')}</h3><span class="spacer"></span>
+  return `<div class="card adv" style="margin-top:1rem"><div class="row"><h3 style="margin:0">¿Qué tan robustas son las conclusiones?${glos('sensibilidad')}</h3><span class="spacer"></span>
     <label class="small" for="f_sens">Variación</label><select id="f_sens" data-path="sensPct" data-type="sel" style="border:1px solid var(--border);border-radius:6px;background:var(--surface);padding:.2rem">${[10, 20, 30].map(v => `<option value="${v}" ${state.sensPct == v ? 'selected' : ''}>±${v}%</option>`).join('')}</select></div>
   <div class="banner ${s.cambiaBanda.length ? 'warn' : 'ok'}" style="margin-top:.6rem">${s.cambiaBanda.length
     ? `La banda con estrategia (<strong>${E.banda}</strong>) <strong>cambia</strong> al mover: ${s.cambiaBanda.map(r => esc(r.lbl)).join('; ')}. Justifica esos supuestos con especial cuidado.`
@@ -2384,13 +2474,14 @@ function aplicarBloqueos() {
   document.querySelectorAll('#main [data-act]').forEach(el => { if (accionBloqueada(el.dataset.act)) { el.disabled = true; el.title = 'Fijado por el docente'; } });
 }
 function payloadClase(opts) {
-  const p = { esquemaClase: 1, version: VERSION, fecha: new Date().toISOString(), mensaje: opts.mensaje || '', bloqueos: opts.bloqueos, exigirVariante: !!opts.exigirVariante,
+  const p = { esquemaClase: 1, version: VERSION, fecha: new Date().toISOString(), mensaje: opts.mensaje || '', bloqueos: opts.bloqueos, exigirVariante: !!opts.exigirVariante, modo: opts.modo || '',
     params: state.params, pesosBorrador: state.pesosBorrador, escenarios: state.escenarios };
   if (opts.bloqueos.datos) p.data = state.data;
   return p;
 }
 function aplicarClase(p) {
-  state.clase = { mensaje: p.mensaje, bloqueos: p.bloqueos || {}, exigirVariante: !!p.exigirVariante, fecha: p.fecha, payload: p };
+  state.clase = { mensaje: p.mensaje, bloqueos: p.bloqueos || {}, exigirVariante: !!p.exigirVariante, modo: p.modo === 'guiado' || p.modo === 'experto' ? p.modo : '', fecha: p.fecha, payload: p };
+  if (state.clase.modo) state.modo = state.clase.modo;
   if (p.bloqueos.motor || p.bloqueos.pesos) state.params = Object.assign(state.params, p.bloqueos.motor ? p.params : { pesosIH: p.params.pesosIH, bandasIH: p.params.bandasIH });
   if (p.bloqueos.pesos) { state.pesosBorrador = p.pesosBorrador; state.params.pesosIH = p.params.pesosIH; state.params.bandasIH = p.params.bandasIH; }
   if (p.bloqueos.escenarios) for (const k in p.escenarios) state.escenarios[k] = Object.assign({}, p.escenarios[k], { activo: state.escenarios[k] ? state.escenarios[k].activo : p.escenarios[k].activo });
@@ -2402,7 +2493,7 @@ function claseDesdeURL() {
 }
 function bannerClase() {
   const c = state.clase; if (!c) return '';
-  const b = c.bloqueos || {}, l = [b.datos && 'datos del caso', b.motor && 'supuestos del motor', b.pesos && 'pesos y bandas del IH', b.escenarios && 'parámetros de los escenarios'].filter(Boolean);
+  const b = c.bloqueos || {}, l = [b.datos && 'datos del caso', b.motor && 'supuestos del motor', b.pesos && 'pesos y bandas del IH', b.escenarios && 'parámetros de los escenarios', c.modo && `modo ${c.modo}`].filter(Boolean);
   return `<div class="banner info small no-print">🔒 <strong>Configuración de la clase.</strong> ${l.length ? `El docente fijó: ${l.join(', ')}.` : ''} ${c.exigirVariante && !state.variante ? '<strong>Genera la variante de tu grupo en Datos con el código que te asignó el docente.</strong>' : ''} ${c.mensaje ? `<br><em>${esc(c.mensaje)}</em>` : ''}</div>`;
 }
 
@@ -2448,6 +2539,7 @@ VISTAS.docente = () => {
     <label class="switch small"><input type="checkbox" id="lkEsc" checked> Parámetros de los escenarios</label>
     <label class="switch small"><input type="checkbox" id="lkDatos"> Datos del caso (no editables)</label>
     <label class="switch small"><input type="checkbox" id="lkVar"> Exigir variante por grupo</label>
+    <div class="field"><label for="lkModo">Modo de trabajo de los estudiantes</label><select id="lkModo"><option value="">Libre (cada grupo elige)</option><option value="guiado">Fijar modo guiado</option><option value="experto">Fijar modo experto</option></select></div>
   </div>
   <div class="field" style="margin-top:.6rem"><label for="lkMsg">Mensaje para los estudiantes (opcional)</label><input id="lkMsg" maxlength="240" placeholder="Ej.: Entrega el JSON el viernes; usen el código de grupo asignado."></div>
   <div class="row" style="margin-top:.6rem"><button class="btn primary" type="button" data-act="linkClase">Copiar link de la clase</button><button class="btn" type="button" data-act="jsonClase">Descargar configuración (JSON)</button>${c ? '<button class="btn" type="button" data-act="quitarClase">Quitar la configuración de este navegador</button>' : ''}</div>
@@ -2470,11 +2562,11 @@ function exportarEntregas() {
 
 /* ------------------------------------------------------------ subpestañas */
 const SUBS = { dashboard: [['resumen', 'Resumen'], ['graficos', 'Gráficos'], ['matriz', 'Matriz y sinergias'], ['roles', 'Por rol'], ['planes', 'Planes A/B']], estrategias: [['palancas', 'Palancas y bitácora'], ['estructural', 'Contingencia vs. estructural'], ['optimizador', 'Optimizador']] };
-const subSel = tab => (state.sub && state.sub[tab]) || SUBS[tab][0][0];
+const subSel = tab => { const v = (state.sub && state.sub[tab]) || SUBS[tab][0][0]; return state.modo === 'guiado' && SUB_ADV.includes(v) ? SUBS[tab][0][0] : v; };
 const subAttr = (tab, id) => `data-sub="${id}" ${PRINT_ALL || subSel(tab) === id ? '' : 'hidden'}`;
 function subnav(tab) {
   if (PRINT_ALL) return '';
-  return `<div class="subnav no-print" role="tablist" aria-label="Secciones">${SUBS[tab].map(([id, l]) => `<button type="button" role="tab" aria-selected="${subSel(tab) === id}" data-act="sub" data-st="${tab}" data-sv="${id}">${esc(l)}</button>`).join('')}</div>`;
+  return `<div class="subnav no-print" role="tablist" aria-label="Secciones">${SUBS[tab].filter(([id]) => state.modo !== 'guiado' || !SUB_ADV.includes(id)).map(([id, l]) => `<button type="button" role="tab" aria-selected="${subSel(tab) === id}" data-act="sub" data-st="${tab}" data-sv="${id}">${esc(l)}</button>`).join('')}</div>`;
 }
 
 /* ------------------------------------------------------------ planes A/B */
@@ -2546,6 +2638,197 @@ function tablaDatosGrafico(id) {
   det.innerHTML = `<summary>Ver datos del gráfico</summary><div class="tw" style="margin-top:.4rem">${h}</div>`;
 }
 function aplicarAccesible() { document.body.classList.toggle('acc', !!state.accesible); const c = $('#chkAcc'); if (c) c.checked = !!state.accesible; }
+
+/* ====================================================================
+ * v1.5 — Navegación por fases, indicador IH fijo, modo guiado/experto,
+ * bienvenida, menú Herramientas y acordeón de Datos
+ * ==================================================================== */
+const SVGI = d => `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+const ICONOS = {
+  datos: '<ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/>',
+  diagnostico: '<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/><path d="M8 11h1.5l1-2 2 4 1-2H14"/>',
+  escenarios: '<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>',
+  estrategias: '<path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3"/><path d="M1 14h6M9 8h6M17 16h6"/>',
+  dashboard: '<path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/>',
+  supuestos: '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>',
+  exportar: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5M12 15V3"/>',
+  preparar: '<path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 14l2 2 4-4"/>',
+  simular: '<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>',
+  evaluar: '<path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/>'
+};
+const FASES = [
+  ['preparar', 'Preparar', ['datos', 'diagnostico']],
+  ['simular', 'Simular', ['escenarios', 'estrategias']],
+  ['evaluar', 'Evaluar', ['dashboard', 'supuestos', 'exportar']]
+];
+const faseDe = tab => (FASES.find(f => f[2].includes(tab)) || FASES[0])[0];
+const MOD_DESC = { datos: 'Carga o captura el SIG', diagnostico: 'Estado inicial por rol', escenarios: 'Simula las disrupciones', estrategias: 'Aplica y justifica palancas', dashboard: 'Compara los tres estados', supuestos: 'Parámetros y sensibilidad', exportar: 'Checklist y descargas' };
+const MOD_CORTO = { datos: 'Datos', diagnostico: 'Diagnóstico', escenarios: 'Escenarios', estrategias: 'Estrategias', dashboard: 'Tablero', supuestos: 'Supuestos', exportar: 'Exportar' };
+
+function renderTabs() {
+  const a = avance(), av = Object.fromEntries(a.map(x => [x[0], x[1]])), n = a.filter(x => x[1]).length, fa = faseDe(state.tab);
+  const idx = Object.fromEntries(TABS.map((t, i) => [t[0], i]));
+  $('#tabs').innerHTML = `<div class="nav-av" aria-hidden="true"><div class="row"><strong>Avance ${n}/${a.length}</strong><span class="spacer"></span><span class="muted">${n === a.length ? 'Listo para el informe' : 'en curso'}</span></div><div class="avance-bar"><span style="width:${n / a.length * 100}%"></span></div></div>` +
+    FASES.map(([fk, fn, mods]) => `<div class="fase ${fk === fa ? 'cur' : ''}" role="presentation"><div class="fase-h">${SVGI(ICONOS[fk])}${fn}<span class="fc">${mods.filter(m => av[m]).length}/${mods.length}</span></div>
+    ${mods.map(k => { const i = idx[k], nm = TABS[i][1]; return `<button role="tab" type="button" class="st ${av[k] ? 'hecho' : ''}" id="tab-${k}" aria-controls="main" aria-selected="${state.tab === k}" tabindex="${state.tab === k ? 0 : -1}" data-tab="${k}" aria-label="${i + 1}. ${nm}${av[k] ? ' (completo)' : ''}" title="${esc(MOD_DESC[k])}"><span class="ico">${SVGI(ICONOS[k])}</span><span class="tl">${i + 1}. ${nm}</span><span class="ts">${MOD_CORTO[k]}</span><span class="ds">${MOD_DESC[k]}</span><span class="ok" aria-hidden="true">${av[k] ? '✓' : ''}</span></button>`; }).join('')}</div>`).join('');
+  $('#fases').innerHTML = FASES.map(([fk, fn, mods]) => `<button type="button" data-fase="${fk}" aria-current="${fk === fa}">${SVGI(ICONOS[fk])}<span>${fn}</span><span class="fcn">${mods.filter(m => av[m]).length}/${mods.length}</span></button>`).join('');
+}
+function irFase(fk) {
+  const f = FASES.find(x => x[0] === fk); if (!f) return;
+  const av = Object.fromEntries(avance().map(x => [x[0], x[1]]));
+  ir(f[2].includes(state.tab) ? state.tab : (f[2].find(m => !av[m]) || f[2][0]));
+}
+
+/* ------------------------------------------------------------ indicador IH fijo */
+function actualizarIHMini() {
+  const el = $('#ihMini'); if (!el) return;
+  if (!cmp) { el.innerHTML = '<span class="ihk">IH</span><span class="muted">—</span>'; return; }
+  const esc_ = escActivos().length > 0, est = estActivas().length > 0, e = cmp.estrategia;
+  el.innerHTML = `<span class="ihk">IH</span><span class="lbl tiny muted">Base</span><span class="v b">${nf(cmp.base.ih)}</span>` +
+    (esc_ ? `<span class="arr ab">→</span><span class="lbl tiny muted">Disr.</span><span class="v d">${nf(cmp.disrupcion.ih)}</span>` : '') +
+    (esc_ || est ? `<span class="arr">→</span><span class="lbl tiny muted">Estr.</span><span class="v e">${nf(e.ih)}</span>` : '') +
+    ` <span class="band ${(esc_ || est ? e : cmp.base).banda}">${(esc_ || est ? e : cmp.base).banda}</span>`;
+  el.setAttribute('aria-label', `Índice de Homeostasis: base ${nf(cmp.base.ih)}${esc_ ? `, disrupción ${nf(cmp.disrupcion.ih)}` : ''}${esc_ || est ? `, con estrategia ${nf(e.ih)}` : ''}. Abrir el Dashboard.`);
+}
+
+/* ------------------------------------------------------------ modo guiado / experto */
+const modoFijo = () => !!(state.clase && state.clase.modo);
+function aplicarModo() {
+  const g = state.modo === 'guiado';
+  document.body.classList.toggle('guiado', g);
+  document.querySelectorAll('[data-act="modo"]').forEach(b => { b.setAttribute('aria-pressed', String(b.dataset.m === state.modo)); b.disabled = modoFijo() && b.dataset.m !== state.modo; if (modoFijo()) b.title = 'Modo fijado por el docente'; });
+}
+function cambiarModo(m) {
+  if (modoFijo()) { toast('El docente fijó el modo de trabajo para la clase.'); return; }
+  state.modo = m === 'guiado' ? 'guiado' : 'experto';
+  if (state.modo === 'guiado' && state.sub) for (const t in state.sub) if (SUB_ADV.includes(state.sub[t])) delete state.sub[t];
+  guardar(); render(); toast(state.modo === 'guiado' ? 'Modo guiado: verás lo esencial y la tarea de cada paso.' : 'Modo experto: todas las herramientas visibles.');
+}
+const SUB_ADV = ['optimizador', 'planes'];
+const TAREAS = {
+  datos: ['Carga el CSV del SIG, usa el caso demo o genera la variante de tu grupo.', 'Revisa la validación: no debe quedar ningún error.', 'Abre cada sección y revisa los datos con la ayuda (?).'],
+  diagnostico: ['Lee el bloque de tu rol y el IH base con su banda.', 'Identifica el KPI más débil y su causa raíz (no el síntoma).', 'Anota los hallazgos de calidad de datos y las brechas de información.'],
+  escenarios: ['Activa las disrupciones una por una y luego combinadas.', 'Antes de activar, predice el efecto: luego compáralo con el resultado.', 'Observa el impacto en KPIs, en $ y en el IH (indicador superior).'],
+  estrategias: ['Activa las palancas que respondan a las causas del diagnóstico.', 'Justifica cada decisión en la bitácora con un dato del SIG.', 'Compara contingencia vs. plan estructural.'],
+  dashboard: ['Compara Base, Disrupción y Con estrategia.', 'Revisa la recuperación, el costo de la homeostasis y el KPI más débil.', 'Revisa la Matriz de decisiones y las sinergias entre áreas.'],
+  supuestos: ['Revisa los supuestos del comité y los pesos del IH.', 'Si cambias pesos, escribe la justificación.'],
+  exportar: ['Completa el checklist de la actividad.', 'Descarga el JSON o XLSX y el borrador del informe.', 'Completa la rúbrica de autoevaluación.']
+};
+function tareaActual(tab) {
+  if (state.modo !== 'guiado' || !TAREAS[tab]) return '';
+  const a = avance(), i = TABS.findIndex(t => t[0] === tab), it = a.find(x => x[0] === tab), f = FASES.find(x => x[2].includes(tab));
+  return `<div class="tarea no-print" role="note"><div class="row"><span class="tk">Paso ${i + 1} de ${TABS.length} · ${f ? f[1] : ''}</span><span class="spacer"></span>${it && it[1] ? '<span class="tag ok">✓ Paso completo</span>' : `<span class="tag warn">Pendiente: ${esc(it ? it[2] : '')}</span>`}</div>
+  <strong>Qué hacer aquí</strong><ul class="small">${TAREAS[tab].map(t => `<li>${esc(t)}</li>`).join('')}</ul>
+  <div class="tiny muted">Modo guiado: se ocultan las herramientas avanzadas (costos detallados, optimizador, planes A/B y sensibilidad). <a href="#" data-act="modo" data-m="experto">Ver todo</a></div></div>`;
+}
+
+/* ------------------------------------------------------------ menú Herramientas */
+function abrirMenu(abrir) {
+  const m = $('#menuTools'), b = $('#btnMenu'); if (!m) return;
+  const v = abrir === undefined ? m.hidden : abrir; m.hidden = !v; b.setAttribute('aria-expanded', String(v));
+  if (v) { const f = m.querySelector('select, .mi'); if (f) f.focus(); }
+}
+document.addEventListener('click', e => {
+  const m = $('#menuTools'); if (!m || m.hidden) return;
+  if (e.target.closest('#btnMenu')) return;
+  if (!e.target.closest('#menuTools')) { abrirMenu(false); return; }
+  if (e.target.closest('.mi, a') && !e.target.closest('label')) setTimeout(() => abrirMenu(false), 0);
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('#menuTools').hidden) { abrirMenu(false); $('#btnMenu').focus(); } });
+
+/* ------------------------------------------------------------ acordeón de Datos */
+const ACC_OPEN = {};
+const ACC_SEC = [
+  ['kpis', '1', 'Resumen ejecutivo y KPIs globales', () => tablaKPIs(), /KPI|meta/i],
+  ['skus', '2', 'Inventarios y almacenes (WMS)', () => tablaEditable('skus'), /SKU|stock|reorden|demanda/i],
+  ['rutas', '3', 'Transporte y distribución (TMS)', () => tablaEditable('rutas'), /ruta|RT-|flota|OTIF de/i],
+  ['proveedores', '4', 'Compras y proveedores', () => tablaEditable('proveedores'), /proveedor|PRV-|categor|lead time/i],
+  ['canales', '5', 'Servicio al cliente y logística inversa', () => tablaEditable('canales'), /canal|pedido|reclamo|devoluci/i],
+  ['escenarios', '6', 'Matriz de escenarios de disrupción', () => tablaEscenarios(), /escenario|ESC-/i],
+  ['costos', '8', 'Costos logísticos y financieros', () => tablaCostos(), /costo|Ilustrativo/i, true]
+];
+function acordeonDatos() {
+  const v = validar(state.data), d = state.data;
+  const filas = { kpis: 5 + (d.kpisExtra || []).length, skus: d.skus.length, rutas: d.rutas.length, proveedores: d.proveedores.length, canales: d.canales.length, escenarios: d.escenarios.length, costos: Object.values(d.costos || {}).filter(x => x != null && x !== '').length };
+  return `<div class="row no-print" style="margin-top:1.2rem"><h3 style="margin:0">Secciones del template</h3><span class="spacer"></span><button class="btn sm ghost" type="button" data-act="accTodo" data-v="1">Expandir todo</button><button class="btn sm ghost" type="button" data-act="accTodo" data-v="0">Contraer todo</button></div>` +
+    ACC_SEC.map(([k, n, t, f, re, adv]) => {
+      const err = v.filter(x => x.n === 'error' && re.test(x.m)).length, avi = v.filter(x => x.n === 'aviso' && re.test(x.m)).length;
+      const st = err ? `<span class="tag bad">${err} error(es)</span>` : avi ? `<span class="tag warn">${avi} aviso(s)</span>` : adv && !filas[k] ? '<span class="tag">opcional</span>' : '<span class="tag ok">✓ sin errores</span>';
+      const open = PRINT_ALL || (ACC_OPEN[k] !== undefined ? ACC_OPEN[k] : (state.modo !== 'guiado' || err > 0));
+      const def = PRINT_ALL || state.modo !== 'guiado' || err > 0;
+      return `<details class="acc ${adv ? 'adv' : ''}" data-acc="${k}" data-def="${def ? 1 : 0}" ${open ? 'open' : ''}><summary><span class="acc-n">${n}</span><span>${esc(t)}</span><span class="acc-s"><span class="tiny muted">${filas[k]} ${k === 'costos' ? 'campo(s)' : 'registro(s)'}</span> ${st}</span></summary><div class="acc-b">${open ? f() : ''}</div></details>`;
+    }).join('');
+}
+document.addEventListener('toggle', e => {
+  const d = e.target; if (!d.matches || !d.matches('details.acc')) return;
+  if (!(ACC_OPEN[d.dataset.acc] === undefined && d.open === (d.dataset.def === '1'))) ACC_OPEN[d.dataset.acc] = d.open;
+  const b = d.querySelector('.acc-b');
+  if (d.open && b && !b.innerHTML.trim()) { const s = ACC_SEC.find(x => x[0] === d.dataset.acc); b.innerHTML = s[3](); aplicarBloqueos(); etiquetarTablas(); }
+}, true);
+
+/* ------------------------------------------------------------ bienvenida */
+const BV_KEY = 'sig-bienvenida';
+let bv = { paso: 1, perfil: 'estudiante', rol: 'comite', modo: 'guiado', datos: 'demo', codigo: '' };
+function bienvenidaVista() { try { return !!localStorage.getItem(BV_KEY); } catch (e) { return true; } }
+function abrirBienvenida() {
+  bv = { paso: 1, perfil: 'estudiante', rol: state.rol || 'comite', modo: modoFijo() ? state.modo : 'guiado', datos: 'demo', codigo: '' };
+  pintarBienvenida(); const d = $('#dlgBienv'); if (d.showModal) d.showModal(); else d.setAttribute('open', '');
+}
+function pintarBienvenida() {
+  const B = $('#bvB'); if (!B) return;
+  if (bv.paso === 1) {
+    B.innerHTML = `<p>Este simulador te pone en el <strong>Comité de Decisiones Logísticas</strong> de LogiTech Solutions S.A.: diagnosticas la cadena, simulas disrupciones y eliges estrategias para devolverle el equilibrio (homeostasis).</p>
+    <p class="small muted">¿Cómo vas a usarlo?</p>
+    <div class="opts"><button type="button" class="opt" data-act="bvPerfil" data-v="estudiante">${SVGI('<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>')}<div><strong>Soy estudiante</strong><span>Resolver el ejercicio con mi grupo.</span></div></button>
+    <button type="button" class="opt" data-act="bvPerfil" data-v="docente">${SVGI('<path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/>')}<div><strong>Soy docente</strong><span>Preparar la clase y revisar entregas.</span></div></button></div>
+    <div class="row" style="margin-top:1rem"><a class="small" href="index.html">¿Qué es el SIG-Logístico?</a><span class="spacer"></span><button class="btn sm ghost" type="button" data-act="bvOmitir">Omitir</button></div>`;
+    return;
+  }
+  B.innerHTML = `<div class="field"><label for="bvRol"><strong>1. ¿Qué rol representas?</strong></label><select id="bvRol">${Object.entries(ROLES).map(([k, r]) => `<option value="${k}" ${bv.rol === k ? 'selected' : ''}>${esc(r.n)}</option>`).join('')}</select><span class="tiny muted">El simulador prioriza la información de tu rol sin perder la visión sistémica.</span></div>
+  <p style="margin:1rem 0 .4rem"><strong>2. ¿Cómo quieres trabajar?</strong>${modoFijo() ? ' <span class="tag">fijado por el docente</span>' : ''}</p>
+  <div class="opts"><label class="opt"><input type="radio" name="bvModo" value="guiado" ${bv.modo === 'guiado' ? 'checked' : ''} ${modoFijo() ? 'disabled' : ''}><div><strong>Guiado (recomendado)</strong><span>Una tarea por paso; oculta las herramientas avanzadas.</span></div></label>
+  <label class="opt"><input type="radio" name="bvModo" value="experto" ${bv.modo === 'experto' ? 'checked' : ''} ${modoFijo() ? 'disabled' : ''}><div><strong>Experto</strong><span>Todas las herramientas: optimizador, planes A/B, sensibilidad.</span></div></label></div>
+  <p style="margin:1rem 0 .4rem"><strong>3. ¿Con qué datos empiezas?</strong></p>
+  <div class="opts"><label class="opt"><input type="radio" name="bvDatos" value="demo" ${bv.datos === 'demo' ? 'checked' : ''}><div><strong>Caso demo</strong><span>LogiTech tal como lo plantea la actividad.</span></div></label>
+  <label class="opt"><input type="radio" name="bvDatos" value="variante" ${bv.datos === 'variante' ? 'checked' : ''}><div><strong>Variante de mi grupo</strong><span>Un caso propio a partir del código que asigna el docente.</span><input id="bvCod" placeholder="Ej.: G07" maxlength="20" value="${esc(bv.codigo)}" style="margin-top:.4rem;width:100%;border:1px solid var(--border);border-radius:6px;padding:.3rem .45rem;background:var(--surface)"></div></label>
+  <label class="opt"><input type="radio" name="bvDatos" value="archivo" ${bv.datos === 'archivo' ? 'checked' : ''}><div><strong>Cargar el CSV del SIG</strong><span>El archivo del formulario de captura o del template.</span></div></label></div>
+  <div class="row" style="margin-top:1.1rem"><button class="btn sm ghost" type="button" data-act="bvAtras">← Atrás</button><span class="spacer"></span><button class="btn primary" type="button" data-act="bvEmpezar">Empezar</button></div>`;
+}
+function leerBienvenida() {
+  const r = $('#bvRol'); if (r) bv.rol = r.value;
+  const m = document.querySelector('input[name="bvModo"]:checked'); if (m) bv.modo = m.value;
+  const d = document.querySelector('input[name="bvDatos"]:checked'); if (d) bv.datos = d.value;
+  const c = $('#bvCod'); if (c) bv.codigo = c.value.trim();
+}
+function cerrarBienvenida() { try { localStorage.setItem(BV_KEY, new Date().toISOString()); } catch (e) { } const d = $('#dlgBienv'); if (d.open) d.close(); }
+function empezarBienvenida() {
+  leerBienvenida();
+  if (bv.datos === 'variante' && !bv.codigo) { toast('Escribe el código de tu grupo o elige otra opción.'); const c = $('#bvCod'); if (c) c.focus(); return; }
+  cerrarBienvenida();
+  state.rol = bv.rol; if (!modoFijo()) state.modo = bv.modo;
+  if (bv.datos === 'variante') { generarVariante(bv.codigo); }
+  else if (bv.datos === 'archivo') { guardar(); ir('datos'); $('#fileData').click(); return; }
+  else { guardar(); }
+  ir('datos');
+  toast(`Listo: ${ROLES[state.rol].corto} · modo ${state.modo}. Sigue la tarea de cada paso.`);
+}
+function registrarV15() {
+Object.assign(ACC, {
+  modo: el => cambiarModo(el.dataset.m),
+  bienvenida: () => abrirBienvenida(),
+  bvPerfil: el => {
+    if (el.dataset.v === 'docente') { cerrarBienvenida(); if (!modoFijo()) state.modo = 'experto'; ir('docente'); toast('Modo docente: compara entregas y configura la clase.'); return; }
+    bv.perfil = 'estudiante'; bv.paso = 2; pintarBienvenida();
+  },
+  bvAtras: () => { leerBienvenida(); bv.paso = 1; pintarBienvenida(); },
+  bvEmpezar: () => empezarBienvenida(),
+  bvOmitir: () => cerrarBienvenida(),
+  compartirMenu: () => copiarLink(),
+  accTodo: el => { const v = el.dataset.v === '1'; ACC_SEC.forEach(s => { ACC_OPEN[s[0]] = v; }); render(); }
+});
+$('#fases').addEventListener('click', e => { const b = e.target.closest('[data-fase]'); if (b) irFase(b.dataset.fase); });
+$('#dlgBienv').addEventListener('cancel', () => { try { localStorage.setItem(BV_KEY, new Date().toISOString()); } catch (e) { } });
+}
 
 
 /* ====================================================================
@@ -2894,7 +3177,7 @@ const ACC = {
   justificarK: el => { const k = el.dataset.k; const e = registrar({ tipo: 'Estrategia', k, item: EST_META[k].n, cambio: 'activa (justificación posterior)', rol: state.estrategias[k].rol, dato: datoSIG(k), ihAntes: cmp.disrupcion.ih, ihDespues: X.porEst[k].ih }); mostrarJustif(e); },
   delBit: el => { if (!confirmar('¿Eliminar este registro de la bitácora?')) return; state.bitacora.splice(Number(el.dataset.i), 1); guardar(); render(); },
   variante: () => generarVariante(($('#fVar') || {}).value),
-  menu: () => $('header.top').classList.toggle('menu-open'), pngs: exportarPNGs, imprimir: imprimir,
+  menu: () => abrirMenu(), pngs: exportarPNGs, imprimir: imprimir,
   link: copiarLink, abrirJson: () => $('#fileJSON').click(),
   addKPI: () => { state.data.kpisExtra.push({ ind: '', actual: null, meta: null, estado: '', responsable: '', unidad: '%', mejor: 'mayor' }); recalc(); },
   delKPI: el => { if (!confirmar('¿Eliminar este indicador adicional?')) return; state.data.kpisExtra.splice(Number(el.dataset.i), 1); recalc(); },
@@ -2916,10 +3199,10 @@ const ACC = {
   undo: deshacer, redo: rehacer,
   docente: () => ir('docente'), cargarEntregas: () => $('#fileGrupos').click(), exportarEntregas: exportarEntregas, limpiarEntregas: () => { ENTREGAS = []; render(); },
   abrirEntrega: el => { const g = ENTREGAS[Number(el.dataset.i)]; if (!confirmar(`¿Abrir el análisis de ${g.grupo}? Reemplaza el análisis de este navegador (puedes deshacer).`)) return; pushHist(); state = Object.assign(normalizarEstado(clone(g.estado)), { tab: 'dashboard' }); recalc(); },
-  linkClase: async () => { const p = payloadClase({ mensaje: $('#lkMsg').value, exigirVariante: $('#lkVar').checked, bloqueos: { motor: $('#lkMotor').checked, pesos: $('#lkPesos').checked, escenarios: $('#lkEsc').checked, datos: $('#lkDatos').checked } });
+  linkClase: async () => { const p = payloadClase({ mensaje: $('#lkMsg').value, exigirVariante: $('#lkVar').checked, modo: $('#lkModo').value, bloqueos: { motor: $('#lkMotor').checked, pesos: $('#lkPesos').checked, escenarios: $('#lkEsc').checked, datos: $('#lkDatos').checked } });
     const url = location.origin + location.pathname + '#clase=' + LZString.compressToEncodedURIComponent(JSON.stringify(p));
     try { await navigator.clipboard.writeText(url); toast(`Link de la clase copiado (${url.length} caracteres).`); } catch (e) { window.prompt('Copia este link:', url); } },
-  jsonClase: () => descargar(`Configuracion_clase_${sello()}.json`, JSON.stringify(payloadClase({ mensaje: $('#lkMsg').value, exigirVariante: $('#lkVar').checked, bloqueos: { motor: $('#lkMotor').checked, pesos: $('#lkPesos').checked, escenarios: $('#lkEsc').checked, datos: $('#lkDatos').checked } }), null, 2), 'application/json'),
+  jsonClase: () => descargar(`Configuracion_clase_${sello()}.json`, JSON.stringify(payloadClase({ mensaje: $('#lkMsg').value, exigirVariante: $('#lkVar').checked, modo: $('#lkModo').value, bloqueos: { motor: $('#lkMotor').checked, pesos: $('#lkPesos').checked, escenarios: $('#lkEsc').checked, datos: $('#lkDatos').checked } }), null, 2), 'application/json'),
   quitarClase: () => { if (!confirmar('¿Quitar la configuración de la clase de este navegador?')) return; delete state.clase; guardar(); render(); },
   offline: () => { const a = document.createElement('a'); a.href = 'SIG_Logistico_sin_internet.html'; a.download = 'SIG_Logistico_sin_internet.html'; document.body.appendChild(a); a.click(); a.remove(); },
   restaurarSupuestos: () => { state.params = clone(M.PARAMS_DEFAULT); state.pesosBorrador = pesosAPct(M.PARAMS_DEFAULT.pesosIH); const e = state.escenarios, s = state.estrategias; state.escenarios = clone(M.ESCENARIOS_DEFAULT); state.estrategias = clone(M.ESTRATEGIAS_DEFAULT); for (const k in e) state.escenarios[k].activo = e[k].activo; for (const k in s) state.estrategias[k].activo = s[k].activo; recalc(); toast('Supuestos restaurados a los valores por defecto.'); }
@@ -2990,6 +3273,7 @@ $('#dlgNext').addEventListener('click', () => { if (tourI < pasosTour().length -
 $('#dlgClose').addEventListener('click', () => $('#dlg').close());
 
 (function init() {
+  registrarV15();
   try { const t = localStorage.getItem('sig-tema'); if (t) document.documentElement.dataset.theme = t; } catch (e) { }
   $('#ver').textContent = `${VERSION} · ${FECHA}`;
   $('#selRol').innerHTML = Object.entries(ROLES).map(([k, r]) => `<option value="${k}">${esc(r.n)}</option>`).join('');
@@ -2999,6 +3283,7 @@ $('#dlgClose').addEventListener('click', () => $('#dlg').close());
   if (cl) { aplicarClase(cl); history.replaceState(null, '', location.pathname + location.search); }
   recalc();
   if (cl) toast('Configuración de la clase aplicada: algunos valores quedan fijados por el docente.');
+  if (!sh && !bienvenidaVista()) abrirBienvenida();
   if (!window.Chart || !window.XLSX || !window.LZString) toast('Algunas librerías no cargaron (¿sin internet?): los gráficos o exportaciones pueden no estar disponibles; el cálculo funciona igual.');
   else if (compartido) toast('Estás viendo un análisis compartido.');
 })();

@@ -8,8 +8,8 @@
 <meta name="author" content="AI HYPERPLANE S.A.S.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230f6e7a'/%3E%3Cpath d='M7 21h6v-6h6v-6h6' stroke='white' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <style>
-:root{--bg:#f4f6f8;--surface:#fff;--surface-2:#eef2f5;--text:#16212b;--muted:#5b6b7a;--border:#d9e0e6;--accent:#0f6e7a;--accent-soft:#e1f1f2;--warn-bg:#fdf3e1;--warn:#b45309;--ok-bg:#e7f6ec;--ok:#15803d;--bad-bg:#fde8e8;--bad:#b91c1c;color-scheme:light}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#0e1419;--surface:#161e25;--surface-2:#1d2730;--text:#e6edf3;--muted:#9aabba;--border:#2a3743;--accent:#3fb6c2;--accent-soft:#163238;--warn-bg:#33270f;--warn:#fbbf24;--ok-bg:#12301f;--ok:#4ade80;--bad-bg:#3a1717;--bad:#f87171;color-scheme:dark}}
+:root{--bg:#f4f6f8;--surface:#fff;--surface-2:#eef2f5;--text:#16212b;--muted:#5b6b7a;--border:#d9e0e6;--accent:#0E7C74;--accent-soft:#dff4f1;--warn-bg:#fdf3e1;--warn:#b45309;--ok-bg:#e7f6ec;--ok:#15803d;--bad-bg:#fde8e8;--bad:#b91c1c;color-scheme:light}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#0e1419;--surface:#161e25;--surface-2:#1d2730;--text:#e6edf3;--muted:#9aabba;--border:#2a3743;--accent:#2DD4BF;--accent-soft:#163238;--warn-bg:#33270f;--warn:#fbbf24;--ok-bg:#12301f;--ok:#4ade80;--bad-bg:#3a1717;--bad:#f87171;color-scheme:dark}}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--text);font:16px/1.65 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
 a{color:var(--accent)}
@@ -21,7 +21,7 @@ main{padding:1.5rem 0 4rem;min-width:0}
 header.cover{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.6rem;margin-bottom:2rem}
 header.cover h1{margin:.2rem 0 .4rem;font-size:1.9rem;line-height:1.2}
 .brand{display:flex;align-items:center;gap:.7rem}
-.logo{width:40px;height:40px;border-radius:10px;background:#0f6e7a;display:grid;place-items:center}
+.logo{width:44px;height:44px;display:block} .logo svg{display:block;width:100%;height:100%}
 h2{font-size:1.45rem;margin:2.6rem 0 .6rem;padding-top:.6rem;border-top:1px solid var(--border);line-height:1.25}
 h3{font-size:1.12rem;margin:1.8rem 0 .4rem}
 h4{font-size:1rem;margin:1.2rem 0 .3rem}
@@ -55,11 +55,15 @@ code,kbd{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.86em;backg
 <nav class="toc" aria-label="Contenido">
   <strong>Contenido</strong>
   <ol>
-    <li><a href="#novedades">Novedades v1.4</a></li>
+    <li><a href="#novedades">Novedades v1.5</a></li>
     <li><a href="#intro">1. Introducción</a></li>
     <li><a href="#ejercicio">2. El ejercicio académico</a></li>
     <li><a href="#acceso">3. Acceso y requisitos</a></li>
-    <li><a href="#interfaz">4. La interfaz</a></li>
+    <li><a href="#interfaz">4. La interfaz</a>
+      <ol>
+        <li><a href="#bienvenida">4.1 Primer ingreso</a></li>
+        <li><a href="#modos">4.2 Modo guiado y experto</a></li>
+      </ol></li>
     <li><a href="#pasos">5. Paso a paso</a>
       <ol>
         <li><a href="#carga">5.1 Datos y template</a></li>
@@ -85,14 +89,23 @@ code,kbd{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.86em;backg
 </nav>
 <main id="main">
 <header class="cover">
-  <div class="brand"><div class="logo" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 32 32"><path d="M5 23h7v-7h7V9h8" stroke="#fff" stroke-width="3.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="muted small">AI HYPERPLANE S.A.S. · Simulador académico</span></div>
+  <div class="brand"><div class="logo" aria-hidden="true"><svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><rect width="64" height="64" rx="15" fill="#0B3A53"/><path d="M45 17 H25 a8.5 8.5 0 0 0 0 17 H39 a8.5 8.5 0 0 1 0 17 H21" fill="none" stroke="#14B8A6" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="47" cy="17" r="5" fill="#F59E0B"/><circle cx="19" cy="51" r="5" fill="none" stroke="#14B8A6" stroke-width="3.4"/></svg></div><span class="muted small">AI HYPERPLANE S.A.S. · Simulador académico</span></div>
   <h1>Manual de usuario — SIG-Logístico LogiTech Solutions S.A.</h1>
-  <p class="muted">Paso a paso del simulador y guía del ejercicio “Estrategas de la Cadena de Suministro: Decisiones Inteligentes con un SIG-Logístico”. Versión del aplicativo: v1.4.1 · octubre de 2026.</p>
-  <p><a class="btn" href="index.html">Abrir el simulador</a> &nbsp; <a href="Manual_SIG_Logistico.pdf">Descargar este manual en PDF</a> · <a href="SIG_Logistico_template_referencia.xlsx">Template de referencia (XLSX)</a></p>
+  <p class="muted">Paso a paso del simulador y guía del ejercicio “Estrategas de la Cadena de Suministro: Decisiones Inteligentes con un SIG-Logístico”. Versión del aplicativo: v1.5.0 · octubre de 2026.</p>
+  <p><a class="btn" href="simulador.html">Abrir el simulador</a> &nbsp; <a href="index.html">Página de inicio</a> · <a href="Manual_SIG_Logistico.pdf">Descargar este manual en PDF</a> · <a href="SIG_Logistico_template_referencia.xlsx">Template de referencia (XLSX)</a></p>
   <p class="small muted">© 2026 AI HYPERPLANE S.A.S. Propiedad intelectual de AI HYPERPLANE S.A.S. El simulador puede usarse libremente con fines académicos y educativos; cualquier otro uso requiere autorización escrita. Ver <a href="#terminos">términos de uso</a>.</p>
 </header>
 
-<div class="note ok" id="novedades"><strong>Novedades de la versión 1.4</strong>
+<div class="note ok" id="novedades"><strong>Novedades de la versión 1.5</strong>
+<ul style="margin:.4rem 0 0">
+  <li><strong>Página de inicio</strong> que explica el propósito, el caso y el funcionamiento; el simulador queda en <code>simulador.html</code>. Los links compartidos anteriores siguen funcionando (<a href="#acceso">3</a>).</li>
+  <li><strong>Nuevo logo</strong> e identidad visual (azul petróleo, verde azulado y ámbar).</li>
+  <li><strong>Navegación por fases</strong>: Preparar, Simular y Evaluar, con barra lateral en computador y barra inferior de fases en el celular; <strong>menú Herramientas</strong> que ordena las funciones secundarias (<a href="#interfaz">4</a>).</li>
+  <li><strong>Índice de Homeostasis siempre visible</strong> en el encabezado: Base → Disrupción → Con estrategia (<a href="#interfaz">4</a>).</li>
+  <li><strong>Bienvenida</strong> al primer ingreso (estudiante o docente, rol, modo y datos) y <strong>modo guiado / experto</strong>, fijable por el docente (<a href="#bienvenida">4.1</a>, <a href="#modos">4.2</a>).</li>
+  <li><strong>Datos en acordeón</strong>: cada sección del template muestra su estado de validación (<a href="#carga">5.1</a>).</li>
+</ul></div>
+<div class="note"><strong>Novedades de la versión 1.4</strong>
 <ul style="margin:.4rem 0 0">
   <li><strong>Preguntas de reflexión</strong> al final de Diagnóstico, Escenarios, Estrategias, Dashboard y Supuestos; <strong>autoevaluación de conceptos</strong> (12 preguntas) y <strong>rúbrica integrada</strong> con nivel sugerido (<a href="#reflexion">5.8</a>).</li>
   <li><strong>Borrador automático del Informe Ejecutivo</strong> en Word (.docx) o HTML, con las cifras y gráficos del análisis y espacios marcados para la interpretación del comité (<a href="#borrador">5.9</a>).</li>
@@ -155,7 +168,7 @@ code,kbd{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.86em;backg
 
 <h2 id="acceso">3. Acceso y requisitos</h2>
 <ul>
-  <li><strong>Acceso:</strong> abre el link del simulador en cualquier navegador moderno (Chrome, Edge, Safari o Firefox), en computador o celular. No hay registro ni contraseña.</li>
+  <li><strong>Acceso:</strong> abre el link en cualquier navegador moderno (Chrome, Edge, Safari o Firefox), en computador o celular. No hay registro ni contraseña. La dirección principal muestra la <strong>página de inicio</strong> (qué es, cómo funciona y el caso); el botón <strong>Abrir el simulador</strong> lleva a <code>simulador.html</code>. Los links de un análisis compartido o de una clase abren directamente el simulador.</li>
   <li><strong>Internet:</strong> se necesita al abrir la página para descargar las librerías de gráficos y Excel. El cálculo funciona aunque fallen. Para clases sin conexión, descarga la <strong>versión sin internet</strong> (Exportar → “Descargar versión sin internet”): un solo archivo que funciona sin red (<a href="#sininternet">5.11</a>).</li>
   <li><strong>Privacidad:</strong> todo el cálculo ocurre en tu navegador. Los datos no se envían a ningún servidor.</li>
   <li><strong>Guardado:</strong> tu análisis se guarda automáticamente en el navegador que estás usando. Para llevarlo a otro equipo, descarga el JSON o copia el link del análisis.</li>
@@ -164,40 +177,66 @@ code,kbd{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.86em;backg
 <div class="note warn"><strong>Caso ficticio.</strong> No ingreses datos reales de empresas sin autorización.</div>
 
 <h2 id="interfaz">4. La interfaz</h2>
-<figure><img src="manual/img/01-datos.jpg" alt="Encabezado del simulador con el selector de vista, botones y pestañas de los siete módulos" loading="lazy"><figcaption>Figura 1. Encabezado y módulo Datos.</figcaption></figure>
+<figure><img src="manual/img/58-inicio.jpg" alt="Página de inicio del SIG-Logístico" loading="lazy"><figcaption>Figura 0. Página de inicio.</figcaption></figure>
+<p>La pantalla se organiza en tres zonas: el <strong>encabezado</strong> (logo, Índice de Homeostasis, modo de trabajo y acciones), la <strong>navegación por fases</strong> a la izquierda y el <strong>módulo</strong> activo a la derecha.</p>
+<figure><img src="manual/img/52-navegacion.jpg" alt="Simulador con encabezado, navegación lateral por fases y módulo Datos" loading="lazy"><figcaption>Figura 1. Encabezado, navegación por fases y módulo Datos (modo guiado).</figcaption></figure>
 <div class="tw"><table>
 <thead><tr><th>Elemento</th><th>Para qué sirve</th></tr></thead>
 <tbody>
-<tr><td><strong>Vista</strong></td><td>Elige “Comité completo” o un rol. El simulador prioriza la información de ese rol (lo abre primero y lo resalta) sin ocultar la visión sistémica.</td></tr>
+<tr><td><strong>Logo</strong></td><td>Vuelve a la página de inicio.</td></tr>
+<tr><td><strong>Indicador IH</strong></td><td>Muestra siempre el Índice de Homeostasis: <span style="color:#2f64b0">Base</span> → <span style="color:#c2410c">Disrupción</span> → <span style="color:#0f8a5f">Con estrategia</span>, con la banda. Se actualiza con cada cambio, así ves el efecto sin ir al Dashboard. Al pulsarlo abre el Dashboard.</td></tr>
+<tr><td><strong>Guiado / Experto</strong></td><td>Cambia el modo de trabajo (<a href="#modos">4.2</a>).</td></tr>
 <tr><td><strong>↶ ↷ Deshacer / Rehacer</strong></td><td>Revierte o repite el último cambio de escenarios, estrategias o supuestos (hasta 60 pasos). Atajos: Ctrl+Z / Ctrl+Shift+Z (Cmd en Mac).</td></tr>
-<tr><td><strong>Autoevaluación</strong></td><td>Quiz de 12 preguntas sobre OTIF, DIO, ROP, efecto látigo, IH y más, con retroalimentación inmediata (<a href="#reflexion">5.8</a>).</td></tr>
-<tr><td><strong>Modo docente</strong></td><td>Comparar entregas de los grupos y configurar la clase (<a href="#docente">5.10</a>).</td></tr>
-<tr><td><strong>Accesible</strong></td><td>Añade patrones y marcadores distintos a cada serie para leer los gráficos sin depender del color (<a href="#sininternet">5.11</a>).</td></tr>
-<tr><td><strong>Recorrido guiado</strong></td><td>Tour corto de seis pasos adaptado al rol elegido.</td></tr>
-<tr><td><strong>Guía académica</strong></td><td>Paso a paso del entregable, buenas prácticas, glosario y referencias.</td></tr>
-<tr><td><strong>Manual</strong></td><td>Abre este documento.</td></tr>
-<tr><td><strong>Copiar link</strong></td><td>Copia un link que reproduce tu análisis exacto (datos, escenarios, estrategias y supuestos).</td></tr>
-<tr><td><strong>Tema</strong></td><td>Alterna entre modo claro y oscuro.</td></tr>
-<tr><td><strong>Pestañas 1 a 7</strong></td><td>Datos, Diagnóstico, Escenarios, Estrategias, Dashboard, Supuestos y Exportar, en el orden del ejercicio. Con el teclado: flechas izquierda y derecha.</td></tr>
+<tr><td><strong>Compartir</strong></td><td>Copia un link que reproduce tu análisis exacto (datos, escenarios, estrategias y supuestos).</td></tr>
+<tr><td><strong>☰ Herramientas</strong></td><td>Menú con: <strong>rol del comité</strong> (prioriza la información de ese rol sin ocultar la visión sistémica), <strong>Recorrido guiado</strong>, <strong>Autoevaluación de conceptos</strong> (<a href="#reflexion">5.8</a>), <strong>Guía académica</strong>, <strong>Manual</strong>, <strong>Página de inicio</strong>, <strong>Cambiar perfil</strong> (vuelve a mostrar la bienvenida), <strong>Modo docente</strong> (<a href="#docente">5.10</a>), <strong>Modo accesible</strong> (<a href="#sininternet">5.11</a>) y <strong>Tema</strong> claro/oscuro. Se cierra con Esc o al pulsar fuera.</td></tr>
+<tr><td><strong>Navegación por fases</strong></td><td>Los siete módulos se agrupan en tres fases: <strong>Preparar</strong> (1 Datos, 2 Diagnóstico), <strong>Simular</strong> (3 Escenarios, 4 Estrategias) y <strong>Evaluar</strong> (5 Dashboard, 6 Supuestos, 7 Exportar). Cada módulo muestra su ícono, una descripción y ✓ cuando está completo; cada fase, cuántos pasos lleva. Arriba está la <strong>barra de avance</strong>. Con el teclado: flechas izquierda y derecha. En pantallas medianas la navegación pasa a una fila horizontal.</td></tr>
+<tr><td><strong>Avance</strong></td><td>Un paso se completa así: Datos sin errores; Diagnóstico revisado; al menos un escenario activo; palancas activas y justificadas en la bitácora; Dashboard y Supuestos revisados; análisis exportado. Al final de cada módulo, el botón <strong>Continuar</strong> lleva al siguiente.</td></tr>
+<tr><td><strong>Subpestañas</strong></td><td>Estrategias (Palancas y bitácora · Contingencia vs. estructural · Optimizador) y Dashboard (Resumen · Gráficos · Matriz y sinergias · Por rol · Planes A/B) se dividen en subpestañas. La elegida se recuerda.</td></tr>
 <tr><td><strong>“?” (ayudas)</strong></td><td>Pasa el cursor, enfoca con Tab o toca el “?” para ver la definición, la fórmula o cómo leer un gráfico.</td></tr>
 <tr><td><strong>ƒ ver cálculo</strong></td><td>Muestra la fórmula de cada cifra con los valores del caso sustituidos.</td></tr>
-<tr><td><strong>Subpestañas</strong></td><td>Estrategias (Palancas y bitácora · Contingencia vs. estructural · Optimizador) y Dashboard (Resumen · Gráficos · Matriz y sinergias · Por rol · Planes A/B) se dividen en subpestañas para no desplazarse por una página larga. La subpestaña elegida se recuerda.</td></tr>
-<tr><td><strong>Preguntas de reflexión</strong></td><td>Al final de cinco módulos; se guardan con el análisis (<a href="#reflexion">5.8</a>).</td></tr>
-<tr><td><strong>Barra de avance</strong></td><td>Muestra cuántos de los siete pasos están completos y cuál sigue (con enlace). Un paso se completa así: Datos sin errores; Diagnóstico revisado; al menos un escenario activo; palancas activas y justificadas en la bitácora; Dashboard y Supuestos revisados; análisis exportado. Las pestañas completas muestran ✓. Al final de cada módulo, el botón <strong>Continuar</strong> lleva al siguiente.</td></tr>
-<tr><td><strong>En el celular</strong></td><td>El encabezado se reduce al nombre y el botón <strong>☰ Menú</strong> (vista por rol, guía, manual, link y tema). Las siete pestañas pasan a una barra fija en la parte inferior.</td></tr>
 <tr><td><strong>Recomendación académica</strong></td><td>Recuadro al inicio de cada módulo con lo que conviene llevar al informe. Se puede ocultar.</td></tr>
+<tr><td><strong>Preguntas de reflexión</strong></td><td>Al final de cinco módulos; se guardan con el análisis (<a href="#reflexion">5.8</a>).</td></tr>
+<tr><td><strong>En el celular</strong></td><td>El encabezado muestra el logo, el IH (Disrupción → Estrategia), deshacer/rehacer y ☰. Una <strong>barra inferior con las tres fases</strong> cambia de fase; arriba aparecen los módulos de la fase actual. El modo y Compartir están en el menú.</td></tr>
 </tbody></table></div>
-<figure><img src="manual/img/30-encabezado.jpg" alt="Encabezado v1.4 con deshacer, rehacer, autoevaluación, modo docente y accesible" loading="lazy"><figcaption>Figura 1a. Encabezado de la versión 1.4.</figcaption></figure>
+<figure><img src="manual/img/53-encabezado-ih.jpg" alt="Encabezado con logo, indicador IH, modo, deshacer, compartir y herramientas" loading="lazy"><figcaption>Figura 1a. Encabezado con el indicador IH siempre visible.</figcaption></figure>
+<figure><img src="manual/img/54-menu.jpg" alt="Menú Herramientas abierto" loading="lazy" style="max-width:420px"><figcaption>Figura 1f. Menú Herramientas.</figcaption></figure>
 <figure><img src="manual/img/32-subpestanas.jpg" alt="Subpestañas del Dashboard" loading="lazy"><figcaption>Figura 1d. Subpestañas del Dashboard.</figcaption></figure>
-<figure><img src="manual/img/21-avance.jpg" alt="Barra de avance del ejercicio con el siguiente paso sugerido" loading="lazy"><figcaption>Figura 1b. Barra de avance del ejercicio.</figcaption></figure>
-<figure><img src="manual/img/27-movil.jpg" alt="Vista en celular con menú y pestañas inferiores" loading="lazy" style="max-width:300px"><figcaption>Figura 1c. Vista en celular.</figcaption></figure>
+<figure><img src="manual/img/21-avance.jpg" alt="Navegación lateral por fases con barra de avance" loading="lazy" style="max-width:300px"><figcaption>Figura 1b. Navegación por fases y avance.</figcaption></figure>
+<figure><img src="manual/img/57-movil-fases.jpg" alt="Vista en celular con la barra inferior de fases" loading="lazy" style="max-width:300px"><figcaption>Figura 1c. Vista en celular: fases abajo, módulos de la fase arriba.</figcaption></figure>
 <p>En el celular, las tablas anchas se muestran como <strong>tarjetas</strong>: cada fila es una tarjeta con el nombre de cada columna junto a su valor, sin desplazamiento horizontal.</p>
 <figure><img src="manual/img/42-movil-tarjetas.jpg" alt="Tabla mostrada como tarjetas en el celular" loading="lazy" style="max-width:300px"><figcaption>Figura 1e. Tablas como tarjetas en el celular.</figcaption></figure>
+
+<h3 id="bienvenida">4.1 Primer ingreso: bienvenida</h3>
+<p>La primera vez que abres el simulador en un navegador aparece la <strong>bienvenida</strong>:</p>
+<ol class="steps">
+  <li>Elige <strong>Soy estudiante</strong> o <strong>Soy docente</strong>. El perfil docente abre directamente el Modo docente en modo experto.</li>
+  <li>El estudiante elige su <strong>rol</strong>, el <strong>modo de trabajo</strong> (guiado recomendado o experto) y <strong>con qué datos empieza</strong>: el caso demo, la <strong>variante de su grupo</strong> (escribiendo el código que asigna el docente) o el <strong>CSV del SIG</strong>.</li>
+  <li>Pulsa <strong>Empezar</strong>. Puedes volver a verla en ☰ Herramientas → <strong>Cambiar perfil</strong>; “Omitir” la cierra sin cambiar nada.</li>
+</ol>
+<figure><img src="manual/img/50-bienvenida-1.jpg" alt="Bienvenida: elegir estudiante o docente" loading="lazy" style="max-width:560px"><figcaption>Figura 1g. Bienvenida: perfil.</figcaption></figure>
+<figure><img src="manual/img/51-bienvenida-2.jpg" alt="Bienvenida: rol, modo y datos" loading="lazy" style="max-width:560px"><figcaption>Figura 1h. Bienvenida: rol, modo de trabajo y datos.</figcaption></figure>
+
+<h3 id="modos">4.2 Modo guiado y modo experto</h3>
+<div class="tw"><table>
+<thead><tr><th></th><th>Modo guiado</th><th>Modo experto</th></tr></thead>
+<tbody>
+<tr><td>Para quién</td><td>Primer contacto con el caso; clases introductorias</td><td>Análisis completo y defensa del informe</td></tr>
+<tr><td>Tarea del paso</td><td>Recuadro <strong>“Qué hacer aquí”</strong> al inicio de cada módulo, con el estado del paso</td><td>No se muestra</td></tr>
+<tr><td>Datos</td><td>Las secciones del template empiezan contraídas (salvo las que tienen errores); se oculta la sección 8 de costos</td><td>Todas las secciones abiertas, incluida la 8</td></tr>
+<tr><td>Estrategias</td><td>Palancas y bitácora · Contingencia vs. estructural</td><td>Además, el <strong>Optimizador</strong></td></tr>
+<tr><td>Dashboard</td><td>Resumen · Gráficos · Matriz y sinergias · Por rol</td><td>Además, <strong>Planes A/B</strong></td></tr>
+<tr><td>Supuestos</td><td>Supuestos y pesos del IH</td><td>Además, el <strong>análisis de sensibilidad</strong></td></tr>
+</tbody></table></div>
+<p>El modo se cambia en el encabezado (o en el menú, en el celular) y no altera ningún cálculo. El docente puede <strong>fijarlo</strong> para toda la clase en la configuración de la clase (<a href="#docente">5.10</a>).</p>
+<figure><img src="manual/img/55-tarea-guiado.jpg" alt="Recuadro Qué hacer aquí del modo guiado" loading="lazy"><figcaption>Figura 1i. Tarea del paso en modo guiado.</figcaption></figure>
 
 <h2 id="pasos">5. Paso a paso</h2>
 
 <h3 id="carga">5.1 Datos: cargar o capturar la información del SIG</h3>
 <p>Tienes tres caminos: usar el <strong>caso demo</strong> (se carga solo la primera vez), cargar un archivo con el <strong>template de referencia</strong> o capturar los datos directamente en las tablas.</p>
+<h4>Secciones del template en acordeón</h4>
+<p>Debajo de la fuente de datos, cada sección del template (1 KPIs, 2 inventarios, 3 transporte, 4 proveedores, 5 servicio, 6 escenarios y 8 costos) es un panel que se abre y se cierra. Su encabezado muestra cuántos registros tiene y su estado: <span class="tag">✓ sin errores</span>, avisos o errores de validación. Usa <strong>Expandir todo</strong> o <strong>Contraer todo</strong> para ver todas a la vez.</p>
+<figure><img src="manual/img/56-acordeon.jpg" alt="Secciones del template en acordeón con su estado" loading="lazy"><figcaption>Figura 2a. Secciones del template con su estado.</figcaption></figure>
 <h4 id="variantes">Usar una variante del caso por grupo</h4>
 <p>Para que cada equipo trabaje con datos propios, el docente asigna un <strong>código de grupo</strong> (por ejemplo <code>G07</code>). En <strong>Datos → Fuente de datos → Variante del caso por grupo</strong>, escribe el código y pulsa <strong>Generar variante</strong>.</p>
 <ul>
@@ -382,7 +421,7 @@ code,kbd{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.86em;backg
 <p>Al final de Diagnóstico, Escenarios, Estrategias, Dashboard y Supuestos hay una o dos preguntas abiertas (nueve en total). Piden explicar con cifras del simulador, por ejemplo: “¿Por qué la disrupción combinada no es la suma de los escenarios aislados?” o “Describe una cadena causal entre dos áreas”. Se recomiendan al menos 80 caracteres por respuesta (el contador lo indica). Las respuestas se guardan, se exportan (hoja Reflexiones y JSON), alimentan el borrador del informe y el docente las ve en el modo docente.</p>
 <figure><img src="manual/img/31-reflexion.jpg" alt="Preguntas de reflexión al final de un módulo" loading="lazy"><figcaption>Figura 18c. Preguntas de reflexión.</figcaption></figure>
 <h4>Autoevaluación de conceptos</h4>
-<p>El botón <strong>Autoevaluación</strong> del encabezado abre 12 preguntas de selección múltiple (OTIF, DIO, punto de reorden, efecto látigo, fill rate, IH, tasa de recuperación, regla conservadora, entre otras). Al calificar, cada pregunta muestra si acertaste y la explicación. Puedes repetirla; el resultado queda en la hoja Quiz y en el criterio “Dominio de conceptos” de la rúbrica.</p>
+<p>☰ Herramientas → <strong>Autoevaluación de conceptos</strong> abre 12 preguntas de selección múltiple (OTIF, DIO, punto de reorden, efecto látigo, fill rate, IH, tasa de recuperación, regla conservadora, entre otras). Al calificar, cada pregunta muestra si acertaste y la explicación. Puedes repetirla; el resultado queda en la hoja Quiz y en el criterio “Dominio de conceptos” de la rúbrica.</p>
 <figure><img src="manual/img/36-quiz.jpg" alt="Autoevaluación de conceptos con retroalimentación" loading="lazy" style="max-width:620px"><figcaption>Figura 18d. Autoevaluación de conceptos.</figcaption></figure>
 <h4>Rúbrica integrada</h4>
 <p>En Exportar, la rúbrica muestra siete criterios (diagnóstico, impacto sistémico, matriz sustentada en datos, uso de evidencia cuantitativa, sinergia y homeostasis, supuestos y limitaciones, dominio de conceptos) en cuatro niveles (1 Insuficiente · 2 Básico · 3 Competente · 4 Destacado). Para cada criterio el simulador sugiere un nivel según la <strong>evidencia del proceso</strong> (módulos revisados, reflexiones, justificaciones, predicciones, frontera eficiente, quiz) y el grupo puede registrar su <strong>autoevaluación</strong>.</p>
@@ -400,7 +439,7 @@ code,kbd{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.86em;backg
 <figure><img src="manual/img/43-borrador.jpg" alt="Primera página del borrador del informe en Word" loading="lazy" style="max-width:520px"><figcaption>Figura 18f. Primera página del borrador.</figcaption></figure>
 
 <h3 id="docente">5.10 Modo docente</h3>
-<p>El botón <strong>Modo docente</strong> abre una vista con dos herramientas. Todo ocurre en el navegador del docente; los archivos no se envían a ningún servidor.</p>
+<p>☰ Herramientas → <strong>Modo docente</strong> (o “Soy docente” en la bienvenida) abre una vista con dos herramientas. Todo ocurre en el navegador del docente; los archivos no se envían a ningún servidor.</p>
 <h4>Comparar entregas de los grupos</h4>
 <ol class="steps">
   <li>Cada grupo descarga su <strong>JSON</strong> en Exportar y lo entrega (por correo o en la plataforma del curso), nombrado con su código de grupo.</li>
@@ -413,7 +452,7 @@ code,kbd{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.86em;backg
 <h4>Configuración de la clase (fijar parámetros)</h4>
 <ol class="steps">
   <li>Deja el simulador con los valores que quieres para todos (por ejemplo, supuestos, pesos o parámetros de los escenarios).</li>
-  <li>En Modo docente, marca qué fijar: <strong>supuestos del motor</strong>, <strong>pesos y bandas del IH</strong>, <strong>parámetros de los escenarios</strong>, <strong>datos del caso</strong> y, si quieres, <strong>exigir variante por grupo</strong>. Agrega un mensaje para los estudiantes.</li>
+  <li>En Modo docente, marca qué fijar: <strong>supuestos del motor</strong>, <strong>pesos y bandas del IH</strong>, <strong>parámetros de los escenarios</strong>, <strong>datos del caso</strong> y, si quieres, <strong>exigir variante por grupo</strong> y <strong>fijar el modo de trabajo</strong> (guiado o experto). Agrega un mensaje para los estudiantes.</li>
   <li>Pulsa <strong>Copiar link de la clase</strong> (o descarga la configuración en JSON) y compártelo.</li>
   <li>Al abrirlo, el estudiante ve un aviso con el mensaje y los campos fijados quedan bloqueados 🔒. Puede activar o desactivar escenarios y estrategias, pero no cambiar lo fijado. Su trabajo se guarda en su navegador y la configuración se mantiene aunque pulse Reiniciar.</li>
 </ol>
@@ -422,7 +461,7 @@ code,kbd{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.86em;backg
 
 <h3 id="sininternet">5.11 Accesibilidad y uso sin internet</h3>
 <ul>
-  <li><strong>Modo Accesible</strong> (casilla del encabezado): cada serie de los gráficos usa un patrón y un marcador distinto, además del color, y aumenta el contraste.</li>
+  <li><strong>Modo accesible</strong> (☰ Herramientas → Preferencias): cada serie de los gráficos usa un patrón y un marcador distinto, además del color, y aumenta el contraste.</li>
   <li><strong>Ver datos del gráfico</strong>: tabla con los valores de cada gráfico.</li>
   <li><strong>Teclado</strong>: todas las funciones se usan con Tab, Enter y flechas; los “?” se abren con el foco.</li>
   <li><strong>Versión sin internet</strong>: Exportar → “Descargar versión sin internet (1 archivo)”. Es el mismo simulador con las librerías incluidas (≈1,5 MB). Ábrelo con doble clic en cualquier navegador; no necesita conexión ni instalación.</li>
@@ -508,6 +547,12 @@ Bandas: ≥ 90 Equilibrio · 75 a 89,9 Tensión · < 75 Desequilibrio</div>
 <p>El IH guardado en el JSON no coincide con el que recalcula el motor: el archivo se editó a mano o proviene de otra versión. Pide al grupo que lo exporte de nuevo.</p>
 <h4>El borrador .docx se ve distinto en Google Docs</h4>
 <p>Los estilos pueden variar ligeramente; el contenido y las cifras son los mismos. Para una vista fiel usa Word o LibreOffice, o descarga la versión HTML.</p>
+<h4>No veo el optimizador, los planes A/B o la sensibilidad</h4>
+<p>Estás en modo guiado. Cambia a <strong>Experto</strong> en el encabezado (o en ☰ Herramientas en el celular). Si el botón está deshabilitado, el docente fijó el modo para la clase.</p>
+<h4>¿Dónde quedaron Autoevaluación, Guía, Tema o Modo docente?</h4>
+<p>En el menú <strong>☰ Herramientas</strong> del encabezado.</p>
+<h4>Quiero volver a ver la bienvenida</h4>
+<p>☰ Herramientas → <strong>Cambiar perfil (bienvenida)</strong>.</p>
 <h4>Quiero empezar de cero</h4>
 <p>Datos → <strong>Reiniciar</strong> borra lo guardado y carga el caso demo.</p>
 <h4>¿Puedo extender el horizonte a 60 o 90 días?</h4>
@@ -550,7 +595,7 @@ Bandas: ≥ 90 Equilibrio · 75 a 89,9 Tensión · < 75 Desequilibrio</div>
   <li>LogiTech Solutions S.A. es un caso ficticio. Los resultados del simulador son ilustrativos y dependen de los datos y supuestos ingresados; no constituyen asesoría profesional.</li>
   <li>Cita sugerida: <em>AI HYPERPLANE S.A.S. (2026). Simulador SIG-Logístico LogiTech Solutions S.A. (versión del pie de página) [Aplicación web].</em></li>
 </ul>
-<p class="pi">© 2026 AI HYPERPLANE S.A.S. Todos los derechos reservados, salvo el uso académico autorizado en estos términos. Manual del simulador SIG-Logístico v1.4.1.</p>
+<p class="pi">© 2026 AI HYPERPLANE S.A.S. Todos los derechos reservados, salvo el uso académico autorizado en estos términos. Manual del simulador SIG-Logístico v1.5.0.</p>
 </main>
 </div>
 </body>
