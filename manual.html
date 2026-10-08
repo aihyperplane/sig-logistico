@@ -55,7 +55,7 @@ code,kbd{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.86em;backg
 <nav class="toc" aria-label="Contenido">
   <strong>Contenido</strong>
   <ol>
-    <li><a href="#novedades">Novedades v1.5</a></li>
+    <li><a href="#novedades">Novedades v1.6</a></li>
     <li><a href="#intro">1. Introducción</a></li>
     <li><a href="#ejercicio">2. El ejercicio académico</a></li>
     <li><a href="#acceso">3. Acceso y requisitos</a></li>
@@ -91,12 +91,19 @@ code,kbd{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.86em;backg
 <header class="cover">
   <div class="brand"><div class="logo" aria-hidden="true"><svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><rect width="64" height="64" rx="15" fill="#0B3A53"/><path d="M45 17 H25 a8.5 8.5 0 0 0 0 17 H39 a8.5 8.5 0 0 1 0 17 H21" fill="none" stroke="#14B8A6" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="47" cy="17" r="5" fill="#F59E0B"/><circle cx="19" cy="51" r="5" fill="none" stroke="#14B8A6" stroke-width="3.4"/></svg></div><span class="muted small">AI HYPERPLANE S.A.S. · Simulador académico</span></div>
   <h1>Manual de usuario — SIG-Logístico LogiTech Solutions S.A.</h1>
-  <p class="muted">Paso a paso del simulador y guía del ejercicio “Estrategas de la Cadena de Suministro: Decisiones Inteligentes con un SIG-Logístico”. Versión del aplicativo: v1.5.1 · octubre de 2026.</p>
+  <p class="muted">Paso a paso del simulador y guía del ejercicio “Estrategas de la Cadena de Suministro: Decisiones Inteligentes con un SIG-Logístico”. Versión del aplicativo: v1.6.0 · octubre de 2026.</p>
   <p><a class="btn" href="simulador.html">Abrir el simulador</a> &nbsp; <a href="index.html">Página de inicio</a> · <a href="Manual_SIG_Logistico.pdf">Descargar este manual en PDF</a> · <a href="SIG_Logistico_template_referencia.xlsx">Template de referencia (XLSX)</a></p>
   <p class="small muted">© 2026 AI HYPERPLANE S.A.S. Propiedad intelectual de AI HYPERPLANE S.A.S. El simulador puede usarse libremente con fines académicos y educativos; cualquier otro uso requiere autorización escrita. Ver <a href="#terminos">términos de uso</a>.</p>
 </header>
 
-<div class="note ok" id="novedades"><strong>Novedades de la versión 1.5</strong>
+<div class="note ok" id="novedades"><strong>Novedades de la versión 1.6</strong>
+<ul style="margin:.4rem 0 0">
+  <li><strong>Identificación del grupo</strong>: nombre del estudiante o de los integrantes, nombre del profesor/a y número de grupo, en la bienvenida y en Datos (<a href="#identificacion">5.1</a>).</li>
+  <li>La identificación aparece en <strong>todos los exportables</strong>: CSV (sección 0), XLSX (hoja Identificación), JSON, borrador del informe, vista imprimible, nombres de archivo y comparación de entregas del docente (<a href="#exportar">5.7</a>).</li>
+  <li><strong>Mapa de la red y disrupciones</strong> en el Simulador de disrupciones, generado con las rutas, los proveedores y la matriz de escenarios (<a href="#mapared">5.3</a>).</li>
+  <li>El docente puede <strong>fijar su nombre</strong> en el link de la clase (<a href="#docente">5.10</a>). El template de referencia incluye la nueva sección 0.</li>
+</ul></div>
+<div class="note"><strong>Novedades de la versión 1.5</strong>
 <ul style="margin:.4rem 0 0">
   <li><strong>Página de inicio</strong> que explica el propósito, el caso y el funcionamiento; el simulador queda en <code>simulador.html</code>. Los links compartidos anteriores siguen funcionando (<a href="#acceso">3</a>).</li>
   <li><strong>Nuevo logo</strong> e identidad visual (azul petróleo, verde azulado y ámbar).</li>
@@ -210,7 +217,7 @@ code,kbd{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.86em;backg
 <p>La primera vez que abres el simulador en un navegador aparece la <strong>bienvenida</strong>:</p>
 <ol class="steps">
   <li>Elige <strong>Soy estudiante</strong> o <strong>Soy docente</strong>. El perfil docente abre directamente el Modo docente en modo experto.</li>
-  <li>El estudiante elige su <strong>rol</strong>, el <strong>modo de trabajo</strong> (guiado recomendado o experto) y <strong>con qué datos empieza</strong>: el caso demo, la <strong>variante de su grupo</strong> (escribiendo el código que asigna el docente) o el <strong>CSV del SIG</strong>.</li>
+  <li>El estudiante escribe <strong>sus datos</strong> (nombre o integrantes, profesor/a y número de grupo; se pueden completar después), elige su <strong>rol</strong>, el <strong>modo de trabajo</strong> (guiado recomendado o experto) y <strong>con qué datos empieza</strong>: el caso demo, la <strong>variante de su grupo</strong> (escribiendo el código que asigna el docente) o el <strong>CSV del SIG</strong>.</li>
   <li>Pulsa <strong>Empezar</strong>. Puedes volver a verla en ☰ Herramientas → <strong>Cambiar perfil</strong>; “Omitir” la cierra sin cambiar nada.</li>
 </ol>
 <figure><img src="manual/img/50-bienvenida-1.jpg" alt="Bienvenida: elegir estudiante o docente" loading="lazy" style="max-width:560px"><figcaption>Figura 1g. Bienvenida: perfil.</figcaption></figure>
@@ -234,6 +241,17 @@ code,kbd{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.86em;backg
 
 <h3 id="carga">5.1 Datos: cargar o capturar la información del SIG</h3>
 <p>Tienes tres caminos: usar el <strong>caso demo</strong> (se carga solo la primera vez), cargar un archivo con el <strong>template de referencia</strong> o capturar los datos directamente en las tablas.</p>
+<h4 id="identificacion">Identificación del grupo</h4>
+<p>La tarjeta <strong>Identificación del grupo</strong>, al inicio del módulo Datos, guarda tres campos: <strong>nombre(s) del estudiante o integrantes</strong> (uno por línea o separados por coma), <strong>nombre del profesor/a</strong> y <strong>número de grupo</strong>. No intervienen en el cálculo; sirven para identificar la entrega:</p>
+<ul>
+  <li><strong>CSV</strong>: sección <strong>0. IDENTIFICACIÓN DEL GRUPO</strong> al inicio del archivo. Al volver a cargarlo, el simulador recupera la identificación.</li>
+  <li><strong>XLSX</strong>: hoja <strong>Identificación</strong> (primera del libro) con los tres campos, el caso, la variante, el rol, el modo, la versión y la fecha; también la sección 0 en la hoja Datos.</li>
+  <li><strong>JSON</strong>, <strong>borrador del informe</strong> (Integrantes, Profesor/a y Grupo en la portada), <strong>vista imprimible</strong> y <strong>nombres de archivo</strong> (por ejemplo, <code>SIG_LogiTech_analisis_G7_2026-10-08.xlsx</code>).</li>
+  <li>El checklist de Exportar incluye “Identificación del grupo”.</li>
+</ul>
+<p>El template de referencia (XLSX y CSV) trae la sección 0 vacía para llenarla antes de cargar. Si el docente fijó su nombre en el link de la clase, el campo Profesor/a aparece bloqueado 🔒.</p>
+<div class="note warn">Los nombres se guardan solo en tu navegador, pero viajan dentro de los archivos exportados y del link “Compartir”. Compártelos solo con tu grupo y tu docente.</div>
+<figure><img src="manual/img/59-identificacion.jpg" alt="Tarjeta Identificación del grupo en el módulo Datos" loading="lazy"><figcaption>Figura 2c. Identificación del grupo.</figcaption></figure>
 <h4>Secciones del template en acordeón</h4>
 <p>Debajo de la fuente de datos, cada sección del template (1 KPIs, 2 inventarios, 3 transporte, 4 proveedores, 5 servicio, 6 escenarios y 8 costos) es un panel que se abre y se cierra. Su encabezado muestra cuántos registros tiene y su estado: <span class="tag">✓ sin errores</span>, avisos o errores de validación. Usa <strong>Expandir todo</strong> o <strong>Contraer todo</strong> para ver todas a la vez.</p>
 <figure><img src="manual/img/56-acordeon.jpg" alt="Secciones del template en acordeón con su estado" loading="lazy"><figcaption>Figura 2a. Secciones del template con su estado.</figcaption></figure>
@@ -309,6 +327,17 @@ code,kbd{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.86em;backg
   <li>Lee el impacto aislado en cada tarjeta (por ejemplo, el día de quiebre del SKU) y la tabla de impacto: los cinco KPIs, el Δ de costo logístico, las ventas perdidas, las penalidades, el impacto total en $ y el IH de cada escenario y de la combinación.</li>
   <li>Usa el gráfico de stock diario para mostrar cuándo y cuánto se pierde.</li>
 </ol>
+<h4 id="mapared">Mapa de la red y disrupciones</h4>
+<p>Al inicio del módulo, el simulador dibuja la red de LogiTech con los datos del SIG: el CD Central, los almacenes satélite y sus clientes (de la sección 3), los proveedores con su categoría, lead time y fill rate (sección 4) y un marcador numerado por cada evento de la <strong>matriz de escenarios</strong> (sección 6):</p>
+<ul>
+  <li>Las <strong>rutas troncales</strong> se colorean según su OTIF frente a la meta (verde cumple, ámbar ≥ 90% de la meta, rojo bajo). La ruta del bloqueo (ESC-01) se dibuja punteada en rojo cuando el escenario está activo.</li>
+  <li>El marcador del <strong>efecto látigo</strong> (ESC-02) muestra el SKU y el aumento de demanda; el proveedor de la <strong>quiebra</strong> (ESC-03) aparece “suspendido”.</li>
+  <li>Marcador relleno: escenario activo. Punteado: inactivo o evento <strong>cualitativo</strong> (no simulado).</li>
+  <li>La tabla de abajo lista cada evento con sus parámetros actuales, el KPI afectado y su efecto aislado en el IH; el interruptor activa o desactiva el escenario.</li>
+  <li>El mapa se actualiza con cada cambio (otra ruta bloqueada, otro proveedor, una variante del grupo o un CSV propio). <strong>PNG</strong> lo descarga, y el borrador del informe lo incluye como primera figura.</li>
+</ul>
+<p>Las posiciones respetan la orientación geográfica aproximada de las ciudades conocidas, pero el esquema <strong>no está a escala</strong>.</p>
+<figure><img src="manual/img/61-mapa-red.jpg" alt="Mapa de la red con las rutas coloreadas por OTIF y los marcadores de la matriz de escenarios" loading="lazy"><figcaption>Figura 7b. Mapa de la red y disrupciones.</figcaption></figure>
 <figure><img src="manual/img/08-esc-cards.jpg" alt="Tarjetas de los tres escenarios con parámetros e impacto aislado" loading="lazy"><figcaption>Figura 8. Tarjetas de escenarios.</figcaption></figure>
 <figure><img src="manual/img/09-esc-impacto.jpg" alt="Tabla de impacto por escenario y combinado" loading="lazy"><figcaption>Figura 9. Impacto en KPIs, $ e IH.</figcaption></figure>
 <div class="note">La combinación no es la suma de los escenarios: los efectos interactúan. Ese es el “impacto sistémico” que pide la actividad.</div>
@@ -405,7 +434,7 @@ code,kbd{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.86em;backg
 <h3 id="exportar">5.7 Exportar y compartir</h3>
 <ul>
   <li><strong>Checklist de la actividad:</strong> verifica datos sin errores, diagnóstico, al menos un escenario, dashboard, matriz con al menos una estrategia, evaluación de homeostasis, justificación de pesos y decisiones justificadas en la bitácora.</li>
-  <li><strong>CSV en formato template</strong> (secciones 1 a 8): vuelve a cargarse sin cambios.</li>
+  <li><strong>CSV en formato template</strong> (secciones 0 a 8, con la identificación del grupo): vuelve a cargarse sin cambios.</li>
   <li><strong>XLSX del análisis:</strong> hojas Datos, KPIs, Escenarios, Estrategias, Homeostasis, Matriz (con justificaciones), Bitácora, Optimizador, Sensibilidad, Estructural, Supuestos, Reflexiones y Rúbrica; además Costos (si se ingresó la sección 8), Quiz (si se hizo la autoevaluación) y Planes (si se guardó algún plan).</li>
   <li><strong>Borrador del informe</strong> en Word (.docx) o HTML (<a href="#borrador">5.9</a>).</li>
   <li><strong>Versión sin internet</strong>: un archivo HTML con todo incluido (<a href="#sininternet">5.11</a>).</li>
@@ -413,6 +442,8 @@ code,kbd{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.86em;backg
   <li><strong>PNG de todos los gráficos</strong> del dashboard y <strong>vista imprimible / PDF</strong>.</li>
   <li><strong>Copiar link de este análisis:</strong> quien lo abra ve exactamente tu análisis, sin cuenta. Si el link es muy largo, comparte el JSON (“Abrir JSON” lo carga).</li>
 </ul>
+<p>El encabezado del checklist muestra la identificación del grupo con un enlace para editarla. Todos los archivos descargados incluyen el número de grupo en el nombre.</p>
+<figure><img src="manual/img/60-exportar-ident.jpg" alt="Checklist con la identificación del grupo" loading="lazy" style="max-width:560px"><figcaption>Figura 18a. Checklist con la identificación del grupo.</figcaption></figure>
 <figure><img src="manual/img/19-exportar.jpg" alt="Módulo Exportar con checklist y descargas" loading="lazy"><figcaption>Figura 18. Exportar.</figcaption></figure>
 <figure><img src="manual/img/38-descargas.jpg" alt="Descargas de la versión 1.4 con borrador del informe y versión sin internet" loading="lazy"><figcaption>Figura 18b. Descargas.</figcaption></figure>
 
@@ -443,7 +474,7 @@ code,kbd{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.86em;backg
 <h4>Comparar entregas de los grupos</h4>
 <ol class="steps">
   <li>Cada grupo descarga su <strong>JSON</strong> en Exportar y lo entrega (por correo o en la plataforma del curso), nombrado con su código de grupo.</li>
-  <li>El docente pulsa <strong>Cargar JSON de los grupos</strong> y selecciona todos los archivos a la vez.</li>
+  <li>El docente pulsa <strong>Cargar JSON de los grupos</strong> y selecciona todos los archivos a la vez. Cada fila muestra el número de grupo, los integrantes y la variante; la exportación XLSX incluye además el profesor/a.</li>
   <li>La tabla muestra por grupo: IH base → disrupción → estrategia, banda, recuperación, costo, $/punto, palancas, si la selección está en la frontera eficiente, justificaciones, predicciones, reflexiones, quiz y rúbrica (sugerida / autoevaluación).</li>
   <li>La columna <strong>Integridad</strong> recalcula cada entrega con el motor y compara el IH declarado: “ok” si coincide; si no, indica el valor declarado (archivo editado a mano o versión distinta).</li>
   <li>El gráfico <strong>Costo vs. IH por grupo</strong> ubica a cada grupo (arriba a la izquierda: más homeostasis por menos dinero). <strong>Abrir</strong> carga la entrega completa para revisarla; <strong>Exportar comparación (XLSX)</strong> descarga la tabla.</li>
@@ -452,7 +483,7 @@ code,kbd{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.86em;backg
 <h4>Configuración de la clase (fijar parámetros)</h4>
 <ol class="steps">
   <li>Deja el simulador con los valores que quieres para todos (por ejemplo, supuestos, pesos o parámetros de los escenarios).</li>
-  <li>En Modo docente, marca qué fijar: <strong>supuestos del motor</strong>, <strong>pesos y bandas del IH</strong>, <strong>parámetros de los escenarios</strong>, <strong>datos del caso</strong> y, si quieres, <strong>exigir variante por grupo</strong> y <strong>fijar el modo de trabajo</strong> (guiado o experto). Agrega un mensaje para los estudiantes.</li>
+  <li>En Modo docente, marca qué fijar: <strong>supuestos del motor</strong>, <strong>pesos y bandas del IH</strong>, <strong>parámetros de los escenarios</strong>, <strong>datos del caso</strong> y, si quieres, <strong>exigir variante por grupo</strong>, <strong>fijar el modo de trabajo</strong> y escribir <strong>tu nombre</strong> (aparece fijo como profesor/a en los exportables de los estudiantes) (guiado o experto). Agrega un mensaje para los estudiantes.</li>
   <li>Pulsa <strong>Copiar link de la clase</strong> (o descarga la configuración en JSON) y compártelo.</li>
   <li>Al abrirlo, el estudiante ve un aviso con el mensaje y los campos fijados quedan bloqueados 🔒. Puede activar o desactivar escenarios y estrategias, pero no cambiar lo fijado. Su trabajo se guarda en su navegador y la configuración se mantiene aunque pulse Reiniciar.</li>
 </ol>
@@ -595,7 +626,7 @@ Bandas: ≥ 90 Equilibrio · 75 a 89,9 Tensión · < 75 Desequilibrio</div>
   <li>LogiTech Solutions S.A. es un caso ficticio. Los resultados del simulador son ilustrativos y dependen de los datos y supuestos ingresados; no constituyen asesoría profesional.</li>
   <li>Cita sugerida: <em>AI HYPERPLANE S.A.S. (2026). Simulador SIG-Logístico LogiTech Solutions S.A. (versión del pie de página) [Aplicación web].</em></li>
 </ul>
-<p class="pi">© 2026 AI HYPERPLANE S.A.S. Todos los derechos reservados, salvo el uso académico autorizado en estos términos. Manual del simulador SIG-Logístico v1.5.1.</p>
+<p class="pi">© 2026 AI HYPERPLANE S.A.S. Todos los derechos reservados, salvo el uso académico autorizado en estos términos. Manual del simulador SIG-Logístico v1.6.0.</p>
 </main>
 </div>
 </body>
