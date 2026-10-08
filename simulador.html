@@ -112,10 +112,13 @@ details.acc .acc-n{display:inline-grid;place-items:center;width:1.6rem;height:1.
 details.acc .acc-s{margin-left:auto;font-weight:500;font-size:.8rem}
 details.acc>.acc-b{padding:0 1rem 1rem}
 details.acc>.acc-b>.card{border:0;box-shadow:none;padding:0;margin-top:0!important;background:transparent}
-dialog#dlgBienv{max-width:min(640px,calc(100vw - 32px));padding:0;overflow:hidden}
+dialog#dlgBienv{max-width:min(640px,calc(100vw - 24px));width:100%;padding:0;overflow:hidden;max-height:calc(100vh - 24px);max-height:calc(100dvh - 24px)}
+dialog#dlgBienv[open]{display:flex;flex-direction:column}
+.bv-h{flex:none}
 .bv-h{background:var(--brand);color:#fff;padding:1.1rem 1.3rem;display:flex;gap:.8rem;align-items:center}
 .bv-h .logo{width:44px;height:44px} .bv-h h3{margin:0;font-size:1.15rem} .bv-h p{margin:0;font-size:.82rem;opacity:.8}
-.bv-b{padding:1.1rem 1.3rem 1.2rem}
+.bv-b{padding:1.1rem 1.3rem 0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;min-height:0;flex:1 1 auto}
+.bv-act{position:sticky;bottom:0;background:var(--surface);padding:.75rem 0 1.1rem;margin-top:.6rem;border-top:1px solid var(--border);z-index:1}
 .opts{display:grid;gap:.6rem;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr))}
 .opt{display:flex;gap:.7rem;align-items:flex-start;border:1.5px solid var(--border);border-radius:12px;padding:.75rem .85rem;cursor:pointer;background:var(--surface);text-align:left;color:inherit;font:inherit}
 .opt:hover{border-color:var(--accent)}
@@ -208,7 +211,7 @@ ul.clean{margin:.2rem 0;padding-left:1.1rem} ul.clean li{margin:.2rem 0}
 .check li{list-style:none;margin-left:-1.1rem}
 .kv{display:grid;grid-template-columns:auto 1fr;gap:.2rem .8rem;font-size:.88rem}
 .kv dt{color:var(--muted)} .kv dd{margin:0;font-variant-numeric:tabular-nums}
-dialog{border:1px solid var(--border);border-radius:14px;background:var(--surface);color:var(--text);max-width:min(520px,calc(100vw - 32px));padding:1.2rem;box-shadow:0 20px 50px rgba(0,0,0,.25)}
+dialog{border:1px solid var(--border);border-radius:14px;background:var(--surface);color:var(--text);max-width:min(520px,calc(100vw - 32px));padding:1.2rem;box-shadow:0 20px 50px rgba(0,0,0,.25);max-height:calc(100vh - 24px);max-height:calc(100dvh - 24px);overflow-y:auto;overscroll-behavior:contain}
 dialog::backdrop{background:rgba(10,15,20,.45)}
 .toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--text);color:var(--bg);padding:.6rem 1rem;border-radius:10px;font-size:.9rem;z-index:50;max-width:calc(100vw - 32px);box-shadow:0 6px 20px rgba(0,0,0,.25)}
 .hidden{display:none!important}
@@ -287,7 +290,10 @@ aside.acad ul{margin-top:.3rem}
   table.edit td.w-l input,table.edit td.w-xl input{min-width:0}
   header.top{position:sticky}
   details.acc>summary{padding:.65rem .75rem} details.acc>.acc-b{padding:0 .6rem .8rem}
+  .bv-h{padding:.75rem 1rem} .bv-h .logo{width:36px;height:36px} .bv-h h3{font-size:1rem} .bv-h p{display:none}
+  .bv-b{padding:.85rem 1rem 0} .opt{padding:.55rem .65rem} .opts{gap:.45rem}
 }
+@media (max-height:500px){ .bv-h{padding:.55rem 1rem} .bv-h .logo{width:30px;height:30px} .bv-h h3{font-size:.98rem} .bv-h p{display:none} }
 @media print{
   header.top,nav.steps,nav#fases,.no-print,details.calc summary{display:none!important}
   .layout{display:block;padding:0}
@@ -828,7 +834,7 @@ const TEMPLATE_XLSX_B64 = "UEsDBBQAAAAIAA2JR11Gx01IlQAAAM0AAAAQAAAAZG9jUHJvcHMvY
  * SIG-Logístico — interfaz. El motor (SIGMotor) es la única fuente de
  * cálculos; este archivo solo lee/escribe el estado y lo presenta.
  * ==================================================================== */
-const VERSION = 'v1.5.0', FECHA = '2026-10-07', ESQUEMA = 1, LS_KEY = 'sig-logistico-estado-v1';
+const VERSION = 'v1.5.1', FECHA = '2026-10-07', ESQUEMA = 1, LS_KEY = 'sig-logistico-estado-v1';
 const M = window.SIGMotor;
 const clone = o => JSON.parse(JSON.stringify(o));
 const $ = s => document.querySelector(s);
@@ -2731,7 +2737,7 @@ function pintarBienvenida() {
     <p class="small muted">¿Cómo vas a usarlo?</p>
     <div class="opts"><button type="button" class="opt" data-act="bvPerfil" data-v="estudiante">${SVGI('<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>')}<div><strong>Soy estudiante</strong><span>Resolver el ejercicio con mi grupo.</span></div></button>
     <button type="button" class="opt" data-act="bvPerfil" data-v="docente">${SVGI('<path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/>')}<div><strong>Soy docente</strong><span>Preparar la clase y revisar entregas.</span></div></button></div>
-    <div class="row" style="margin-top:1rem"><a class="small" href="index.html">¿Qué es el SIG-Logístico?</a><span class="spacer"></span><button class="btn sm ghost" type="button" data-act="bvOmitir">Omitir</button></div>`;
+    <div class="row bv-act"><a class="small" href="index.html">¿Qué es el SIG-Logístico?</a><span class="spacer"></span><button class="btn sm ghost" type="button" data-act="bvOmitir">Omitir</button></div>`;
     return;
   }
   B.innerHTML = `<div class="field"><label for="bvRol"><strong>1. ¿Qué rol representas?</strong></label><select id="bvRol">${Object.entries(ROLES).map(([k, r]) => `<option value="${k}" ${bv.rol === k ? 'selected' : ''}>${esc(r.n)}</option>`).join('')}</select><span class="tiny muted">El simulador prioriza la información de tu rol sin perder la visión sistémica.</span></div>
@@ -2742,7 +2748,7 @@ function pintarBienvenida() {
   <div class="opts"><label class="opt"><input type="radio" name="bvDatos" value="demo" ${bv.datos === 'demo' ? 'checked' : ''}><div><strong>Caso demo</strong><span>LogiTech tal como lo plantea la actividad.</span></div></label>
   <label class="opt"><input type="radio" name="bvDatos" value="variante" ${bv.datos === 'variante' ? 'checked' : ''}><div><strong>Variante de mi grupo</strong><span>Un caso propio a partir del código que asigna el docente.</span><input id="bvCod" placeholder="Ej.: G07" maxlength="20" value="${esc(bv.codigo)}" style="margin-top:.4rem;width:100%;border:1px solid var(--border);border-radius:6px;padding:.3rem .45rem;background:var(--surface)"></div></label>
   <label class="opt"><input type="radio" name="bvDatos" value="archivo" ${bv.datos === 'archivo' ? 'checked' : ''}><div><strong>Cargar el CSV del SIG</strong><span>El archivo del formulario de captura o del template.</span></div></label></div>
-  <div class="row" style="margin-top:1.1rem"><button class="btn sm ghost" type="button" data-act="bvAtras">← Atrás</button><span class="spacer"></span><button class="btn primary" type="button" data-act="bvEmpezar">Empezar</button></div>`;
+  <div class="row bv-act"><button class="btn sm ghost" type="button" data-act="bvAtras">← Atrás</button><span class="spacer"></span><button class="btn primary" type="button" data-act="bvEmpezar">Empezar</button></div>`;
 }
 function leerBienvenida() {
   const r = $('#bvRol'); if (r) bv.rol = r.value;
